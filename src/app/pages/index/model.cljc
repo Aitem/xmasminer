@@ -64,6 +64,12 @@
                          :id (get-in db [:buildings-menu-item :id])
                          :dir (get-in db [:buildings-menu-item :dir])}}}))
 
+
+(rf/reg-event-fx
+ ::remove-building
+ (fn [db [_ x y]]
+   {:app.ws/send {:event "remove-building" :data {:x x :y y}}}))
+
 (rf/reg-event-db
  ::seleted-building-rotate
  (fn [db [_]]

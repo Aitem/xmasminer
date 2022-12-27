@@ -29,6 +29,17 @@
 (defn init-map
   [object]
   (when object
+    (.addEventListener
+     (js/document.getElementById "map")
+     "contextmenu"
+     (fn [event]
+       (.preventDefault event)
+       (let [belt? (clojure.string/includes? (.. event -target -className) "belt")]
+         (when belt?
+           (rf/dispatch [::model/remove-building
+                         (int (.. event -target -style -gridColumnStart)) 
+                         (int (.. event -target -style -gridRowStart))])))
+       ))
     (js/document.addEventListener
      "keydown"
      (fn [event]

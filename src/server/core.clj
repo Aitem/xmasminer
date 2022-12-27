@@ -39,24 +39,25 @@
          [14 11] [:b :u]
          }))
 
-(def tick-status
-  (atom true))
+(defn broadcast-players-state
+  []
+  (doseq [[channel data] @players]
+    (org.httpkit.server/send! channel (str {:event "players" :data (vals @players)}))))
 
-;;(future-cancel tick)
-(def tick
-  (future
-    (while @tick-status
-      (doseq [[channel data] @players]
-        (org.httpkit.server/send! channel (str {:event "players" :data (vals @players)}))
-        (org.httpkit.server/send! channel (str {:event "buildings" :data @buildings})))
-      (Thread/sleep 1))))
+(defn broadcast-buildings-state
+  []
+  (doseq [[channel data] @players]
+    (org.httpkit.server/send! channel (str {:event "buildings" :data @buildings}))))
 
 (defn handler
   [request]
   (cond
     (= "/ws" (:uri request))
     (org.httpkit.server/with-channel request channel
-      (swap! players assoc channel {:position {:x 0 :y 0} :name (str "Guest #" (inc (count @players))) :color (rand-nth ["red" "yellow" "green" "purple"])})
+      (do 
+        (swap! players assoc channel {:position {:x 0 :y 0} :name (str "Guest #" (inc (count @players))) :color (rand-nth ["red" "yellow" "green" "purple"])})
+
+        (broadcast-players-state))
       (org.httpkit.server/on-close
        channel
        (fn [status]
@@ -66,20 +67,33 @@
        (fn [string]
          (let [data (read-string string)]
            (cond
+             (= "remove-building" (:event data))
+             (do 
+               (swap! buildings dissoc [(get-in data [:data :x])
+                                        (get-in data [:data :y])])
+               (broadcast-buildings-state))
              (= "create-building" (:event data))
-             (swap! buildings assoc [(get-in data [:data :x]) (get-in data [:data :y])]
-                    [(get-in data [:data :id])
-                     (get-in data [:data :dir])])
+             (do 
+               (swap! buildings assoc [(get-in data [:data :x]) (get-in data [:data :y])]
+                      [(get-in data [:data :id])
+                       (get-in data [:data :dir])])
+               (broadcast-buildings-state))
              (= "change-name" (:event data))
-             (swap! players assoc-in [channel :name] (:data data))
+             (do 
+               (swap! players assoc-in [channel :name] (:data data))
+               (broadcast-players-state))
              (= "move-y" (:event data))
-             (swap! players assoc-in [channel :position :y] (:data data))
+             (do 
+               (swap! players assoc-in [channel :position :y] (:data data))
+               (broadcast-players-state))
              (= "move-x" (:event data))
-             (swap! players assoc-in [channel :position :x] (:data data)))))))
+             (do 
+               (swap! players assoc-in [channel :position :x] (:data data))
+               (broadcast-players-state)))))))
     :else {:status 200}))
 
 (comment
   (def server (org.httpkit.server/run-server #'handler {:port 8080}))
   (server)
   @players 
-  (reset! tick-status false))
+  )
