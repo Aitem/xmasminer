@@ -37,86 +37,16 @@
 (rf/reg-event-fx
  index-page
  (fn [{db :db} [pid phase params]]
-   {:db (merge db {:player {:position {:x 5 :y 10}}})}))
-
-(rf/reg-event-fx
- ::start-game
- (fn [{db :db} [evid practitioner-name]]
-   {:json/fetch {:uri "/Practitioner"
-                 :method :post
-                 :body {:name [{:given [practitioner-name]}]}
-                 :success {:event ::prepare-patients}
-                 :req-id evid}}))
+   {:db (merge db {:belt   {:#b_17 [15 20 4  4   :r]
+                            :#b_17tr [14 14 4 4  :ur]
+                            :#b_18 [20 20 5  10  :d]
+                            :#b_19 [15 20 10 10  :l]
+                            :#b_20 [14 14 5  10  :u]
+                            }
+                   :player {:position {:x 5 :y 10}}})}))
 
 
-(defn mk-patient-batch-req [{id :id :as practitioner} pts]
-  (let [pts (vals pts)]
-    (loop [free-avatars pt-avatars
-           free-names   pt-names
-           patients     []
-           idx          0]
-      (if (= 3 (count patients))
-        patients
-        (let [pt-gender (rand-nth genders)
-              pt-avatar (rand-nth (vec (get free-avatars pt-gender)))
-              pt-name   (rand-nth (vec (get free-names pt-gender)))
-              pt-req {:request  {:method (if (nth pts idx)
-                                           "PUT"
-                                           "POST")
-                                 :url (if (nth pts idx)
-                                        (str "/Patient/" (:id (nth pts idx)))
-                                        "/Patient")}
-                      :resource {:name                [{:given [pt-name]}]
-                                 :balance             30
-                                 :health              3
-                                 :gender              pt-gender
-                                 :generalPractitioner [{:id id :resourceType "Practitioner"}]
-                                 :avatar              pt-avatar}}]
-          (recur
-           (update free-avatars pt-gender disj pt-avatar)
-           (update free-names pt-gender disj pt-name)
-           (conj patients pt-req)
-           (inc idx)))))))
 
-(defn stat-builder [patient stat]
-
-  {:request {:method "post" :url "/Observation"}
-   :resource {:subject {:id (:id patient) :resourceType "Patient"}
-              :status "final"
-              :code {:coding [{:code   stat
-                               :system "urn:observation"}]}
-              :value {:Quantity {:value (- 1 (rand-int 3))}}}})
-
-(defn mk-patient-stats-request
-  [patient]
-  [(stat-builder patient "temperature")
-   (stat-builder patient "sugar")
-   (stat-builder patient "pressure")
-   (stat-builder patient "bacteria")
-   (stat-builder patient "diarrhea")])
-
-(rf/reg-event-fx
- ::prepare-patients
- (fn [{db :db} [evid {practitioner :data} ]]
-   (let [pts (:patients db)]
-     {::storage/set {:player practitioner}
-      :json/fetch {:uri "/"
-                   :method :post
-                   :body {:resourceType "Bundle"
-                          :entry (mk-patient-batch-req practitioner pts)}
-                   :success {:event ::save-init-data}}})))
-
-(rf/reg-event-fx
- ::save-init-data
- (fn [{_db :db} [_evid {resp :data}]]
-   (let [pts (->> resp
-                  :entry
-                  (map :resource))]
-     {:json/fetch {:uri "/"
-                   :method :post
-                   :body {:resourceType "Bundle"
-                          :entry (mapcat mk-patient-stats-request pts)}
-                   :success {:event ::run-game}}})))
 
 (rf/reg-event-fx
  ::run-game
@@ -126,4 +56,4 @@
 (rf/reg-sub
  index-page
  (fn [db _]
-   (select-keys db [:player])))
+   (select-keys db [:player :belt])))

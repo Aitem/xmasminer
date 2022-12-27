@@ -4,10 +4,16 @@
             [app.pages.index.model :as model]))
 
 
+(def belt-dir {:u "belt-u"
+               :d "belt-d"
+               :r "belt-r"
+               :l "belt-l"
+               :ur "belt-ur"
+               })
 
 (pages/reg-subs-page
  model/index-page
- (fn [{{pos :position} :player :as page} _]
+ (fn [{{pos :position} :player belt :belt :as page} _]
    [:div#screen
     [:span#info (str pos)]
     [:div#map
@@ -15,8 +21,16 @@
       [:div#player {:style {:grid-column (:x pos)
                             :grid-row    (:y pos)}}]
 
-     [:div#belt_1.belt {:style {:grid-column "10 / 10"
-                                :grid-row    "5 / 20"}}]
+     [:<>
+      (map
+       (fn [[id [x1 x2 y1 y2 d]]]
+         [:div.belt {:id id
+                     :class (str "belt " (get belt-dir d))
+                     :style {:grid-column (str x1 " / " x2)
+                             :grid-row    (str y1 " / " y2)}}])
+
+       belt)]
+
 
 
      ]

@@ -9,26 +9,54 @@
 }
 
 .belt {
-    width: calc(100% - 10px);;
-    height: calc(100% - 10px);;
+    width: calc(100% );;
+    height: calc(100% );;
     display: block;
-    /* background-color: #99e699; */
-    border: 1px solid gray;
-    background-image: url("/img/belt.png");
-    background-position: -4px;
-    animation: animatedBackground 2s linear infinite ;
+}
 
+.belt-u {
+    animation: belt-up 2s linear infinite ;
+    background-image: url("/img/belt-u.png");
+}
+
+.belt-r {
+    animation: belt-right 2s linear infinite ;
+    background-image: url("/img/belt-r.png");
+}
+
+.belt-d {
+    animation: belt-down 2s linear infinite ;
+    background-image: url("/img/belt-d.png");
+}
+
+.belt-l {
+    animation: belt-left 2s linear infinite ;
+    background-image: url("/img/belt-l.png");
+}
+
+.belt-ur {
+    background-image: url("/img/belt-ur.png");
 }
 
 
+@keyframes belt-right {
+    from {background-position: -40px 0;}
+    to   {background-position: 0 0;}
+}
 
-@keyframes animatedBackground {
-  from {
-    background-position: -4px 40px;
-  }
-  to {
-    background-position: -4px 0;
-  }
+@keyframes belt-left {
+    from {background-position: 0 0;}
+    to   {background-position: -40px 0;}
+}
+
+@keyframes belt-up {
+    from {background-position: 0 40px;}
+    to   {background-position: 0 0;}
+}
+
+@keyframes belt-down {
+    from {background-position: 0 0;}
+    to   {background-position: 0 40px;}
 }
 
 .slide-left {
