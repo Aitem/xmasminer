@@ -69,10 +69,12 @@
       buildings)]
     [:<>
      (map
-      (fn [[[x y] [type opts]]]
+      (fn [[[x y] [type opts dx dy]]]
         [:div {:key (hash (str x y type))
                :class (str "char char-h")
-               :style {:grid-column x :grid-row    y}}])
+               :style {:margin-left (str (* 2 dx) "px")
+                       :margin-top  (str (* 2 dy) "px")
+                       :grid-column x :grid-row    y}}])
       res)]
     ]
    ]

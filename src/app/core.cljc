@@ -22,32 +22,51 @@
     (fn []
       (app.pages.index.view/view @m))))
 
-(defn process-res [[pos res] gmap]
+(defn process-res [[pos [t o]] gmap]
   (if-let [infra (get gmap pos)]
     (condp = infra
-      [:b :r] {[(inc (first pos)) (second pos)] res}
-      [:b :l] {[(dec (first pos)) (second pos)] res}
-      [:b :u] {[(first pos) (dec (second pos))] res}
-      [:b :d] {[(first pos) (inc (second pos))] res}
+      [:b :r] {[(inc (first pos)) (second pos)] [t o]}
+      [:b :l] {[(dec (first pos)) (second pos)] [t o]}
+      [:b :u] {[(first pos) (dec (second pos))] [t o]}
+      [:b :d] {[(first pos) (inc (second pos))] [t o]}
       )
 
-    {pos res}
+    {pos [t o]}
     )
   )
 
-(rf/reg-event-fx
+(rf/reg-event-db
  ::global
- (fn [{db :db} _]
+ (fn [db _]
    (let [gmap (:buildings db)]
-     {:db (update db :res
-                  (fn [ress]
-                    (reduce (fn [acc r] (merge acc (process-res r gmap))) {} ress)
-                    ))})))
+       (update db :res
+               (fn [ress]
+                 (reduce (fn [acc r] (merge acc (process-res r gmap))) {} ress)
+                 )))))
 
-(rf/reg-event-fx
- ::tick
- (fn [{db :db} _]
-   (prn "tick")
+(def fps 50)
+(def d (/ 40 fps))
+
+(defn move-res [[pos [t o dx dy]] gmap]
+  (if-let [infra (get gmap pos)]
+    (condp = infra
+      [:b :r] {pos [t o (+ dx d) dy]}
+      [:b :l] {pos [t o (- dx d) dy]}
+      [:b :u] {pos [t o dx (- dy d)]}
+      [:b :d] {pos [t o dx (+ dy d)]})
+    {pos [t o]}
+    )
+  )
+
+
+(rf/reg-event-db
+ ::animation
+ (fn [db _]
+   (let [gmap (:buildings db)]
+     (update db :res
+             (fn [ress]
+               (reduce (fn [acc r] (merge acc (move-res r gmap))) {} ress)
+               )))
    ))
 
 (rf/reg-fx
@@ -75,10 +94,10 @@
                      :id        :global
                      :frequency 1000
                      :event     [::global]}]
-         #_[:interval {:action    :start
+         [:interval {:action    :start
                      :id        :tick
-                     :frequency 1000
-                     :event     [::tick]}]]
+                     :frequency (/ 1000 fps)
+                     :event     [::animation]}]]
 
     :db (merge db {:res    resources
                    :player {:position {:x 0 :y 0}}})}))
