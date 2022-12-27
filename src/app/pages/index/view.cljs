@@ -16,7 +16,7 @@
    [:input {:type "text" :on-change #(rf/dispatch [::model/change-name (.. % -target -value)])}]
    ])
 
-(defn view [{{pos :position} :player gmap :map res :res belt :belt :as page}]
+(defn view [{{pos :position} :player buildings :buildings res :res belt :belt :as page}]
   [:div#screen
    [menu]
    [:span#info (str pos)]
@@ -38,7 +38,7 @@
         [:div.belt {:key (hash (str x y type))
                     :class (str "belt " (get belt-dir opts))
                     :style {:grid-column x :grid-row    y}}])
-      gmap)]
+      buildings)]
 
 
 

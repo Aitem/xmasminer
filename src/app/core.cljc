@@ -43,38 +43,6 @@
        (do (js/clearInterval (get @live-intervals id))
            (swap! live-intervals dissoc id))))))
 
-(def gmap
-  {
-   [15 4] [:b :r]
-   [16 4] [:b :r]
-   [17 4] [:b :r]
-   [18 4] [:b :r]
-   [19 4] [:b :r]
-   [20 4] [:b :r]
-
-   [21 5] [:b :d]
-   [21 6] [:b :d]
-   [21 7] [:b :d]
-   [21 8] [:b :d]
-   [21 9] [:b :d]
-   [21 10] [:b :d]
-
-   [15 11] [:b :l]
-   [16 11] [:b :l]
-   [17 11] [:b :l]
-   [18 11] [:b :l]
-   [19 11] [:b :l]
-   [20 11] [:b :l]
-
-   [14 5] [:b :u]
-   [14 6] [:b :u]
-   [14 7] [:b :u]
-   [14 8] [:b :u]
-   [14 9] [:b :u]
-   [14 10] [:b :u]
-
-   }
-  )
 
 (rf/reg-event-fx
  ::init
@@ -90,8 +58,7 @@
                      :frequency 1000
                      :event     [::tick]}]]
 
-    :db (merge db {:map    gmap
-                   :res    {:#c_1    [15 4 :h]}
+    :db (merge db {:res    {:#c_1    [15 4 :h]}
                    :player {:position {:x 10 :y 10}}})}))
 
 (defn ^:dev/after-load init []
