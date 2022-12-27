@@ -2,20 +2,35 @@
   (:require [re-frame.core :as rf]))
 
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::move-d
- (fn [db _]
-   (prn "here D")
-   (update-in db [:player :position :x] inc)))
+ (fn [{db :db} _]
+   (let [new-db (update-in db [:player :position :x] inc)]
+     {:db new-db
+      :app.ws/send {:event "move-x"
+                    :data  (get-in new-db [:player :position :x])}})))
 
-(rf/reg-event-db
+
+(rf/reg-event-fx
  ::move-a
- (fn [db _] (update-in db [:player :position :x] dec)))
+ (fn [{db :db} _]
+   (let [new-db (update-in db [:player :position :x] dec)]
+     {:db new-db
+      :app.ws/send {:event "move-x"
+                    :data  (get-in new-db [:player :position :x])}})))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::move-w
- (fn [db _] (update-in db [:player :position :y] dec)))
+ (fn [{db :db} _]
+   (let [new-db (update-in db [:player :position :y] dec)]
+     {:db new-db
+      :app.ws/send {:event "move-y"
+                    :data  (get-in new-db [:player :position :y])}})))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::move-s
- (fn [db _] (update-in db [:player :position :y] inc)))
+ (fn [{db :db} _]
+   (let [new-db (update-in db [:player :position :y] inc)]
+     {:db new-db
+      :app.ws/send {:event "move-y"
+                    :data  (get-in new-db [:player :position :y])}})))

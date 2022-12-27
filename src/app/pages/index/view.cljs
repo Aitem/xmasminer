@@ -10,16 +10,29 @@
                :l "belt-l"
                :ur "belt-ur"
                })
+(defn menu
+  []
+  [:div {:style {:padding-top "20px"}}
+   [:label "Name "]
+   [:input {:type "text" :on-change #(rf/dispatch [::model/change-name (.. % -target -value)])}]
+   ])
 
 (pages/reg-subs-page
  model/index-page
  (fn [{{pos :position} :player belt :belt :as page} _]
    [:div#screen
+    [menu]
     [:span#info (str pos)]
     [:div#map
-
-      [:div#player {:style {:grid-column (:x pos)
-                            :grid-row    (:y pos)}}]
+     (for [p (:players page)]
+       [:div#player {:style {:background (:color p)
+                             :grid-column (-> p :position :x)
+                             :grid-row    (-> p :position :y)}}
+        [:div {:style {:color "black"
+                       :position "absolute"
+                       :text-align "center"
+                       :margin-top "-20px"}}
+         (:name p)]])
 
      [:<>
       (map

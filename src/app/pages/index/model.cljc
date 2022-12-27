@@ -56,4 +56,9 @@
 (rf/reg-sub
  index-page
  (fn [db _]
-   (select-keys db [:player :belt])))
+   (select-keys db [:player :players])))
+
+(rf/reg-event-fx
+ ::change-name
+ (fn [_ [_ value]]
+   {:app.ws/send {:event "change-name" :data value}}))

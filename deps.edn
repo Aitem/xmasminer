@@ -12,7 +12,8 @@
          me.flowthing/re-frame-utils   {:mvn/version "0.1.1"}
          fipp                          {:mvn/version "0.6.10"}
          cljstache/cljstache           {:mvn/version "2.0.6"}
-         route-map/route-map           {:mvn/version "0.0.7-RC1"}}
+         route-map/route-map           {:mvn/version "0.0.7-RC1"}
+         http-kit/http-kit             {:mvn/version "2.3.0"}}
 
  :npm-deps {:react "16.13.0"
             :react-dom "16.13.0"}
