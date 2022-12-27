@@ -16,46 +16,33 @@
    [:input {:type "text" :on-change #(rf/dispatch [::model/change-name (.. % -target -value)])}]
    ])
 
-(pages/reg-subs-page
- model/index-page
- (fn [{{pos :position} :player res :res belt :belt :as page} _]
-   [:div#screen
-    [menu]
-    [:span#info (str pos)]
-    [:div#map
-     (for [p (:players page)]
-       [:div#player {:style {:background (:color p)
-                             :grid-column (-> p :position :x)
-                             :grid-row    (-> p :position :y)}}
-        [:div {:style {:color "black"
-                       :position "absolute"
-                       :text-align "center"
-                       :margin-top "-20px"}}
-         (:name p)]])
+(defn view [{{pos :position} :player gmap :map res :res belt :belt :as page}]
+  [:div#screen
+   [menu]
+   [:span#info (str pos)]
+   [:div#map
+    (for [p (:players page)]
+      [:div#player {:key (hash p)
+                    :style {:background (:color p)
+                            :grid-column (-> p :position :x)
+                            :grid-row    (-> p :position :y)}}
+       [:div {:style {:color "black"
+                      :position "absolute"
+                      :text-align "center"
+                      :margin-top "-20px"}}
+        (:name p)]])
 
-     [:<>
-      (map
-       (fn [[id [x1 x2 y1 y2 d]]]
-         [:div.belt {:id id
-                     :key id
-                     :class (str "belt " (get belt-dir d))
-                     :style {:grid-column (str x1 " / " x2)
-                             :grid-row    (str y1 " / " y2)}}])
-
-       belt)]
-
-     [:<>
-      (map
-       (fn [[id [x y c]]]
-         [:div.res.char {:key id
-                         :class "char-h"
-                         :style {:grid-column (str x " / " (+ 2 x))
-                                 :grid-row    y}}])
-
-       res)]
+    [:<>
+     (map
+      (fn [[[x y] [type opts]]]
+        [:div.belt {:key (hash (str x y type))
+                    :class (str "belt " (get belt-dir opts))
+                    :style {:grid-column x :grid-row    y}}])
+      gmap)]
 
 
-     ]
+
     ]
+   ]
 
-   ))
+  )

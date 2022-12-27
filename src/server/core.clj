@@ -8,7 +8,7 @@
 (def tick-status
   (atom true))
 
-(future-cancel tick)
+#_(future-cancel tick)
 (def tick
   (future
     (while @tick-status

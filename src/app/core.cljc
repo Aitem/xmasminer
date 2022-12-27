@@ -3,6 +3,8 @@
             [re-frame.core :as rf]
             [reagent.core :as r]
             [app.pages.core :as pages]
+            [app.pages.index.model]
+            [app.pages.index.view]
             [app.routes :refer [routes]]
             [re-pressed.core :as rp]
             [app.layout]
@@ -12,18 +14,13 @@
             [app.dispatch :as dispatch]
             [zframes.srv :as srv]
             [app.ws :as ws]
-            #?(:cljs [zframes.xhr :as xhr])
-            #?(:cljs [app.init])))
+            #?(:cljs [app.init])
+            #?(:cljs [zframes.xhr :as xhr])))
 
-(def response (r/atom nil))
-
-(defn handler [req]
-  (reset! response (dispatch/handler req)))
-
-(def srv  (srv/run handler))
-
-(defn root [] @response)
-
+(defn root []
+  (let [m (rf/subscribe [app.pages.index.model/index-page])]
+    (fn []
+      (app.pages.index.view/view @m))))
 
 (rf/reg-event-fx
  ::global
@@ -46,26 +43,57 @@
        (do (js/clearInterval (get @live-intervals id))
            (swap! live-intervals dissoc id))))))
 
+(def gmap
+  {
+   [15 4] [:b :r]
+   [16 4] [:b :r]
+   [17 4] [:b :r]
+   [18 4] [:b :r]
+   [19 4] [:b :r]
+   [20 4] [:b :r]
 
+   [21 5] [:b :d]
+   [21 6] [:b :d]
+   [21 7] [:b :d]
+   [21 8] [:b :d]
+   [21 9] [:b :d]
+   [21 10] [:b :d]
+
+   [15 11] [:b :l]
+   [16 11] [:b :l]
+   [17 11] [:b :l]
+   [18 11] [:b :l]
+   [19 11] [:b :l]
+   [20 11] [:b :l]
+
+   [14 5] [:b :u]
+   [14 6] [:b :u]
+   [14 7] [:b :u]
+   [14 8] [:b :u]
+   [14 9] [:b :u]
+   [14 10] [:b :u]
+
+   }
+  )
 
 (rf/reg-event-fx
  ::init
  (fn [{db :db} _]
+
+   ()
    {:fx [[:interval {:action    :start
                      :id        :global
                      :frequency 1000
                      :event     [::global]}]
-         [:interval {:action    :start
+         #_[:interval {:action    :start
                      :id        :tick
                      :frequency 1000
                      :event     [::tick]}]]
 
-    :db (merge db {:player {:position {:x 10 :y 10}}})}))
+    :db (merge db {:map    gmap
+                   :res    {:#c_1    [15 4 :h]}
+                   :player {:position {:x 10 :y 10}}})}))
 
 (defn ^:dev/after-load init []
-  (srv)
   (rf/dispatch [::init])
-  ;;(rf/dispatch-sync [::xhr/init {:base-url "https://healthmesamurai.edge.aidbox.app"}])
-
   (rdom/render [root] (.getElementById js/document "root")))
-

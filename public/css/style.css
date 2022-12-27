@@ -33,22 +33,22 @@
 
 
 .belt-u {
-    animation: belt-up 2s linear infinite ;
+    animation: belt-up 1s linear infinite ;
     background-image: url("/img/belt-u.png");
 }
 
 .belt-r {
-    animation: belt-right 2s linear infinite ;
+    animation: belt-right 1s linear infinite ;
     background-image: url("/img/belt-r.png");
 }
 
 .belt-d {
-    animation: belt-down 2s linear infinite ;
+    animation: belt-down 1s linear infinite ;
     background-image: url("/img/belt-d.png");
 }
 
 .belt-l {
-    animation: belt-left 2s linear infinite ;
+    animation: belt-left 1s linear infinite ;
     background-image: url("/img/belt-l.png");
 }
 
