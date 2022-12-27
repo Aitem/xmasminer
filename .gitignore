@@ -1,0 +1,12 @@
+.package.json
+database-data
+.DS_Store
+.nrepl-port
+jars
+.cpcache
+package-lock.json
+node_modules
+public/js/cljs-runtime
+.shadow-cljs
+public/js/main.js
+public/js/manifest.edn

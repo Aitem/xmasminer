@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  postgres:
+    container_name: libox
+    image: postgres
+    restart: always
+    environment:
+    - DATABASE_HOST=localhost
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+    # - POSTGRES_BD=root
+
+    ports:
+    - "5432:5432"
+    volumes:
+    - ./database-data:/var/lib/postgresql/data/
