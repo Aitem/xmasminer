@@ -24,10 +24,31 @@
 (defn root [] @response)
 
 
-(rf/reg-event-db
+(rf/reg-fx
+ :interval
+ (let [live-intervals (atom {})]
+   (fn [{:keys [action id frequency event]}]
+     (if (= action :start)
+       (swap! live-intervals assoc id (js/setInterval #(rf/dispatch event) frequency))
+       (do (js/clearInterval (get @live-intervals id))
+           (swap! live-intervals dissoc id))))))
+
+
+(rf/reg-event-fx
+ ::tick
+ (fn [{db :db} _]
+   (prn "Hello")
+   ))
+
+(rf/reg-event-fx
  ::init
- (fn [db _]
-   (merge db {:player {:position {:x 10 :y 10}}})))
+ (fn [{db :db} _]
+   {:interval {:action :start
+               :id :tick
+               :frequency 1000
+               :event [::tick]}
+
+    :db (merge db {:player {:position {:x 10 :y 10}}})}))
 
 (defn ^:dev/after-load init []
   (srv)

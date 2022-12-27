@@ -37,11 +37,11 @@
 (rf/reg-event-fx
  index-page
  (fn [{db :db} [pid phase params]]
-   {:db (merge db {:belt   {:#b_17 [15 20 4  4   :r]
-                            :#b_17tr [14 14 4 4  :ur]
-                            :#b_18 [20 20 5  10  :d]
-                            :#b_19 [15 20 10 10  :l]
-                            :#b_20 [14 14 5  10  :u]
+   {:db (merge db {:belt   {:#b_17   [15 20 4  4   :r]
+                            :#b_18   [20 20 5  10  :d]
+                            :#b_19   [15 20 10 10  :l]
+                            :#b_20   [14 14 5  10  :u]
+                            :#b_17tr [14 14 4  4   :ur]
                             }
                    :player {:position {:x 5 :y 10}}})}))
 

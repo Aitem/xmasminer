@@ -25,6 +25,7 @@
       (map
        (fn [[id [x1 x2 y1 y2 d]]]
          [:div.belt {:id id
+                     :key id
                      :class (str "belt " (get belt-dir d))
                      :style {:grid-column (str x1 " / " x2)
                              :grid-row    (str y1 " / " y2)}}])
