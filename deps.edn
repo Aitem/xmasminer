@@ -6,6 +6,8 @@
          nrepl/nrepl                   {:mvn/version "0.7.0"}
          garden/garden                 {:mvn/version "1.3.5"}
          re-pressed/re-pressed         {:mvn/version "0.3.2"}
+         quil/quil                     {:mvn/version "4.0.0-SNAPSHOT-1"}
+         cljsjs/p5                     {:mvn/version "1.4.0-0"}
          ;;cljsjs/react-beautiful-dnd    {:mvn/version "12.2.0-2"}
          ;;re-dnd/re-dnd                 {:mvn/version "0.1.19"}
          com.taoensso/timbre           {:mvn/version "4.10.0"}
