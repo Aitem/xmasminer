@@ -36,7 +36,8 @@
 
 (rf/reg-event-fx
  index-page
- (fn [{db :db} [pid phase params]]))
+ (fn [{db :db} [pid phase params]]
+   {:db (merge db {:player {:position {:x 5 :y 10}}})}))
 
 (rf/reg-event-fx
  ::start-game
@@ -125,4 +126,4 @@
 (rf/reg-sub
  index-page
  (fn [db _]
-   {}))
+   (select-keys db [:player])))

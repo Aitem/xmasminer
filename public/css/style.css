@@ -1,14 +1,72 @@
-body, #root
-{
-    background: #222;
-    padding-top:20px;
-    padding-bottom:20px;
-}
-#app {
-    display: flex;
+#map {
+    display: grid;
+    background-color: #cdd0d4;
+    background-image: url("/img/tale.png");
+    background-size: 40px;
+    grid: repeat(100, 40px) / repeat(100, 40px);
+    justify-items: center;
     align-items: center;
-    justify-content: center;
 }
+
+.belt {
+    width: calc(100% - 10px);;
+    height: calc(100% - 10px);;
+    display: block;
+    /* background-color: #99e699; */
+    border: 1px solid gray;
+    background-image: url("/img/belt.png");
+    background-position: -4px;
+    animation: animatedBackground 2s linear infinite ;
+
+}
+
+
+
+@keyframes animatedBackground {
+  from {
+    background-position: -4px 40px;
+  }
+  to {
+    background-position: -4px 0;
+  }
+}
+
+.slide-left {
+	-webkit-animation: slide-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) infinite both;
+	        animation: slide-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) infinite both;
+}
+
+@-webkit-keyframes slide-left {
+  0% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+  100% {
+    -webkit-transform: translateX(-40px);
+            transform: translateX(-40px);
+  }
+}
+@keyframes slide-left {
+  0% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+  100% {
+    -webkit-transform: translateX(-40px);
+            transform: translateX(-40px);
+  }
+}
+
+#player {
+    width: 35px;
+    height: 35px;
+    display: block;
+    background-color: red;
+    z-index: 1000;
+    /* grid-column: 5; */
+    /* grid-row: 5; */
+}
+
 .pt-icn {
     width: 22px;
     margin-right: 10px;
@@ -539,4 +597,12 @@ body, #root
 .hoverable:hover {
     /* box-shadow: 4px 4px 4px 4px rgba(210, 125, 44, 1); */
     box-shadow: 0px 0px 25px 14px rgba(249, 224, 31, 0.81);
+}
+
+#info {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+
 }
