@@ -19,6 +19,7 @@
 (re-frame.core/reg-fx
  ::send
  (fn [data]
+   (prn "SEND:" data)
    (.send ws (str data))))
 
 (set! (.. ws -onmessage)

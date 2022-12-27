@@ -50,3 +50,26 @@
  ::change-name
  (fn [_ [_ value]]
    {:app.ws/send {:event "change-name" :data value}}))
+
+(rf/reg-event-db
+ ::select-buildings-menu-item
+ (fn [db [_ item]]
+   (assoc db :buildings-menu-item item)))
+
+(rf/reg-event-fx
+ ::create-seleted-building
+ (fn [{db :db} [_ x y]]
+   {:app.ws/send {:event "create-building"
+                  :data {:x x :y y
+                         :id (get-in db [:buildings-menu-item :id])
+                         :dir (get-in db [:buildings-menu-item :dir])}}}))
+
+(rf/reg-event-db
+ ::seleted-building-rotate
+ (fn [db [_]]
+   (update-in db [:buildings-menu-item :dir]
+           (fn [dir]
+             (get {:u :r
+                   :r :d
+                   :d :l
+                   :l :u} dir)))))

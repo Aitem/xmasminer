@@ -66,6 +66,10 @@
        (fn [string]
          (let [data (read-string string)]
            (cond
+             (= "create-building" (:event data))
+             (swap! buildings assoc [(get-in data [:data :x]) (get-in data [:data :y])]
+                    [(get-in data [:data :id])
+                     (get-in data [:data :dir])])
              (= "change-name" (:event data))
              (swap! players assoc-in [channel :name] (:data data))
              (= "move-y" (:event data))

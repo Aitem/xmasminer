@@ -651,3 +651,27 @@
     left: 0;
 
 }
+
+#buildings-menu {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#buildings-menu-items {
+    padding: 0px 20px 0px 20px;
+    background-color: rgba(0,0,0,0.02);
+    display: flex;
+}
+
+#buildings-menu-items > .item {
+    padding: 20px;
+    margin-right: 10px;
+}
+
+#buildings-menu-items > .item:hover {
+    background-color: rgba(0,0,0,0.09);
+    cursor: pointer;
+}

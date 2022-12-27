@@ -16,11 +16,39 @@
    [:input {:type "text" :on-change #(rf/dispatch [::model/change-name (.. % -target -value)])}]
    ])
 
+(defn buildings-menu
+  []
+  [:div#buildings-menu
+   [:div#buildings-menu-items
+    [:div.item {:on-click #(rf/dispatch [::model/select-buildings-menu-item {:id :b :dir :u}])} "B"]
+    [:div.item 1]
+    [:div.item 1]
+    [:div.item 1]]
+   ])
+
+(defn init-map
+  [object]
+  (when object
+    (js/document.addEventListener
+     "keydown"
+     (fn [event]
+       (case (.-key event)
+         "r" (rf/dispatch-sync [::model/seleted-building-rotate])
+         nil)))
+    (.addEventListener
+     (js/document.getElementById "map")
+     "click"
+     (fn [event]
+       (rf/dispatch [::model/create-seleted-building
+                     (inc (int (/ (.-offsetX event) 40)))
+                     (inc (int (/ (.-offsetY event) 40)))])))))
+
 (defn view [{{pos :position} :player buildings :buildings res :res belt :belt :as page}]
   [:div#screen
    [menu]
+   [buildings-menu]
    [:span#info (str pos)]
-   [:div#map
+   [:div#map {:ref init-map}
     (for [p (:players page)]
       [:div#player {:key (hash p)
                     :style {:background (:color p)
