@@ -35,13 +35,17 @@
     [:<>
      (map
       (fn [[[x y] [type opts]]]
-        [:div.belt {:key (hash (str x y type))
-                    :class (str "belt " (get belt-dir opts))
-                    :style {:grid-column x :grid-row    y}}])
+        [:div {:key (hash (str x y type))
+               :class (str "belt " (get belt-dir opts))
+               :style {:grid-column x :grid-row    y}}])
       buildings)]
-
-
-
+    [:<>
+     (map
+      (fn [[[x y] [type opts]]]
+        [:div {:key (hash (str x y type))
+               :class (str "char char-h")
+               :style {:grid-column x :grid-row    y}}])
+      res)]
     ]
    ]
 

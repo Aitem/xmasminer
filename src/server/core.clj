@@ -12,7 +12,9 @@
          [18 4] [:b :r]
          [19 4] [:b :r]
          [20 4] [:b :r]
+         [14 4] [:b :r]
 
+         [21 4] [:b :d]
          [21 5] [:b :d]
          [21 6] [:b :d]
          [21 7] [:b :d]
@@ -26,18 +28,21 @@
          [18 11] [:b :l]
          [19 11] [:b :l]
          [20 11] [:b :l]
+         [21 11] [:b :l]
 
          [14 5] [:b :u]
          [14 6] [:b :u]
          [14 7] [:b :u]
          [14 8] [:b :u]
          [14 9] [:b :u]
-         [14 10] [:b :u]}))
+         [14 10] [:b :u]
+         [14 11] [:b :u]
+         }))
 
 (def tick-status
   (atom true))
 
-(future-cancel tick)
+;;(future-cancel tick)
 (def tick
   (future
     (while @tick-status

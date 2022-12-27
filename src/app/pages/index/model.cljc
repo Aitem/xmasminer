@@ -44,7 +44,7 @@
 (rf/reg-sub
  index-page
  (fn [db _]
-   (select-keys db [:player :players :buildings])))
+   (select-keys db [:player :players :buildings :res])))
 
 (rf/reg-event-fx
  ::change-name

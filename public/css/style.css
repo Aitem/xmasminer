@@ -14,7 +14,7 @@
     display: block;
 }
 .char {
-    width: 80px;
+    width: 40px;
     height: 40px;
     display: block;
     background-repeat: no-repeat;
@@ -22,8 +22,7 @@
 
 .char-h {
     background-image: url("/img/char-h.png");
-    animation: char-right 1s linear infinite;
-    background-position: 0 0;
+    /* animation: char-right 1s linear infinite; */
 }
 
 @keyframes char-right {

@@ -22,11 +22,27 @@
     (fn []
       (app.pages.index.view/view @m))))
 
+(defn process-res [[pos res] gmap]
+  (if-let [infra (get gmap pos)]
+    (condp = infra
+      [:b :r] {[(inc (first pos)) (second pos)] res}
+      [:b :l] {[(dec (first pos)) (second pos)] res}
+      [:b :u] {[(first pos) (dec (second pos))] res}
+      [:b :d] {[(first pos) (inc (second pos))] res}
+      )
+
+    {pos res}
+    )
+  )
+
 (rf/reg-event-fx
  ::global
  (fn [{db :db} _]
-   (prn "global")
-   {:db (update-in db [:res :#c_1 0] inc)}))
+   (let [gmap (:buildings db)]
+     {:db (update db :res
+                  (fn [ress]
+                    (reduce (fn [acc r] (merge acc (process-res r gmap))) {} ress)
+                    ))})))
 
 (rf/reg-event-fx
  ::tick
@@ -44,11 +60,17 @@
            (swap! live-intervals dissoc id))))))
 
 
+(def resources
+  {
+   [15 4] [:c :h]
+   [21 5] [:c :h]
+   [14 10] [:c :h]
+   [20 11] [:c :h]
+   })
+
 (rf/reg-event-fx
  ::init
  (fn [{db :db} _]
-
-   ()
    {:fx [[:interval {:action    :start
                      :id        :global
                      :frequency 1000
@@ -58,8 +80,8 @@
                      :frequency 1000
                      :event     [::tick]}]]
 
-    :db (merge db {:res    {:#c_1    [15 4 :h]}
-                   :player {:position {:x 10 :y 10}}})}))
+    :db (merge db {:res    resources
+                   :player {:position {:x 0 :y 0}}})}))
 
 (defn ^:dev/after-load init []
   (rf/dispatch [::init])
