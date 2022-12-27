@@ -1,0 +1,542 @@
+body, #root
+{
+    background: #222;
+    padding-top:20px;
+    padding-bottom:20px;
+}
+#app {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.pt-icn {
+    width: 22px;
+    margin-right: 10px;
+}
+.pt-icn.stat-icon{
+    width: 25px;
+    margin-right: 22px;
+    margin-left: 8px;
+}
+
+.pt-monitor {
+    width: 50px;
+    margin-right: 10px;
+}
+#app .pt-stats {
+    margin-top: 10px;
+}
+#app .pt {
+    width: 280px;
+}
+#app .p-8 {
+    padding: 8px;
+}
+
+#app .relative {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.pos-initial {
+    position: initial !important;
+}
+
+.no-border-td {
+    border: none;
+}
+
+.score-right-td {
+    border: none;
+    width: 60%;
+    text-align: right;
+}
+
+.score-left-td {
+    border: none;
+    width: 20%;
+    text-align: left;
+}
+
+
+.med-img {
+    width: 50px;
+    height: 50px;
+    padding-left: 7px;
+    padding-top: 7px !important;
+}
+
+.drag {
+    margin-right: 10px;
+    min-width: 200px;
+}
+.aidbox-grid {
+    /* display: grid; */
+    /* width: 800px; */
+    /* grid-template-columns: 1fr 1fr 1fr; */
+}
+
+.game-grid {
+    display: grid;
+    grid-template-columns: 1fr 375px;
+}
+
+.score p {
+    line-height: 10px !important;
+    margin: 5px;
+}
+
+.grid-grug {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.grid-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+
+
+}
+.flex {
+    display: flex;
+}
+.x4 {
+    transform: scale(4);
+}
+.x3 {
+    transform: scale(2.9);
+}
+
+.pt-koika {
+    position: relative;
+    min-height: 300px;
+    width: 280px;
+}
+.pt-koika .tumba {
+    left: 164px; top: 63px;
+}
+.pt-koika .stul {
+    left: 14px; top: 100px;
+}
+
+
+.pt-koika .wall {
+    right: 20px; top: 80px;
+}
+
+.pt-koika .koika {
+    left: 100px; top: 100px;
+}
+
+.pt-koika .patient {
+    left: 94px; top: 93px;
+    z-index: 4;
+}
+
+.pt-koika .blood {
+    left: 40px; top: 55px; z-index: 4;
+}
+
+.a { position: absolute; z-index: 2;}
+
+
+
+.grow-1 {
+    flex-grow: 1;
+}
+.tabl-ico {
+    margin-right: 10px;
+}
+.inner
+{
+    background: #444;
+    padding-left:20px;
+    padding-right:20px;
+    min-width: 740px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.top-90 {
+    margin-top: -90px;
+    margin-left: 60px;
+}
+
+.patient .patient.deceased {
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+}
+.inln {
+    display: inline-block;
+}
+
+.left-bordur {
+        height: calc(100% - 36px);
+    width: 20px;
+    background-size: 21px;
+    background-image: url(./../img/left-bordur.png);
+    position: absolute;
+    z-index: 4;
+    top: 18px;
+    left: 0;
+    background-repeat: repeat-y;
+}
+.right-bordur {
+    height: calc(100% - 36px);
+    width: 18px;
+    background-size: 18px;
+    background-image: url(./../img/right-bordur.png);
+    position: absolute;
+    z-index: 4;
+    top: 18px;
+    right: 0;
+    background-repeat: repeat-y;
+}
+
+.bottom-right-bordur {
+    width: 18px;
+    background-size: 18px;
+    background-image: url(./../img/bottom-right-bordur.png);
+    position: absolute;
+    z-index: 5;
+    bottom: -6px;
+    right: 0;
+    background-repeat: no-repeat;
+    height: 29px;
+}
+
+.bottom-left-bordur {
+    width: 27px;
+    background-size: 21px;
+    background-image: url(./../img/bottom-left-bordur.png);
+    position: absolute;
+    z-index: 5;
+    bottom: -6px;
+    left: 0;
+    background-repeat: no-repeat;
+    height: 29px;
+}
+
+
+.top-bordur {
+    height: 36px;
+    background-size: 6px;
+    background-image: url(./../img/top-bordur.png);
+    position: absolute;
+    z-index: 3;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-repeat: repeat-x;
+
+}
+
+.bottom-bordur {
+    height: 23px;
+    background-size: 6px;
+    background-image: url(./../img/bottom-bordur.png);
+    position: absolute;
+    z-index: 3;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    background-repeat: repeat-x;
+
+}
+
+
+.top-right-bordur {
+    width: 18px;
+    height: 20px;
+    background-size: 18px;
+    background-image: url(./../img/top-right-bordur.png);
+    background-repeat: no-repeat;
+    position: absolute;
+    z-index: 4;
+    top: 0;
+    right: 0;
+}
+
+.top-left-bordur {
+    width: 20px;
+    height: 20px;
+    background-size: 21px;
+    background-image: url(./../img/top-left-bordur.png);
+    background-repeat: no-repeat;
+
+    position: absolute;
+    z-index: 4;
+    top: 0;
+    left: 0;
+}
+
+.top-wall {
+    background-image: url(./../img/wall-wall.png);
+    width: 100%;
+    height: 120px;
+    background-size: 19px;
+    position: absolute;
+    top: 18px;
+    left: 0;
+    z-index: 1;
+}
+.kik {
+    min-width: 50p;
+    position: absolute;
+    bottom: 20px;
+    width: calc(100% - 40px);
+    right: -10px;
+}
+
+.top-door {
+
+    background-image: url(./../img/door.png);
+    width: 143px;
+    height: 154px;
+    background-size: 150px;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 23px;
+    left: 320px;
+    z-index: 1;
+
+}
+
+.left-racovina {
+    background-image: url(./../img/racovina.png);
+    width: 143px;
+    height: 500px;
+    background-size: 84px;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 6%;
+    left: 10px;
+    z-index: 1;
+}
+.lab     {top: 107px; left: 590px; z-index: 1;}
+.ray     {top: 107px; right: 100px; z-index: 1;}
+.divan   {bottom: 167px; left: 44px; z-index: 1;}
+.prep-stool  {top: 140px; left: 44px; z-index: 1;}
+.aaidbox {top: 65px; left: 270px; z-index: 1;}
+.clock   {top: 48px; left: 200px; z-index: 1;}
+.rupor   {top: 48px; left: 100px; z-index: 1;}
+.stol1   {top: 280px; right: 38px; z-index: 1;}
+.bb1     {top: 368px; right: 291px; z-index: 1;}
+.logo {
+    background-image: url(./../img/logo.png);
+    width: 308px;
+    height: 508px;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 28px;
+    left: 480px;
+    z-index: 1;
+}
+
+
+.wall-blood {
+    background-image: url(./../img/wall-blood.png);
+    width: 201px; height: 508px;
+    background-size: 130px;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 58px;
+    left: 25%;
+    z-index: 1;
+    opacity: 0.9;
+}
+
+
+
+
+.position-rel {
+    position: relative !important;
+}
+
+.tabs {
+     position: absolute;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+    left: 0;
+    background-color: green;
+}
+
+#app .game
+{
+    background-image: url(./../img/floor_tile2.png);
+    background-size: 90px;
+    padding-left:20px;
+    padding-right:20px;
+    min-width: 740px;
+    max-width: 97%;
+    margin: 0 auto;
+    /* height: calc(100vh - 430px); */
+    height: 500px;
+}
+
+.tab {
+    display: flex;
+    justify-content: space-around;
+}
+.tab .pt-icn {
+    width: 30px;
+    padding: 5px
+}
+
+.tab .pt-icn:hover {
+    background-color: lightgray;
+}
+
+.tab .pt-icn.active {
+    background-color: #4e4a4e;
+    border: 1px solid #442434;
+}
+
+.img-img-img {
+    border-radius: 3px;
+    border: solid 0.08em transparent;}
+
+.img-img-img:hover {
+    border-radius: .5em;
+    border: solid 0.08em transparent;}
+
+.fsgrid {
+    display: grid;
+    height: calc(100% - 40px);
+    grid-template-columns: 1fr 375px;
+    grid-template-rows: 1fr 70px;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+        "patients aidbox ."
+        "progress progress ."
+        ". . .";
+}
+
+#g-patients { grid-area: patients;}
+
+#g-aidbox { grid-area: aidbox; }
+
+#g-progress { grid-area: progress; }
+
+
+
+
+.draggable, dropped-element {
+    cursor: url(./../dist/img/cursor/grab-close.png) 10 0,auto!important;
+    position: relative;
+}
+
+.draggable .drag-mask,
+.dropped-element .drag-mask {
+   position: absolute;
+   top: 0px;
+   left: 0px;
+   width: 0px;
+   height: 0px;
+   background-color: rgba(0,0,0,0.2);
+   z-index: 9999;
+}
+
+.drop-zone.highlight {
+   border: 1px solid #000;
+}
+
+.drop-marker {
+   /* width: 100%; */
+   /* height: 4px; */
+   /* margin-bottom: 5px; */
+   /* background-color: black; */
+}
+
+.drag-box {
+  position: fixed;
+  background-color: rgba(0,0,0,0.2);
+  z-index: 999;
+  height: 0px;
+  width: 0px;
+}
+.mr-3 {
+    margin-right: 20px;
+}
+.around {
+     justify-content: space-around;
+}
+
+
+.my-drop-marker {
+    /* border: 10px solid blue; */
+    box-shadow: 0px 0px 25px 14px rgba(249, 224, 31, 0.81);
+    width: 280px;
+    height: 230px;
+    border-radius: 10px;
+    position: absolute;
+    z-index: 100;
+}
+.ac {
+    align-items: center;
+}
+
+.ib {
+    display: inline-block;
+    width: 300px;
+    margin-bottom: 10px;
+}
+.apps {
+    display: flex ;
+    justify-content: space-around;
+}
+
+.dsbl {
+    filter: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='grayscale'><feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/></filter></svg>#grayscale");
+}
+
+.stat-widget-itm {
+    /* width: 10px; */
+    /* height: 30px; */
+    /* background-color: gray; */
+    /* border: 1px solid gray; */
+
+    width: 20px;
+    height: 15px;
+    background-color: #4e4a4e;
+    border: 1px solid gray;
+    margin-right: 5px;
+    border-radius: 2px;
+    margin-top: 2px;
+}
+
+
+.stat-row .red {
+    background-color: red;
+    color: red;
+}
+
+.stat-row .yellow {
+    background-color: yellow;
+    color: yellow;
+}
+.stat-row .blue {
+    background-color: #1195e8;
+    color: yellow;
+}
+
+
+.stat-row .green {
+    background-color: lightgreen;
+    color: lightgreen;
+}
+
+.aidbox {
+    overflow: scroll;
+    overflow-x: hidden;
+    margin-bottom: 10px;
+    /* height: calc(100vh - 315px); */
+    height: 597px;
+}
+
+.hoverable:hover {
+    /* box-shadow: 4px 4px 4px 4px rgba(210, 125, 44, 1); */
+    box-shadow: 0px 0px 25px 14px rgba(249, 224, 31, 0.81);
+}
