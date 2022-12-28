@@ -67,8 +67,8 @@
                      :event     [::animation]}]]
     :db (merge db {:viewport {:x -5
                               :y -5
-                              :h 20
-                              :w 45}
+                              :h (int (/ js/document.documentElement.clientHeight 40))
+                              :w (int (/ js/document.documentElement.clientWidth 40))}
                    :player {:position {:x 0 :y 0}}})}))
 
 (defn ^:dev/after-load init []

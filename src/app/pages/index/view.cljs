@@ -5,7 +5,7 @@
 
 (defn menu
   []
-  [:div {:style {:padding-top "20px"}}
+  [:div {:style {:padding-top "20px" :position "absolute"}}
    [:label "Name "]
    [:input {:type "text" :on-change #(rf/dispatch [::model/change-name (.. % -target -value)])}]
    ])
@@ -127,7 +127,8 @@
      [menu]
      [buildings-menu]
      [:span#info (str pos)]
-     [:div#map {:ref init-map}
+     [:div#map {:ref init-map :style {:grid (str "repeat(" (get-in page [:viewport :h])
+                                                 ", 40px) / repeat("(get-in page [:viewport :w]) ", 40px)")}}
       (for [p (:players page)
             :let [vp-px (- (get-in p [:position :x]) vp-x)
                   vp-py (- (get-in p [:position :y]) vp-y)]
