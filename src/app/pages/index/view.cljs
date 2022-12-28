@@ -27,10 +27,7 @@
      "contextmenu"
      (fn [event]
        (.preventDefault event)
-       (let [map-object (.getBoundingClientRect (js/document.getElementById "map"))]
-         (rf/dispatch [::model/remove-building
-                       (inc (int (/ (- (.-pageX event) (.-x map-object)) 40))) 
-                       (inc (int (/ (- (.-pageY event) (.-y map-object)) 40)))]))))
+       (rf/dispatch [::model/remove-building])))
     (js/document.addEventListener
      "keydown"
      (fn [event]
@@ -40,23 +37,17 @@
     (js/document.addEventListener
      "mousemove"
      (fn [event]
-       (let [map-object (.getBoundingClientRect (js/document.getElementById "map"))
-             item (js/document.getElementById "selected-menu-item")]
+       (let [map-object (.getBoundingClientRect (js/document.getElementById "map"))]
          (rf/dispatch [::model/map-cursor
                        (inc (int (/ (- (.-pageX event) (.-x map-object)) 40)))
                        (inc (int (/ (- (.-pageY event) (.-y map-object)) 40)))])
          (when (= 1 (.-buttons event))
-           (rf/dispatch [::model/create-seleted-building
-                         (inc (int (/ (- (.-pageX event) (.-x map-object)) 40))) 
-                         (inc (int (/ (- (.-pageY event) (.-y map-object)) 40)))])))))
+           (rf/dispatch [::model/create-seleted-building])))))
     (.addEventListener
      (js/document.getElementById "map")
      "click"
      (fn [event]
-       (let [map-object (.getBoundingClientRect (js/document.getElementById "map"))]
-         (rf/dispatch [::model/create-seleted-building
-                       (inc (int (/ (- (.-pageX event) (.-x map-object)) 40))) 
-                       (inc (int (/ (- (.-pageY event) (.-y map-object)) 40)))]))))))
+       (rf/dispatch [::model/create-seleted-building])))))
 
 
 (defn tail-type [t]

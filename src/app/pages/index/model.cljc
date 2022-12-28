@@ -59,17 +59,18 @@
 
 (rf/reg-event-fx
  ::create-seleted-building
- (fn [{db :db} [_ x y]]
+ (fn [{db :db} _]
    {:app.ws/send {:event "create-building"
-                  :data {:x x :y y
+                  :data {:x (get-in db [:cursor :x]) :y (get-in db [:cursor :y])
                          :id (get-in db [:buildings-menu-item :id])
                          :dir (get-in db [:buildings-menu-item :dir])}}}))
 
 
 (rf/reg-event-fx
  ::remove-building
- (fn [db [_ x y]]
-   {:app.ws/send {:event "remove-building" :data {:x x :y y}}}))
+ (fn [{db :db} _]
+   {:app.ws/send {:event "remove-building" :data {:x (get-in db [:cursor :x])
+                                                  :y (get-in db [:cursor :y])}}}))
 
 (rf/reg-sub
  ::selected-menu-item
