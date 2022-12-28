@@ -58,6 +58,7 @@
      :b "belt"
      :m "miner"
      :h "hub"
+     :q "quest"
 
      t))
 
@@ -117,7 +118,7 @@
       ;; buildings
       [:<>
        (for [building buildings
-             :let [[[x y] [type opts]] building
+             :let [[[x y] [type opts _ _ state]] building
                    vp-bx (- x vp-x)
                    vp-by (- y vp-y)]
              :when (and (>= vp-bx 0)
@@ -126,7 +127,9 @@
                         (< vp-by vp-h))]
          [:div {:key (str x y type opts)
                 :class (building-tail [type opts])
-                :style {:grid-column (inc vp-bx) :grid-row (inc vp-by)}}])]
+                :style {:grid-column (inc vp-bx) :grid-row (inc vp-by)}}
+          (when state
+            (:count state))])]
 
       ;; resources
       [:<>

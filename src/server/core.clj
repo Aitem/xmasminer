@@ -26,7 +26,10 @@
 
 (def buildings
   (atom {[4 4]  [:m :r :c :h]
-         [25 4] [:h :r :c :h]
+         [25 4]  [:h :r :c :h {:limit 10 :count 0}]
+         [15 15] [:h :r :c :h {:limit 10 :count 0}]
+
+         [10 10] [:q :u {:limit 10 :count 0}]
 
          [15 4] [:b :r]
          [16 4] [:b :r]
@@ -60,6 +63,12 @@
          [14 10] [:b :u]
          [14 11] [:b :u]
          }))
+
+(defn broadcast-buildings-state
+  []
+  (doseq [[channel data] @players]
+    (org.httpkit.server/send! channel (str {:event "buildings" :data @buildings}))))
+
 
 (def mines
   {
@@ -103,13 +112,17 @@
 
 (defn process-res [[pos [t o]] gmap]
   (if-let [infra (get gmap pos)]
-    (condp = infra
-      [:b :r] {[(inc (first pos)) (second pos)] [t o]}
-      [:b :l] {[(dec (first pos)) (second pos)] [t o]}
-      [:b :u] {[(first pos) (dec (second pos))] [t o]}
-      [:b :d] {[(first pos) (inc (second pos))] [t o]}
-      {pos [t o]}
-      )
+    (if (= :h (first infra))
+      (do
+        (swap! buildings update pos (fn [hub] (update-in hub [4 :count] inc)))
+        nil)
+
+      (condp = infra
+        [:b :r] {[(inc (first pos)) (second pos)] [t o]}
+        [:b :l] {[(dec (first pos)) (second pos)] [t o]}
+        [:b :u] {[(first pos) (dec (second pos))] [t o]}
+        [:b :d] {[(first pos) (inc (second pos))] [t o]}
+        {pos [t o]}))
 
     {pos [t o]}
     )
@@ -128,12 +141,9 @@
       (swap! resources merge spawned))
 
     (broadcast-resources-state)
+    (broadcast-buildings-state)
     (catch Exception e
       (prn e)))
-  )
-
-(comment
-  (run-job ctx :global global-tick 1)
   )
 
 (defn broadcast-mines-state
@@ -145,11 +155,6 @@
   []
   (doseq [[channel data] @players]
     (org.httpkit.server/send! channel (str {:event "players" :data (vals @players)}))))
-
-(defn broadcast-buildings-state
-  []
-  (doseq [[channel data] @players]
-    (org.httpkit.server/send! channel (str {:event "buildings" :data @buildings}))))
 
 (defn handler
   [request]

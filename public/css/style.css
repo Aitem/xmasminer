@@ -33,6 +33,21 @@
 }
 .hub-r {
     background-image: url("/img/miner-r.png");
+    text-align: center;
+    color: green;
+    vertical-align: center;
+    justify-content: center;
+    z-index: 1000;
+    background-color: red;
+
+}
+
+.quest {
+    width: 800px;
+    height: 800px;
+
+    background-image: url("/img/main-tree.png");
+    background-size: 800px 800px;
 }
 
 .char-h {
