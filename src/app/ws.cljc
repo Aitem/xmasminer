@@ -29,12 +29,13 @@
 (re-frame.core/reg-fx
  ::send
  (fn [data]
-   (prn "SEND:" data)
+   (prn "Out: " data)
    (.send ws (str data))))
 
 (set! (.. ws -onmessage)
       (fn [a]
         (let [response (clojure.edn/read-string (.-data a))]
+          (prn "In: " (:event response))
           (case (:event response)
             "resources" (re-frame.core/dispatch [::save-resources (:data response)])
             "mines"     (re-frame.core/dispatch [::save-mines     (:data response)])

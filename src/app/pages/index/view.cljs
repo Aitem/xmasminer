@@ -45,10 +45,10 @@
          (rf/dispatch [::model/map-cursor
                        (inc (int (/ (- (.-pageX event) (.-x map-object)) 40)))
                        (inc (int (/ (- (.-pageY event) (.-y map-object)) 40)))])
-         (when item
-           (let [map-object (.getBoundingClientRect (js/document.getElementById "map"))]
-             (set! (.. item -style -left) (str (+ (.-pageX event) 20) "px"))
-             (set! (.. item -style -top)  (str (.-pageY event) "px")))))))
+         (when (= 1 (.-buttons event))
+           (rf/dispatch [::model/create-seleted-building
+                         (inc (int (/ (- (.-pageX event) (.-x map-object)) 40))) 
+                         (inc (int (/ (- (.-pageY event) (.-y map-object)) 40)))])))))
     (.addEventListener
      (js/document.getElementById "map")
      "click"
@@ -92,9 +92,7 @@
                (:buildings-menu-item page))
       [:div {:class (conj [(:class (:buildings-menu-item page))]
                           (building-tail [(:id (:buildings-menu-item page))
-                                          ;;opts
-                                          (:dir (:buildings-menu-item page))])
-                          #_(get belt-dir (:dir (:buildings-menu-item page))))
+                                          (:dir (:buildings-menu-item page))]))
              :style {:opacity     0.4
                      :grid-column (-> page :cursor :x)
                      :grid-row  (-> page :cursor :y)}}])

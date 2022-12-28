@@ -38,5 +38,4 @@
 (rf/reg-event-db
  ::clear
  (fn [db _]
-   (dissoc db :buildings-menu-item)
-   ))
+   (dissoc db :buildings-menu-item)))
