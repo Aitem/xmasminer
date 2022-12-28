@@ -34,12 +34,10 @@
      "contextmenu"
      (fn [event]
        (.preventDefault event)
-       (let [belt? (clojure.string/includes? (.. event -target -className) "belt")]
-         (when belt?
-           (rf/dispatch [::model/remove-building
-                         (int (.. event -target -style -gridColumnStart)) 
-                         (int (.. event -target -style -gridRowStart))])))
-       ))
+       (let [map-object (.getBoundingClientRect (js/document.getElementById "map"))]
+         (rf/dispatch [::model/remove-building
+                       (inc (int (/ (- (.-pageX event) (.-x map-object)) 40))) 
+                       (inc (int (/ (- (.-pageY event) (.-y map-object)) 40)))]))))
     (js/document.addEventListener
      "keydown"
      (fn [event]
@@ -50,9 +48,10 @@
      (js/document.getElementById "map")
      "click"
      (fn [event]
-       (rf/dispatch [::model/create-seleted-building
-                     (inc (int (/ (.-offsetX event) 40)))
-                     (inc (int (/ (.-offsetY event) 40)))])))))
+       (let [map-object (.getBoundingClientRect (js/document.getElementById "map"))]
+         (rf/dispatch [::model/create-seleted-building
+                       (inc (int (/ (- (.-pageX event) (.-x map-object)) 40))) 
+                       (inc (int (/ (- (.-pageY event) (.-y map-object)) 40)))]))))))
 
 (defn view [{{pos :position} :player buildings :buildings res :res belt :belt :as page}]
   [:div#screen
