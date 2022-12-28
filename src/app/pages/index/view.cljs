@@ -53,7 +53,7 @@
        (rf/dispatch [::model/create-seleted-building])))))
 
 
-(defn tail-type [t]
+(defn tile-type [t]
   (condp = t
      :b "belt"
      :m "miner"
@@ -62,9 +62,58 @@
 
      t))
 
-(defn building-tail [[type opts]]
-  (let [t (tail-type type)]
+(defn building-tile [[type opts]]
+  (let [t (tile-type type)]
     (str "t " t " " t "-" (last (str opts)))))
+
+(defn add-content [block content]
+  (cond-> block
+    content (conj block content)))
+
+(defn render-generic-box
+  ([box-spec content]
+   (let [box-width (:width box-spec)
+         box-height (:height box-spec)
+         vp-x-pos (:vp-x box-spec)
+         vp-y-pos (:vp-y box-spec)]
+     (-> [:div.box {:key (str "box-" vp-x-pos "-" vp-y-pos "-" box-width "-" box-height)
+                    :style {:grid-column-start (inc vp-x-pos)
+                            :grid-column-end (+ vp-x-pos box-width)
+                            :grid-row-start (inc vp-y-pos)
+                            :grid-row-end (+ vp-y-pos box-height)}}]
+         (add-content content))))
+  ([box-spec]
+   (render-generic-box box-spec nil)))
+
+
+(defn render-tile
+  ([box-spec content]
+   (render-generic-box box-spec
+                       (add-content
+                        [:div.tile {:class (:tile box-spec)}]
+                        content)))
+  ([box-spec]
+   (render-tile box-spec nil)))
+
+(defn render-colorbox
+  ([box-spec content]
+   (render-generic-box box-spec
+                       (add-content
+                        [:div.colorbox {:style {:background (:color box-spec)}}]
+                        content)))
+  ([box-spec]
+   (render-colorbox box-spec nil)))
+
+(defn render-player [player-data]
+  (render-colorbox {:width 1
+                    :height 1
+                    :vp-x (:vp-x player-data)
+                    :vp-y (:vp-y player-data)}
+                   [:div.player {:style {:color "black"
+                                         :position "absolute"
+                                         :text-align "center"
+                                         :margin-top "-20px"}}]))
+
 
 (defn view [{{pos :position} :player
              mines :mines
@@ -102,13 +151,13 @@
               item-y  (-> page :cursor :y)]
           (if (model/allow-building-create? page (:buildings-menu-item page))
             [:div {:class (conj [(:class (:buildings-menu-item page))]
-                                (building-tail [(:id (:buildings-menu-item page))
+                                (building-tile [(:id (:buildings-menu-item page))
                                                 (:dir (:buildings-menu-item page))]))
                    :style {:opacity     0.4
                            :grid-column item-x
                            :grid-row  item-y}}]
             [:div {:class (conj [(:class (:buildings-menu-item page))]
-                                (building-tail [(:id (:buildings-menu-item page))
+                                (building-tile [(:id (:buildings-menu-item page))
                                                 (:dir (:buildings-menu-item page))]))
                    :style {:opacity     0.4
                            :background "red"
@@ -126,7 +175,7 @@
                         (< vp-bx vp-w)
                         (< vp-by vp-h))]
          [:div {:key (str x y type opts)
-                :class (building-tail [type opts])
+                :class (building-tile [type opts])
                 :style {:grid-column (inc vp-bx) :grid-row (inc vp-by)}}
           (when state
             (:count state))])]
