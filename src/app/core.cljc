@@ -1,21 +1,16 @@
 (ns app.core
   (:require [reagent.dom :as rdom]
             [re-frame.core :as rf]
-            [reagent.core :as r]
             [app.pages.core :as pages]
             [app.pages.index.model]
             [app.pages.index.view]
-            [app.routes :refer [routes]]
             [re-pressed.core :as rp]
-            [app.layout]
-            [app.player :as player]
-            [app.auth]
-            [clojure.core.async :as a]
-            [app.dispatch :as dispatch]
             [zframes.srv :as srv]
-            [app.ws :as ws]
             #?(:cljs [app.init])
-            #?(:cljs [zframes.xhr :as xhr])))
+
+            ;; Side-effectful only imports
+            [app.ws]
+            [app.player]))
 
 (defn root []
   (let [m (rf/subscribe [app.pages.index.model/index-page])]
