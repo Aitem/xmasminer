@@ -683,7 +683,7 @@
     border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     padding: 0px 20px 0px 20px;
-    background-color: rgba(0,0,0,0.02);
+    background-color: rgba(0,0,0,0.20);
     display: flex;
 }
 
