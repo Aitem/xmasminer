@@ -25,7 +25,8 @@
 
 
 (def buildings
-  (atom {[4 4] [:m :r :c :h]
+  (atom {[4 4]  [:m :r :c :h]
+         [25 4] [:h :r :c :h]
 
          [15 4] [:b :r]
          [16 4] [:b :r]
@@ -107,6 +108,7 @@
       [:b :l] {[(dec (first pos)) (second pos)] [t o]}
       [:b :u] {[(first pos) (dec (second pos))] [t o]}
       [:b :d] {[(first pos) (inc (second pos))] [t o]}
+      {pos [t o]}
       )
 
     {pos [t o]}
@@ -114,17 +116,20 @@
   )
 
 (defn global-tick []
-  (let [gmap @buildings
-        miners (get-miners gmap)
-        spawned (spawn-on-miner miners)]
-    ;; move resource
-    (swap! resources
-           (fn [ress]
-             (reduce (fn [acc r] (merge acc (process-res r gmap))) {} ress)))
-    ;; spawn resource
-    (swap! resources merge spawned))
+  (try
+    (let [gmap @buildings
+          miners (get-miners gmap)
+          spawned (spawn-on-miner miners)]
+      ;; move resource
+      (swap! resources
+             (fn [ress]
+               (reduce (fn [acc r] (merge acc (process-res r gmap))) {} ress)))
+      ;; spawn resource
+      (swap! resources merge spawned))
 
-  (broadcast-resources-state)
+    (broadcast-resources-state)
+    (catch Exception e
+      (prn e)))
   )
 
 (comment

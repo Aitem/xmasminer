@@ -30,6 +30,9 @@
 .miner-r {
     background-image: url("/img/miner-r.png");
 }
+.hub-r {
+    background-image: url("/img/miner-r.png");
+}
 
 .char-h {
     background-image: url("/img/char-h.png");
@@ -38,6 +41,7 @@
 .mine-h {
     background-image: url("/img/mine-h.png");
 }
+
 
 @keyframes char-right {
     from {background-position: 0 0;}

@@ -34,7 +34,10 @@
       [:b :r] {pos [t o (+ dx d) dy]}
       [:b :l] {pos [t o (- dx d) dy]}
       [:b :u] {pos [t o dx (- dy d)]}
-      [:b :d] {pos [t o dx (+ dy d)]})
+      [:b :d] {pos [t o dx (+ dy d)]}
+
+      {pos [t o]}
+      )
     {pos [t o]}
     )
   )

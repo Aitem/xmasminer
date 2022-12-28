@@ -54,6 +54,8 @@
   (condp = t
      :b "belt"
      :m "miner"
+     :h "hub"
+
      t))
 
 (defn building-tail [[type opts]]
@@ -92,7 +94,7 @@
     [:<>
      (map
       (fn [[[x y] [type opts]]]
-        [:div {:key (hash (str x y type))
+        [:div {:key  (str x y type opts)
                :class (building-tail [type opts])
                :style {:grid-column x :grid-row y}}])
       buildings)]
@@ -101,7 +103,7 @@
     [:<>
      (map
       (fn [[[x y] [type opts dx dy]]]
-        [:div {:key (hash (str x y type dx dy))
+        [:div {:key  (str x y type dx dy "1")
                :class (str "char char-h")
                :style {:margin-left (str (* 2 dx) "px")
                        :margin-top  (str (* 2 dy) "px")
@@ -112,7 +114,7 @@
     [:<>
      (map
       (fn [[[x y] [type opts dx dy]]]
-        [:div {:key (hash (str x y type))
+        [:div {:key  (str x y type)
                :class (str "char mine-h")
                :style {:grid-column x :grid-row    y}}])
       mines)]
