@@ -61,8 +61,8 @@
  ::resize-viewport
  (fn [db [_ w h]]
    (-> db
-       (assoc-in [:viewport :h] (inc h))
-       (assoc-in [:viewport :w] (inc w)))))
+       (assoc-in [:viewport :h] h)
+       (assoc-in [:viewport :w] w))))
 
 
 (rf/reg-event-fx
@@ -74,8 +74,8 @@
                      :event     [::animation]}]]
     :db (merge db {:viewport {:x -5
                               :y -5
-                              :h (inc (int (/ js/document.documentElement.clientHeight 40)))
-                              :w (inc (int (/ js/document.documentElement.clientWidth 40)))}
+                              :h (int (/ js/document.documentElement.clientHeight 40))
+                              :w (int (/ js/document.documentElement.clientWidth 40))}
                    :player {:position {:x 0 :y 0}}})}))
 
 (defn ^:dev/after-load init []

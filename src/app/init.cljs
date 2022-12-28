@@ -6,7 +6,6 @@
     (js/window.addEventListener
      "resize"
      (fn []
-       (prn "####")
        (rf/dispatch [:app.core/resize-viewport
                      (int (/ js/document.documentElement.clientWidth 40))
                      (int (/ js/document.documentElement.clientHeight 40))])))
