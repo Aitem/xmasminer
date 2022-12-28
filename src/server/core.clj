@@ -39,6 +39,20 @@
          [14 11] [:b :u]
          }))
 
+(def mines
+  {
+   [3 3] [:c :h]
+   [3 4] [:c :h]
+   [4 3] [:c :h]
+   [4 4] [:c :h]
+   }
+  )
+
+(defn broadcast-mines-state
+  []
+  (doseq [[channel data] @players]
+    (org.httpkit.server/send! channel (str {:event "mines" :data mines}))))
+
 (defn broadcast-players-state
   []
   (doseq [[channel data] @players]
@@ -57,6 +71,8 @@
       (do 
         (swap! players assoc channel {:position {:x 0 :y 0} :name (str "Guest #" (inc (count @players))) :color (rand-nth ["red" "yellow" "green" "purple"])})
 
+        (broadcast-mines-state)
+        (broadcast-buildings-state)
         (broadcast-players-state))
       (org.httpkit.server/on-close
        channel

@@ -8,6 +8,11 @@
    (assoc db :players players)))
 
 (re-frame.core/reg-event-db
+ ::save-mines
+ (fn [db [_ data]]
+   (assoc db :mines data)))
+
+(re-frame.core/reg-event-db
  ::save-buildings
  (fn [db [_ buildings]]
    (assoc db :buildings buildings)))
@@ -26,6 +31,7 @@
       (fn [a]
         (let [response (clojure.edn/read-string (.-data a))]
           (case (:event response)
+            "mines"     (re-frame.core/dispatch-sync [::save-mines   (:data response)])
             "players"   (re-frame.core/dispatch-sync [::save-players   (:data response)])
             "buildings" (re-frame.core/dispatch-sync [::save-buildings (:data response)])
             nil))))

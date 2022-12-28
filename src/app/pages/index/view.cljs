@@ -53,7 +53,9 @@
                        (inc (int (/ (- (.-pageX event) (.-x map-object)) 40))) 
                        (inc (int (/ (- (.-pageY event) (.-y map-object)) 40)))]))))))
 
-(defn view [{{pos :position} :player buildings :buildings res :res belt :belt :as page}]
+(defn view [{{pos :position} :player
+             mines :mines
+             buildings :buildings res :res belt :belt :as page}]
   [:div#screen
    [menu]
    [buildings-menu]
@@ -86,6 +88,15 @@
                        :margin-top  (str (* 2 dy) "px")
                        :grid-column x :grid-row    y}}])
       res)]
+    [:<>
+     (map
+      (fn [[[x y] [type opts dx dy]]]
+        [:div {:key (hash (str x y type))
+               :class (str "char char-h")
+               :style {:margin-left (str (* 2 dx) "px")
+                       :margin-top  (str (* 2 dy) "px")
+                       :grid-column x :grid-row    y}}])
+      mines)]
     ]
    ]
 
