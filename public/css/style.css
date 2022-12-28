@@ -59,6 +59,15 @@ body {
     background-image: url("/img/char-h.png");
 }
 
+.wire {
+    width: 40px;
+    height: 40px;
+    background-size:  40px 40px;
+    background-image: url("/img/wire.png");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .mine-h {
     background-image: url("/img/mine-h.png");
 }

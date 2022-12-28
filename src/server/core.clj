@@ -33,9 +33,13 @@
 
 
 (def buildings
-  (atom {[4 4]  [:m :r :c :h]
+  (atom {[4 4]   [:m :r :c :h]
          [25 4]  [:h :r :c :h {:limit 10 :count 0}]
          [15 15] [:h :r :c :h {:limit 10 :count 0}]
+
+         [15 16] [:f :a {:recept {:battery 2} :state {:battery 0} :ticks 2 :current-tick 0}] ;; accamulator = battery + battery
+         ;; UI inputs ???
+         [15 17] [:f :c {:recept {:micro 1 :wire 1} :state {:micro 0 :wire 0} :ticks 2 :current 0}] ;; circuite = microproccessor + wire
 
          [10 10] [:q :u {:limit 10 :count 0}]
 
@@ -87,12 +91,18 @@
    }
   )
 
-(defonce resources
+;; RESOURCES
+;; :b battery
+;; :w wire
+;; :c chip
+;; :l light
+
+(def resources
   (atom {
-         [15 4] [:c :h]
-         [21 5] [:c :h]
-         [14 10] [:c :h]
-         [20 11] [:c :h]
+         [15 4]  [:b nil]
+         [21 5]  [:w nil]
+         [14 10] [:c nil]
+         [20 11] [:l nil]
          })
   )
 

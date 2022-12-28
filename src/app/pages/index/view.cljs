@@ -193,10 +193,12 @@
                         (< vp-rx vp-w)
                         (< vp-ry vp-h))]
          [:div {:key (hash (str x y type dx dy "1"))
-                :class (str "char char-h")
+                :class (str "wire")
+
                 :style {:margin-left (str (* 2 dx) "px")
                         :margin-top  (str (* 2 dy) "px")
-                        :grid-column (inc vp-rx) :grid-row (inc vp-ry)}}])]
+                        :grid-column (inc vp-rx) :grid-row (inc vp-ry)}}
+          ])]
 
       ;; mines
       [:<>
