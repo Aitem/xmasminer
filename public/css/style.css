@@ -51,6 +51,7 @@
 }
 
 .char-h {
+    background-size:  40px 40px;
     background-image: url("/img/char-h.png");
 }
 
