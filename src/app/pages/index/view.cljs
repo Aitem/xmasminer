@@ -42,7 +42,10 @@
                        (inc (int (/ (- (.-pageX event) (.-x map-object)) 40)))
                        (inc (int (/ (- (.-pageY event) (.-y map-object)) 40)))])
          (when (= 1 (.-buttons event))
-           (rf/dispatch [::model/create-seleted-building])))))
+           (rf/dispatch [::model/create-seleted-building]))
+         (when (= 2 (.-buttons event))
+           (rf/dispatch [::model/remove-building]))
+         )))
     (.addEventListener
      (js/document.getElementById "map")
      "click"
