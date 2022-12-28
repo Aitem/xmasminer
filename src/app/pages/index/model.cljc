@@ -22,6 +22,18 @@
  (fn [db [_ item]]
    (assoc db :buildings-menu-item item)))
 
+(defn allow-miner-create?
+  [cursor viewport mines]
+  (get mines [(+ (:x viewport) (dec (:x cursor)))
+              (+ (:y viewport) (dec (:y cursor)))]))
+
+(defn allow-building-create?
+  [page item]
+  (cond
+    (= :m (:id item))
+    (allow-miner-create? (:cursor page) (:viewport page) (:mines page))
+    :else true))
+
 (rf/reg-event-fx
  ::create-seleted-building
  (fn [{db :db} _]
@@ -32,10 +44,11 @@
          vp-y (:y vp)
          x (+ vp-x (dec vp-bx))
          y (+ vp-y (dec vp-by))]
-     {:app.ws/send {:event "create-building"
-                    :data {:x x :y y
-                           :id (get-in db [:buildings-menu-item :id])
-                           :dir (get-in db [:buildings-menu-item :dir])}}})))
+     (when (allow-building-create? db (:buildings-menu-item db))
+       {:app.ws/send {:event "create-building"
+                      :data {:x x :y y
+                             :id (get-in db [:buildings-menu-item :id])
+                             :dir (get-in db [:buildings-menu-item :dir])}}}))))
 
 (rf/reg-event-fx
  ::remove-building
@@ -58,7 +71,9 @@
  ::buildings-menu
  :<- [::selected-menu-item]
  (fn [selected-menu-item _]
-   {:items [{:id :b :dir :u :class ["belt-u" "belt" (when (= :b (:id selected-menu-item)) "selected-item")]}]}))
+   {:items
+    [{:id :b :dir :u :class ["t" "belt-u" "belt" (when (= :b (:id selected-menu-item)) "selected-item")]}
+     {:id :m :dir :r :class ["t" "miner" "miner-r" (when (= :m (:id selected-menu-item)) "selected-item")]}]}))
 
 (rf/reg-event-db
  ::seleted-building-rotate
@@ -73,4 +88,5 @@
 (rf/reg-event-db
  ::map-cursor
  (fn [db [_ x y]]
-   (assoc db :cursor {:x x :y y})))
+   (assoc db :cursor {:x (inc x)
+                      :y (inc y)})))

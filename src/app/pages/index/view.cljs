@@ -39,8 +39,8 @@
      (fn [event]
        (let [map-object (.getBoundingClientRect (js/document.getElementById "map"))]
          (rf/dispatch [::model/map-cursor
-                       (inc (int (/ (- (.-x event) (.-x map-object)) 40)))
-                       (inc (int (/ (- (.-y event) (.-y map-object)) 40)))])
+                       (int (/ (- (.-x event) (.-x map-object)) 40))
+                       (int (/ (- (.-y event) (.-y map-object)) 40))])
          (when (= 1 (.-buttons event))
            (rf/dispatch [::model/create-seleted-building]))
          (when (= 2 (.-buttons event))
@@ -96,12 +96,23 @@
 
       (when (and (:cursor page)
                  (:buildings-menu-item page))
-        [:div {:class (conj [(:class (:buildings-menu-item page))]
-                            (building-tail [(:id (:buildings-menu-item page))
-                                            (:dir (:buildings-menu-item page))]))
-               :style {:opacity     0.4
-                       :grid-column (-> page :cursor :x)
-                       :grid-row  (-> page :cursor :y)}}])
+        (let [item-id (-> page :buildings-menu-item :id)
+              item-x  (-> page :cursor :x)
+              item-y  (-> page :cursor :y)]
+          (if (model/allow-building-create? page (:buildings-menu-item page))
+            [:div {:class (conj [(:class (:buildings-menu-item page))]
+                                (building-tail [(:id (:buildings-menu-item page))
+                                                (:dir (:buildings-menu-item page))]))
+                   :style {:opacity     0.4
+                           :grid-column item-x
+                           :grid-row  item-y}}]
+            [:div {:class (conj [(:class (:buildings-menu-item page))]
+                                (building-tail [(:id (:buildings-menu-item page))
+                                                (:dir (:buildings-menu-item page))]))
+                   :style {:opacity     0.4
+                           :background "red"
+                           :grid-column item-x
+                           :grid-row  item-y}}])))
 
       ;; buildings
       [:<>
