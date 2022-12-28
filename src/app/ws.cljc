@@ -17,6 +17,11 @@
  (fn [db [_ buildings]]
    (assoc db :buildings buildings)))
 
+(re-frame.core/reg-event-db
+ ::save-resources
+ (fn [db [_ res]]
+   (assoc db :res res)))
+
 (defonce ws
   #?(:cljs (new js/WebSocket "ws://localhost:8080/ws")
      :clj  nil))
@@ -31,7 +36,8 @@
       (fn [a]
         (let [response (clojure.edn/read-string (.-data a))]
           (case (:event response)
-            "mines"     (re-frame.core/dispatch-sync [::save-mines   (:data response)])
-            "players"   (re-frame.core/dispatch-sync [::save-players   (:data response)])
-            "buildings" (re-frame.core/dispatch-sync [::save-buildings (:data response)])
+            "resources" (re-frame.core/dispatch [::save-resources (:data response)])
+            "mines"     (re-frame.core/dispatch [::save-mines     (:data response)])
+            "players"   (re-frame.core/dispatch [::save-players   (:data response)])
+            "buildings" (re-frame.core/dispatch [::save-buildings (:data response)])
             nil))))

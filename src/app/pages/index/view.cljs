@@ -112,7 +112,7 @@
     [:<>
      (map
       (fn [[[x y] [type opts dx dy]]]
-        [:div {:key (hash (str x y type))
+        [:div {:key (hash (str x y type dx dy))
                :class (str "char char-h")
                :style {:margin-left (str (* 2 dx) "px")
                        :margin-top  (str (* 2 dy) "px")
@@ -125,9 +125,7 @@
       (fn [[[x y] [type opts dx dy]]]
         [:div {:key (hash (str x y type))
                :class (str "char mine-h")
-               :style {:margin-left (str (* 2 dx) "px")
-                       :margin-top  (str (* 2 dy) "px")
-                       :grid-column x :grid-row    y}}])
+               :style {:grid-column x :grid-row    y}}])
       mines)]
 
     ]

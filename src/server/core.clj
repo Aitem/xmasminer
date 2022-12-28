@@ -1,9 +1,28 @@
 (ns server.core
   (:require
-   org.httpkit.server))
+   org.httpkit.server)
+  (:import [java.util.concurrent Executors TimeUnit]))
+
+
+(defn stop-job [state job-id]
+  (when-let [e (:executor (get @state job-id))]
+    (.shutdown e))
+  (when-let [f (:future (get @state job-id))]
+    (future-cancel f)))
+
+(defn run-job [state job-id job-fn & [interval]]
+  (stop-job state job-id)
+  (let [executor (Executors/newScheduledThreadPool 1)
+        fut (.scheduleAtFixedRate executor job-fn 0 (or interval 5) TimeUnit/SECONDS)]
+    (swap! state assoc job-id {:executor executor :future fut})))
+
+(defonce ctx (atom {}))
+
+
 
 (def players
   (atom {}))
+
 
 (def buildings
   (atom {[4 4] [:m :r :c :h]
@@ -50,6 +69,68 @@
    }
   )
 
+(defonce resources
+  (atom {
+         [15 4] [:c :h]
+         [21 5] [:c :h]
+         [14 10] [:c :h]
+         [20 11] [:c :h]
+         })
+  )
+
+(defn broadcast-resources-state
+  []
+  (doseq [[channel data] @players]
+    (org.httpkit.server/send! channel (str {:event "resources" :data @resources}))))
+
+(defn get-miners [buildings]
+  (reduce
+   (fn [acc [pos opts]]
+     (if (= :m (first opts))
+       (assoc acc pos opts)
+       acc))
+   {}
+   buildings))
+
+(defn spawn-on-miner [miners]
+  (reduce
+   (fn [acc [[x y] [_ _dir type r]]]
+     (assoc acc [(inc x)  y] [type r]))
+   {} miners)
+  )
+
+
+(defn process-res [[pos [t o]] gmap]
+  (if-let [infra (get gmap pos)]
+    (condp = infra
+      [:b :r] {[(inc (first pos)) (second pos)] [t o]}
+      [:b :l] {[(dec (first pos)) (second pos)] [t o]}
+      [:b :u] {[(first pos) (dec (second pos))] [t o]}
+      [:b :d] {[(first pos) (inc (second pos))] [t o]}
+      )
+
+    {pos [t o]}
+    )
+  )
+
+(defn global-tick []
+  (let [gmap @buildings
+        miners (get-miners gmap)
+        spawned (spawn-on-miner miners)]
+    ;; move resource
+    (swap! resources
+           (fn [ress]
+             (reduce (fn [acc r] (merge acc (process-res r gmap))) {} ress)))
+    ;; spawn resource
+    (swap! resources merge spawned))
+
+  (broadcast-resources-state)
+  )
+
+(comment
+  (run-job ctx :global global-tick 1)
+  )
+
 (defn broadcast-mines-state
   []
   (doseq [[channel data] @players]
@@ -73,6 +154,7 @@
       (do 
         (swap! players assoc channel {:position {:x 0 :y 0} :name (str "Guest #" (inc (count @players))) :color (rand-nth ["red" "yellow" "green" "purple"])})
 
+        (broadcast-resources-state)
         (broadcast-mines-state)
         (broadcast-buildings-state)
         (broadcast-players-state))
