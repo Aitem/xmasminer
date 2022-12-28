@@ -3,12 +3,6 @@
             [re-frame.core :as rf]
             [app.pages.index.model :as model]))
 
-(def belt-dir {:u "belt-u"
-               :d "belt-d"
-               :r "belt-r"
-               :l "belt-l"
-               :ur "belt-ur"
-               })
 (defn menu
   []
   [:div {:style {:padding-top "20px"}}
@@ -53,6 +47,17 @@
                        (inc (int (/ (- (.-pageX event) (.-x map-object)) 40))) 
                        (inc (int (/ (- (.-pageY event) (.-y map-object)) 40)))]))))))
 
+
+(defn tail-type [t]
+  (condp = t
+     :b "belt"
+     :m "miner"
+     t))
+
+(defn building-tail [[type opts]]
+  (let [t (tail-type type)]
+    (str "t " t " " t "-" (last (str opts)))))
+
 (defn view [{{pos :position} :player
              mines :mines
              buildings :buildings res :res belt :belt :as page}]
@@ -72,13 +77,16 @@
                       :margin-top "-20px"}}
         (:name p)]])
 
+    ;; buildings
     [:<>
      (map
       (fn [[[x y] [type opts]]]
         [:div {:key (hash (str x y type))
-               :class (str "belt " (get belt-dir opts))
-               :style {:grid-column x :grid-row    y}}])
+               :class (building-tail [type opts])
+               :style {:grid-column x :grid-row y}}])
       buildings)]
+
+    ;; resources
     [:<>
      (map
       (fn [[[x y] [type opts dx dy]]]
@@ -88,15 +96,21 @@
                        :margin-top  (str (* 2 dy) "px")
                        :grid-column x :grid-row    y}}])
       res)]
+
+    ;; mines
     [:<>
      (map
       (fn [[[x y] [type opts dx dy]]]
         [:div {:key (hash (str x y type))
-               :class (str "char char-h")
+               :class (str "char mine-h")
                :style {:margin-left (str (* 2 dx) "px")
                        :margin-top  (str (* 2 dy) "px")
                        :grid-column x :grid-row    y}}])
       mines)]
+
+
+
+
     ]
    ]
 

@@ -19,10 +19,24 @@
     display: block;
     background-repeat: no-repeat;
 }
+.t {
+    width: 40px;
+    height: 40px;
+    display: block;
+}
+
+.miner {z-index: 1000}
+
+.miner-r {
+    background-image: url("/img/miner-r.png");
+}
 
 .char-h {
     background-image: url("/img/char-h.png");
-    /* animation: char-right 1s linear infinite; */
+}
+
+.mine-h {
+    background-image: url("/img/mine-h.png");
 }
 
 @keyframes char-right {
