@@ -38,6 +38,5 @@
 (rf/reg-event-db
  ::clear
  (fn [db _]
-   #?(:cljs (.remove (js/document.getElementById "selected-menu-item")))
    (dissoc db :buildings-menu-item)
    ))
