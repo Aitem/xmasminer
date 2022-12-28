@@ -12,13 +12,12 @@
 
 (defn buildings-menu
   []
-  [:div#buildings-menu
-   [:div#buildings-menu-items
-    [:div.item {:on-click #(rf/dispatch [::model/select-buildings-menu-item {:id :b :dir :u}])} "B"]
-    [:div.item 1]
-    [:div.item 1]
-    [:div.item 1]]
-   ])
+  (let [state @(rf/subscribe [::model/buildings-menu])]
+    [:div#buildings-menu
+     [:div#buildings-menu-items
+      (for [item (:items state)]
+        [:div.item {:on-click #(rf/dispatch [::model/select-buildings-menu-item item])}
+         [:div {:id (:id item) :class (:class item)}]])]]))
 
 (defn init-map
   [object]
@@ -38,6 +37,18 @@
        (case (.-key event)
          "r" (rf/dispatch-sync [::model/seleted-building-rotate])
          nil)))
+    (js/document.addEventListener
+     "mousemove"
+     (fn [event]
+       (let [map-object (.getBoundingClientRect (js/document.getElementById "map"))
+             item (js/document.getElementById "selected-menu-item")]
+         (rf/dispatch [::model/map-cursor
+                       (inc (int (/ (- (.-pageX event) (.-x map-object)) 40)))
+                       (inc (int (/ (- (.-pageY event) (.-y map-object)) 40)))])
+         (when item
+           (let [map-object (.getBoundingClientRect (js/document.getElementById "map"))]
+             (set! (.. item -style -left) (str (+ (.-pageX event) 20) "px"))
+             (set! (.. item -style -top)  (str (.-pageY event) "px")))))))
     (.addEventListener
      (js/document.getElementById "map")
      "click"
@@ -76,6 +87,17 @@
                       :text-align "center"
                       :margin-top "-20px"}}
         (:name p)]])
+
+    (when (and (:cursor page)
+               (:buildings-menu-item page))
+      [:div {:class (conj [(:class (:buildings-menu-item page))]
+                          (building-tail [(:id (:buildings-menu-item page))
+                                          ;;opts
+                                          (:dir (:buildings-menu-item page))])
+                          #_(get belt-dir (:dir (:buildings-menu-item page))))
+             :style {:opacity     0.4
+                     :grid-column (-> page :cursor :x)
+                     :grid-row  (-> page :cursor :y)}}])
 
     ;; buildings
     [:<>

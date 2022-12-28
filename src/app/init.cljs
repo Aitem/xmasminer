@@ -7,6 +7,7 @@
      "keydown"
      (fn [event]
        (case (.-key event)
+         "Escape" (rf/dispatch-sync [:app.player/clear])
          "w" (rf/dispatch-sync [:app.player/move-w])
          "a" (rf/dispatch-sync [:app.player/move-a])
          "s" (rf/dispatch-sync [:app.player/move-s])

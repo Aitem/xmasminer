@@ -34,3 +34,10 @@
      {:db new-db
       :app.ws/send {:event "move-y"
                     :data  (get-in new-db [:player :position :y])}})))
+
+(rf/reg-event-db
+ ::clear
+ (fn [db _]
+   #?(:cljs (.remove (js/document.getElementById "selected-menu-item")))
+   (dissoc db :buildings-menu-item)
+   ))

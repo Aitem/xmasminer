@@ -44,7 +44,8 @@
 (rf/reg-sub
  index-page
  (fn [db _]
-   (select-keys db [:player :players :buildings :res :mines])))
+   (select-keys db [:player :players :buildings :res :mines
+                    :cursor :buildings-menu-item])))
 
 (rf/reg-event-fx
  ::change-name
@@ -70,6 +71,17 @@
  (fn [db [_ x y]]
    {:app.ws/send {:event "remove-building" :data {:x x :y y}}}))
 
+(rf/reg-sub
+ ::selected-menu-item
+ (fn [db _]
+   (:buildings-menu-item db)))
+
+(rf/reg-sub
+ ::buildings-menu
+ :<- [::selected-menu-item]
+ (fn [selected-menu-item _]
+   {:items [{:id :b :dir :u :class ["belt-u" "belt" (when (= :b (:id selected-menu-item)) "selected-item")]}]}))
+
 (rf/reg-event-db
  ::seleted-building-rotate
  (fn [db [_]]
@@ -79,3 +91,8 @@
                    :r :d
                    :d :l
                    :l :u} dir)))))
+
+(rf/reg-event-db
+ ::map-cursor
+ (fn [db [_ x y]]
+   (assoc db :cursor {:x x :y y})))

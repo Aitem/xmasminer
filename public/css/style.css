@@ -668,24 +668,29 @@
 
 #buildings-menu {
     position: fixed;
-    bottom: 0;
+    bottom: 40px;
     width: 100%;
     display: flex;
     justify-content: center;
 }
 
 #buildings-menu-items {
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     padding: 0px 20px 0px 20px;
     background-color: rgba(0,0,0,0.02);
     display: flex;
 }
 
 #buildings-menu-items > .item {
+    border-radius: 10px;
+    width: 40px;
+    height: 40px;
     padding: 20px;
-    margin-right: 10px;
+    margin: 10px;
 }
 
 #buildings-menu-items > .item:hover {
-    background-color: rgba(0,0,0,0.09);
+    background-color: rgba(0,0,0,0.06);
     cursor: pointer;
 }
