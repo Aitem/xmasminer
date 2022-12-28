@@ -137,8 +137,7 @@
                        (< vp-px vp-w)
                        (< vp-py vp-h))]
         [:div#player {:key (hash p)
-                      :style {:background (:color p)
-                              :grid-column (inc vp-px)
+                      :style {:grid-column (inc vp-px)
                               :grid-row (inc vp-py)}}
          [:div {:style {:color "black"
                         :position "absolute"

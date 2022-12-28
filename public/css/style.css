@@ -44,11 +44,11 @@ body {margin: 0}
 }
 
 .quest {
-    width: 800px;
-    height: 800px;
+    width: 200px;
+    height: 350px;
 
     background-image: url("/img/main-tree.png");
-    background-size: 800px 800px;
+    background-size: 200px 350px;
 }
 
 .char-h {
@@ -139,10 +139,10 @@ body {margin: 0}
 }
 
 #player {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     display: block;
-    background-color: red;
+    background-image: url(/img/p_1.png);
     z-index: 1000;
     /* grid-column: 5; */
     /* grid-row: 5; */
