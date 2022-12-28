@@ -35,14 +35,34 @@
     )
   )
 
+(defn get-miners [buildings]
+  (reduce
+   (fn [acc [pos opts]]
+     (if (= :m (first opts))
+       (assoc acc pos opts)
+       acc))
+   {}
+   buildings))
+
+(defn spawn-on-miner [miners]
+  (reduce
+   (fn [acc [[x y] [_ _dir type r]]]
+     (assoc acc [(inc x)  y] [type r]))
+   {} miners)
+  )
+
 (rf/reg-event-db
  ::global
  (fn [db _]
-   (let [gmap (:buildings db)]
-       (update db :res
-               (fn [ress]
-                 (reduce (fn [acc r] (merge acc (process-res r gmap))) {} ress)
-                 )))))
+   (let [gmap (:buildings db)
+         miners (get-miners gmap)
+         spawned (spawn-on-miner miners)]
+     (-> db
+         (update :res
+                 (fn [ress]
+                   (reduce (fn [acc r] (merge acc (process-res r gmap))) {} ress)
+                   ))
+         (update :res merge spawned)))))
 
 (def fps 50)
 (def d (/ 40 fps))

@@ -108,9 +108,6 @@
                        :grid-column x :grid-row    y}}])
       mines)]
 
-
-
-
     ]
    ]
 

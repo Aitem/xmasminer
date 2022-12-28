@@ -6,7 +6,7 @@
   (atom {}))
 
 (def buildings
-  (atom {[4 4] [:m :r]
+  (atom {[4 4] [:m :r :c :h]
 
          [15 4] [:b :r]
          [16 4] [:b :r]
