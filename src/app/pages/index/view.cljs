@@ -34,7 +34,8 @@
        (case (.-key event)
          "r" (rf/dispatch-sync [::model/seleted-building-rotate])
          nil)))
-    (js/document.addEventListener
+    (.addEventListener
+     (js/document.getElementById "map")
      "mousemove"
      (fn [event]
        (let [map-object (.getBoundingClientRect (js/document.getElementById "map"))]
