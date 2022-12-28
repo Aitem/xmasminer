@@ -18,11 +18,11 @@
         l-dist (- px vp-x)
         t-dist (- py vp-y)
         b-dist (- (+ vp-y vp-h) py)]
-    (let [vp-dx (- (max 0 (- (+ 5 px) (dec (+ vp-x vp-w))))
-                   (max 0 (- (+ 5 vp-x) px)))
+    (let [vp-dx (- (max 0 (- (+ 21 px) (dec (+ vp-x vp-w))))
+                   (max 0 (- (+ 21 vp-x) px)))
 
-          vp-dy (- (max 0 (- (+ 5 py) (dec (+ vp-y vp-h))))
-                   (max 0 (- (+ 5 vp-y) py)))]
+          vp-dy (- (max 0 (- (+ 9 py) (dec (+ vp-y vp-h))))
+                   (max 0 (- (+ 9 vp-y) py)))]
       {:x (+ vp-x vp-dx)
        :y (+ vp-y vp-dy)
        :h vp-h
