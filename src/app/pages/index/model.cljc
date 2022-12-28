@@ -45,7 +45,7 @@
  index-page
  (fn [db _]
    (select-keys db [:player :players :buildings :res :mines
-                    :cursor :buildings-menu-item])))
+                    :cursor :buildings-menu-item :viewport])))
 
 (rf/reg-event-fx
  ::change-name
@@ -60,17 +60,29 @@
 (rf/reg-event-fx
  ::create-seleted-building
  (fn [{db :db} _]
-   {:app.ws/send {:event "create-building"
-                  :data {:x (get-in db [:cursor :x]) :y (get-in db [:cursor :y])
-                         :id (get-in db [:buildings-menu-item :id])
-                         :dir (get-in db [:buildings-menu-item :dir])}}}))
-
+   (let [vp (:viewport db)
+         vp-bx (get-in db [:cursor :x])
+         vp-by (get-in db [:cursor :y])
+         vp-x (:x vp)
+         vp-y (:y vp)
+         x (+ vp-x (dec vp-bx))
+         y (+ vp-y (dec vp-by))]
+     {:app.ws/send {:event "create-building"
+                    :data {:x x :y y
+                           :id (get-in db [:buildings-menu-item :id])
+                           :dir (get-in db [:buildings-menu-item :dir])}}})))
 
 (rf/reg-event-fx
  ::remove-building
  (fn [{db :db} _]
-   {:app.ws/send {:event "remove-building" :data {:x (get-in db [:cursor :x])
-                                                  :y (get-in db [:cursor :y])}}}))
+   (let [vp (:viewport db)
+         vp-bx (get-in db [:cursor :x])
+         vp-by (get-in db [:cursor :y])
+         vp-x (:x vp)
+         vp-y (:y vp)
+         x (+ vp-x (dec vp-bx))
+         y (+ vp-y (dec vp-by))]
+     {:app.ws/send {:event "remove-building" :data {:x x :y y}}})))
 
 (rf/reg-sub
  ::selected-menu-item

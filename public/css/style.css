@@ -3,9 +3,10 @@
     background-color: #cdd0d4;
     background-image: url("/img/tale.png");
     background-size: 40px;
-    grid: repeat(100, 40px) / repeat(100, 40px);
+    grid: repeat(20, 40px) / repeat(45, 40px);
     justify-items: center;
     align-items: center;
+    width: max-content;
 }
 
 .belt {

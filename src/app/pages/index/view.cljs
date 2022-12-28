@@ -68,61 +68,81 @@
 (defn view [{{pos :position} :player
              mines :mines
              buildings :buildings res :res belt :belt :as page}]
-  [:div#screen
-   [menu]
-   [buildings-menu]
-   [:span#info (str pos)]
-   [:div#map {:ref init-map}
-    (for [p (:players page)]
-      [:div#player {:key (hash p)
-                    :style {:background (:color p)
-                            :grid-column (-> p :position :x)
-                            :grid-row    (-> p :position :y)}}
-       [:div {:style {:color "black"
-                      :position "absolute"
-                      :text-align "center"
-                      :margin-top "-20px"}}
-        (:name p)]])
+  (let [vp-x (get-in page [:viewport :x])
+        vp-y (get-in page [:viewport :y])
+        vp-h (get-in page [:viewport :h])
+        vp-w (get-in page [:viewport :w])]
+    [:div#screen
+     [menu]
+     [buildings-menu]
+     [:span#info (str pos)]
+     [:div#map {:ref init-map}
+      (for [p (:players page)
+            :let [vp-px (- (get-in p [:position :x]) vp-x)
+                  vp-py (- (get-in p [:position :y]) vp-y)]
+            :when (and (>= vp-px 0)
+                       (>= vp-py 0)
+                       (< vp-px vp-w)
+                       (< vp-py vp-h))]
+        [:div#player {:key (hash p)
+                      :style {:background (:color p)
+                              :grid-column (inc vp-px)
+                              :grid-row (inc vp-py)}}
+         [:div {:style {:color "black"
+                        :position "absolute"
+                        :text-align "center"
+                        :margin-top "-20px"}}
+          (:name p)]])
 
-    (when (and (:cursor page)
-               (:buildings-menu-item page))
-      [:div {:class (conj [(:class (:buildings-menu-item page))]
-                          (building-tail [(:id (:buildings-menu-item page))
-                                          (:dir (:buildings-menu-item page))]))
-             :style {:opacity     0.4
-                     :grid-column (-> page :cursor :x)
-                     :grid-row  (-> page :cursor :y)}}])
+      (when (and (:cursor page)
+                 (:buildings-menu-item page))
+        [:div {:class (conj [(:class (:buildings-menu-item page))]
+                            (building-tail [(:id (:buildings-menu-item page))
+                                            (:dir (:buildings-menu-item page))]))
+               :style {:opacity     0.4
+                       :grid-column (-> page :cursor :x)
+                       :grid-row  (-> page :cursor :y)}}])
 
-    ;; buildings
-    [:<>
-     (map
-      (fn [[[x y] [type opts]]]
-        [:div {:key  (str x y type opts)
-               :class (building-tail [type opts])
-               :style {:grid-column x :grid-row y}}])
-      buildings)]
+      ;; buildings
+      [:<>
+       (for [building buildings
+             :let [[[x y] [type opts]] building
+                   vp-bx (- x vp-x)
+                   vp-by (- y vp-y)]
+             :when (and (>= vp-bx 0)
+                        (>= vp-by 0)
+                        (< vp-bx vp-w)
+                        (< vp-by vp-h))]
+         [:div {:key (str x y type opts)
+                :class (building-tail [type opts])
+                :style {:grid-column (inc vp-bx) :grid-row (inc vp-by)}}])]
 
-    ;; resources
-    [:<>
-     (map
-      (fn [[[x y] [type opts dx dy]]]
-        [:div {:key  (str x y type dx dy "1")
-               :class (str "char char-h")
-               :style {:margin-left (str (* 2 dx) "px")
-                       :margin-top  (str (* 2 dy) "px")
-                       :grid-column x :grid-row    y}}])
-      res)]
+      ;; resources
+      [:<>
+       (for [resource res
+             :let [[[x y] [type opts dx dy]] resource
+                   vp-rx (- x vp-x)
+                   vp-ry (- y vp-y)]
+             :when (and (>= vp-rx 0)
+                        (>= vp-ry 0)
+                        (< vp-rx vp-w)
+                        (< vp-ry vp-h))]
+         [:div {:key (hash (str x y type dx dy "1"))
+                :class (str "char char-h")
+                :style {:margin-left (str (* 2 dx) "px")
+                        :margin-top  (str (* 2 dy) "px")
+                        :grid-column (inc vp-rx) :grid-row (inc vp-ry)}}])]
 
-    ;; mines
-    [:<>
-     (map
-      (fn [[[x y] [type opts dx dy]]]
-        [:div {:key  (str x y type)
-               :class (str "char mine-h")
-               :style {:grid-column x :grid-row    y}}])
-      mines)]
-
-    ]
-   ]
-
-  )
+      ;; mines
+      [:<>
+       (for [mine mines
+             :let [[[x y] [type opts dx dy]] mine
+                   vp-mx (- x vp-x)
+                   vp-my (- y vp-y)]
+             :when (and (>= vp-mx 0)
+                        (>= vp-my 0)
+                        (< vp-mx vp-w)
+                        (< vp-my vp-h))]
+         [:div {:key (str x y type)
+                :class (str "char mine-h")
+                :style {:grid-column (inc vp-mx) :grid-row (inc vp-my)}}])]]]))

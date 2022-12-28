@@ -70,8 +70,11 @@
                      :id        :tick
                      :frequency (/ 1000 fps)
                      :event     [::animation]}]]
-
-    :db (merge db {:player {:position {:x 0 :y 0}}})}))
+    :db (merge db {:viewport {:x -5
+                              :y -5
+                              :h 20
+                              :w 45}
+                   :player {:position {:x 0 :y 0}}})}))
 
 (defn ^:dev/after-load init []
   (rf/dispatch [::init])
