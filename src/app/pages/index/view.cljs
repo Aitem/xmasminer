@@ -137,7 +137,8 @@
                        (< vp-px vp-w)
                        (< vp-py vp-h))]
         [:div#player {:key (hash p)
-                      :style {:grid-column (inc vp-px)
+                      :style {:background-image (str "url(" (:skin p)")")
+                              :grid-column (inc vp-px)
                               :grid-row (inc vp-py)}}
          [:div {:style {:color "black"
                         :position "absolute"

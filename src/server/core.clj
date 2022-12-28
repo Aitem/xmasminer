@@ -3,6 +3,14 @@
    org.httpkit.server)
   (:import [java.util.concurrent Executors TimeUnit]))
 
+(def player-skins
+  #{"/img/p_1.png"
+    "/img/p01.PNG"
+    "/img/p_02.PNG"
+    "/img/p_03.PNG"
+    "/img/p_04.PNG"
+    })
+
 
 (defn stop-job [state job-id]
   (when-let [e (:executor (get @state job-id))]
@@ -20,7 +28,7 @@
 
 
 
-(def players
+(def players 
   (atom {}))
 
 
@@ -162,7 +170,10 @@
     (= "/ws" (:uri request))
     (org.httpkit.server/with-channel request channel
       (do 
-        (swap! players assoc channel {:position {:x 0 :y 0} :name (str "Guest #" (inc (count @players))) :color (rand-nth ["red" "yellow" "green" "purple"])})
+        (swap! players assoc channel {:position {:x 0 :y 0}
+                                      :name (str "Guest #" (inc (count @players)))
+                                      :skin (rand-nth (vec player-skins))
+                                      :color (rand-nth ["red" "yellow" "green" "purple"])})
 
         (broadcast-resources-state)
         (broadcast-mines-state)
