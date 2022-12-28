@@ -57,6 +57,13 @@
        (do (js/clearInterval (get @live-intervals id))
            (swap! live-intervals dissoc id))))))
 
+(rf/reg-event-db
+ ::resize-viewport
+ (fn [db [_ w h]]
+   (-> db
+       (assoc-in [:viewport :h] (inc h))
+       (assoc-in [:viewport :w] (inc w)))))
+
 
 (rf/reg-event-fx
  ::init
@@ -67,8 +74,8 @@
                      :event     [::animation]}]]
     :db (merge db {:viewport {:x -5
                               :y -5
-                              :h (int (/ js/document.documentElement.clientHeight 40))
-                              :w (int (/ js/document.documentElement.clientWidth 40))}
+                              :h (inc (int (/ js/document.documentElement.clientHeight 40)))
+                              :w (inc (int (/ js/document.documentElement.clientWidth 40)))}
                    :player {:position {:x 0 :y 0}}})}))
 
 (defn ^:dev/after-load init []
