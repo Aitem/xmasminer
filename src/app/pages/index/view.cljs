@@ -219,7 +219,7 @@
             [:div {:class (conj [(:class (:buildings-menu-item page))]
                                 (building-tile [(:id (:buildings-menu-item page))
                                                 (:dir (:buildings-menu-item page))]))
-                   :style {:opacity     0.4
+                   :style {:opacity     0.8
                            :background-color "red"
                            :grid-column item-x
                            :grid-row  item-y
@@ -294,6 +294,7 @@
                              :height (str (* 100 
                                              (/ (get-in main [:cticks])
                                                 (get-in main [:ticks]))) "%")}}]])
+
            [:div {:key (str x "-" y "-" type "-" opts)
                   :class (building-tile [type opts])
                   :style {:grid-column (inc vp-bx)
@@ -349,13 +350,14 @@
                         (>= vp-my 0)
                         (< vp-mx vp-w)
                         (< vp-my vp-h))]
-         [:div {:key (str "w-" x "-" y "-" type)
-                :class (str "world world-" (name type))
-                :style {:grid-column (inc vp-mx)
-                        :grid-row (inc vp-my)
-                        :width (str tile-size "px")
-                        :height (str tile-size "px")
-                        :background-size (str tile-size "px")}}
-          (when text text)])]
+         (let [tile-size (if (= :t type) (* 16 tile-size) tile-size)]
+           [:div {:key (str "w-" x "-" y "-" type)
+                  :class (str "world world-" (name type))
+                  :style {:grid-column (inc vp-mx)
+                          :grid-row (inc vp-my)
+                          :width (str tile-size "px")
+                          :height (str tile-size "px")
+                          :background-size (str tile-size "px")}}
+            (when text text)]))]
 
       ]]))

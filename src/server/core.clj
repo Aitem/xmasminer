@@ -71,8 +71,9 @@
          ;; [15 17] [:f :c {:recept {:micro 1 :wire 1} :state {:micro 0 :wire 0} :ticks 2 :current 0}] ;; circuite = microproccessor + wire
          }))
 
+
 (defn add-building [x y building]
-  (let [[building-type _ building-data] building]
+  (let [[building-type opts building-data] building]
     (swap! buildings
            (fn [building-map]
              (case building-type
@@ -84,28 +85,18 @@
                               :up :u
                               :down :d)])
               :hub (assoc building-map [x y]
-                          [:h
-                           (case (:direction building-data)
-                             :left :l
-                             :right :r
-                             :up :u
-                             :down :d)
-                           (:resource building-data)
-                           {:limit (:limit building-data)
-                            :count (:count building-data)}
-                           :h])
+                          [:h opts nil nil building-data])
 
-              :tree (assoc building-map [x y]
-                           [:q
-                            (case (:direction building-data)
-                              :left :l
-                              :right :r
-                              :up :u
-                              :down :d)
-                            {:limit (:limit building-data)
-                             :count (:count building-data)}]))))))
+              )))))
 
-
+(add-building -3 33 [:hub :or {:resource :or :limit 100 :count 0}])
+(add-building 0  25 [:hub :og {:resource :or :limit 100 :count 0}])
+(add-building 4  33 [:hub :ob {:resource :or :limit 100 :count 0}])
+(add-building 1  32 [:hub :or {:resource :or :limit 100 :count 0}])
+(add-building -2 28 [:hub :or {:resource :or :limit 100 :count 0}])
+(add-building 2  29 [:hub :ob {:resource :or :limit 100 :count 0}])
+(add-building -2 31 [:hub :og {:resource :or :limit 100 :count 0}])
+(add-building 1  27 [:hub :og {:resource :or :limit 100 :count 0}])
 
 ;; (add-building 10 10 (buildings/tree))
 
@@ -143,7 +134,11 @@
          (for [x (range -11 10)
                y (range -11 -1)]
            [[x y] [:s nil]]))
-   {[-3 -12] [:w "Sandbox"]}))
+   {[-3 -12] [:w "Sandbox"]
+    [0 30]   [:t]
+
+
+    }))
 
 (defn broadcast-world-state
   []
@@ -152,7 +147,6 @@
 
 (def mines
   {
-
    [-9 -9]   [:w  nil]
    [-8 -9]   [:wr nil]
    [-7 -9]   [:wg nil]

@@ -81,16 +81,29 @@ body {
 .miner-u {background-image: url("../img/miner-u.png");}
 .miner-d {background-image: url("../img/miner-d.png");}
 
-.hub-r {
-    background-image: url("../img/miner-r.png");
+.hub-or {
+    background-image: url("../img/orb-red.png");
     text-align: center;
-    color: green;
     vertical-align: center;
     justify-content: center;
     z-index: 1000;
-    background-color: red;
-
 }
+.hub-og {
+    background-image: url("../img/orb-green.png");
+    text-align: center;
+    vertical-align: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.hub-ob {
+    background-image: url("../img/orb-blue.png");
+    text-align: center;
+    vertical-align: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
 
 .quest {
     width: 200px;
@@ -132,6 +145,11 @@ body {
 
 .world-s {
     background-image: url("../img/s-floor.png");
+}
+
+.world-t {
+    z-index: 10;
+    background-image: url("../img/xmastree.png");
 }
 
 .mine {
