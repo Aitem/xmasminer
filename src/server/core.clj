@@ -170,8 +170,8 @@
    [-9 -9] [:b nil]
 
 
-   [-10 0] [:w nil]
-   [-10 1] [:w nil]
+   [-10 0] [:w  nil]
+   [-10 1] [:wr nil]
    [-9 0]  [:w nil]
    [-9 1]  [:w nil]
 
@@ -194,13 +194,14 @@
 
 
    [-10 9]  [:a nil]
-   [-11 9]  [:a nil]
+   [-11 9] [:a nil]
    [-10 10] [:a nil]
    [-11 10] [:a nil]
 
    }
   )
 
+(str (name :foo))
 ;; RESOURCES
 ;; :b battery  +
 ;; :w wire     +

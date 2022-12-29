@@ -64,7 +64,7 @@
 
 (defn building-tile [[type opts]]
   (let [t (tile-type type)]
-    (str "t " t " " t "-" (last (str opts)))))
+    (str "t " t " " t "-" (name opts))))
 
 (defn add-content [block content]
   (cond-> block
@@ -235,7 +235,7 @@
          (if (map? fab)
            (let [main (get-in buildings [(:main fab) 2])]
              [:div {:key (str x "-" y "-" type "-" opts)
-                    :class (str "fabric mine-" (second (str (:input fab))))
+                    :class (str "fabric mine-" (name (:input fab)))
                     :style {:position "relative"
                             :grid-column (inc vp-bx)
                             :grid-row (inc vp-by)
@@ -257,7 +257,7 @@
                                              (/ (get-in main [:cticks])
                                                 (get-in main [:ticks]))) "%")}}]])
            [:div {:key (str x "-" y "-" type "-" opts)
-                  :class [(building-tile [type opts])]
+                  :class (building-tile [type opts])
                   :style {:grid-column (inc vp-bx)
                           :grid-row (inc vp-by)
                           :width (str tile-size "px")
@@ -275,16 +275,13 @@
                         (< vp-rx vp-w)
                         (< vp-ry vp-h))]
          [:div {:key (str "r-" x "-" y "-" type "-" dx "-" dy "1")
-
-                :class (str "res res-" (second (str type)))
-
+                :class (str "res res-" (name type))
                 :style {:margin-left (str (* 2 dx) "px")
                         :margin-top  (str (* 2 dy) "px")
                         :grid-column (inc vp-rx) :grid-row (inc vp-ry)
                         :width (str tile-size "px")
                         :height (str tile-size "px")
-                        :background-size (str tile-size "px")}}
-          ])]
+                        :background-size (str tile-size "px")}}])]
 
       ;; mines
       [:<>
@@ -297,7 +294,7 @@
                         (< vp-mx vp-w)
                         (< vp-my vp-h))]
          [:div {:key (str "m-" x "-" y "-" type)
-                :class (str "mine mine-" (second (str type)))
+                :class (str "mine mine-" (name type))
                 :style {:grid-column (inc vp-mx)
                         :grid-row (inc vp-my)
                         :width (str tile-size "px")
