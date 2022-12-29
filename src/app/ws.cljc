@@ -43,8 +43,9 @@
 (defonce ws
   #?(:cljs
      (if (= "aitem.github.io" js/window.location.host)
+       (new js/WebSocket "ws://xmas.aidbox.dev/ws")
        (new js/WebSocket "ws://135.181.141.93:8787/ws")
-       (new js/WebSocket "ws://localhost:8080/ws"))
+       )
      :clj  nil))
 
 (re-frame.core/reg-fx
