@@ -7,26 +7,14 @@
 
 (defn update-viewport
   [viewport player-pos]
-  (let [vp-x (:x viewport)
-        vp-y (:y viewport)
-        vp-w (:w viewport)
+  (let [vp-w (:w viewport)
         vp-h (:h viewport)
         px (:x player-pos)
-        py (:y player-pos)
-
-        r-dist (- (+ vp-x vp-w) px)
-        l-dist (- px vp-x)
-        t-dist (- py vp-y)
-        b-dist (- (+ vp-y vp-h) py)]
-    (let [vp-dx (- (max 0 (- (+ 21 px) (dec (+ vp-x vp-w))))
-                   (max 0 (- (+ 21 vp-x) px)))
-
-          vp-dy (- (max 0 (- (+ 9 py) (dec (+ vp-y vp-h))))
-                   (max 0 (- (+ 9 vp-y) py)))]
-      {:x (+ vp-x vp-dx)
-       :y (+ vp-y vp-dy)
-       :h vp-h
-       :w vp-w})))
+        py (:y player-pos)]
+    {:x (- px (int (/ vp-w 2)))
+     :y (- py (int (/ vp-h 2)))
+     :h vp-h
+     :w vp-w}))
 
 (rf/reg-event-fx
  ::move-d
@@ -82,3 +70,14 @@
  ::clear
  (fn [db _]
    (dissoc db :buildings-menu-item)))
+
+(rf/reg-event-db
+ ::zoom
+ (fn [db [_ dy]]
+   (let [current-zoom-level (:zoom-level db)
+         down? (> dy 0)]
+     (if down?
+       (cond-> db
+         (> current-zoom-level 1) (assoc :zoom-level (dec current-zoom-level)))
+       (cond-> db
+         (< current-zoom-level 5) (assoc :zoom-level (inc current-zoom-level)))))))

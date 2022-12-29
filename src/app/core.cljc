@@ -64,19 +64,25 @@
        (assoc-in [:viewport :h] h)
        (assoc-in [:viewport :w] w))))
 
+(defn make-odd [n]
+  (if (even? n)
+    (inc n)
+    n))
 
 (rf/reg-event-fx
  ::init
  (fn [{db :db} _]
-   {:fx [[:interval {:action    :start
-                     :id        :tick
-                     :frequency (/ 1000 fps)
-                     :event     [::animation]}]]
-    :db (merge db {:viewport {:x -5
-                              :y -5
-                              :h (int (/ js/document.documentElement.clientHeight 40))
-                              :w (int (/ js/document.documentElement.clientWidth 40))}
-                   :player {:position {:x 0 :y 0}}})}))
+   (let [h (make-odd (inc (int (/ js/document.documentElement.clientHeight 40))))
+         w (make-odd (inc (int (/ js/document.documentElement.clientWidth 40))))]
+     {:fx [[:interval {:action    :start
+                       :id        :tick
+                       :frequency (/ 1000 fps)
+                       :event     [::animation]}]]
+      :db (merge db {:viewport {:x (- 0 (int (/ w 2)))
+                                :y (- 0 (int (/ h 2)))
+                                :h h
+                                :w w}
+                     :player {:position {:x 0 :y 0}}})})))
 
 (defn ^:dev/after-load init []
   (rf/dispatch [::init])

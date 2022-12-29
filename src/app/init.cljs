@@ -18,4 +18,10 @@
          "a" (rf/dispatch-sync [:app.player/move-a])
          "s" (rf/dispatch-sync [:app.player/move-s])
          "d" (rf/dispatch-sync [:app.player/move-d])
-         nil)))))
+         nil)))
+    (js/document.addEventListener
+     "wheel"
+     (fn [event]
+       (.preventDefault event)
+       (let [dy (.-deltaY event)]
+         (rf/dispatch-sync [:app.player/zoom dy]))))))

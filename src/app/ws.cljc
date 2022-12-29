@@ -22,6 +22,11 @@
  (fn [db [_ res]]
    (assoc db :res res)))
 
+(re-frame.core/reg-event-db
+ ::init-player
+ (fn [db [_ res]]
+   (assoc-in db [:player :id] (:id res))))
+
 (defonce ws
   #?(:cljs (new js/WebSocket "ws://localhost:8080/ws")
      :clj  nil))
@@ -41,4 +46,5 @@
             "mines"     (re-frame.core/dispatch [::save-mines     (:data response)])
             "players"   (re-frame.core/dispatch [::save-players   (:data response)])
             "buildings" (re-frame.core/dispatch [::save-buildings (:data response)])
+            "init" (re-frame.core/dispatch [::init-player (:data response)])
             nil))))

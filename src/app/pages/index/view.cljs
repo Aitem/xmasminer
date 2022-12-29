@@ -86,7 +86,6 @@
   ([box-spec]
    (render-generic-box box-spec nil)))
 
-
 (defn render-tile
   ([box-spec content]
    (render-generic-box box-spec
@@ -116,13 +115,16 @@
                                          :margin-top "-20px"}}]))
 
 
-(defn view [{{pos :position} :player
+(defn view [{{pos :position pid :id} :player
              mines :mines
              buildings :buildings res :res belt :belt :as page}]
-  (let [vp-x (get-in page [:viewport :x])
-        vp-y (get-in page [:viewport :y])
+  (let [player (first (filter #(= pid (:id %)) (:players page)))
         vp-h (get-in page [:viewport :h])
-        vp-w (get-in page [:viewport :w])]
+        vp-w (get-in page [:viewport :w])
+        p-x (get-in player [:position :x])
+        p-y (get-in player [:position :y])
+        vp-x (- p-x (int (/ vp-w 2)))
+        vp-y (- p-y (int (/ vp-h 2)))]
     [:div#screen
      [menu]
      [buildings-menu]

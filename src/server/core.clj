@@ -3,6 +3,12 @@
    org.httpkit.server)
   (:import [java.util.concurrent Executors TimeUnit]))
 
+
+(def uid (atom 0))
+
+(defn next-uid []
+  (str (swap! uid inc)))
+
 (def player-skins
   #{"/img/p_1.png"
     "/img/p01.PNG"
@@ -103,8 +109,7 @@
          [21 5]  [:w nil]
          [14 10] [:c nil]
          [20 11] [:l nil]
-         })
-  )
+         }))
 
 (defn broadcast-resources-state
   []
@@ -174,17 +179,21 @@
   (doseq [[channel data] @players]
     (org.httpkit.server/send! channel (str {:event "players" :data (vals @players)}))))
 
+(defn send-player-data [channel player-data]
+  (org.httpkit.server/send! channel (str {:event "init" :data player-data})))
+
 (defn handler
   [request]
   (cond
     (= "/ws" (:uri request))
     (org.httpkit.server/with-channel request channel
-      (do 
-        (swap! players assoc channel {:position {:x 0 :y 0}
-                                      :name (str "Guest #" (inc (count @players)))
-                                      :skin (rand-nth (vec player-skins))
-                                      :color (rand-nth ["red" "yellow" "green" "purple"])})
-
+      (let [player-data {:position {:x 0 :y 0}
+                         :name (str "Guest #" (inc (count @players)))
+                         :skin (rand-nth (vec player-skins))
+                         :color (rand-nth ["red" "yellow" "green" "purple"])
+                         :id (next-uid)}]
+        (swap! players assoc channel player-data)
+        (send-player-data channel player-data)
         (broadcast-resources-state)
         (broadcast-mines-state)
         (broadcast-buildings-state)
