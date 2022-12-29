@@ -18,9 +18,7 @@
       (app.pages.index.view/view @m))))
 
 
-
-
-(def fps 50)
+(def fps 30)
 
 (defn zoom-level->tile-size [level]
   (case level
