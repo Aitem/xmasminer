@@ -51,10 +51,13 @@
          y (+ vp-y (dec vp-by))]
      (when (allow-building-create? db (:buildings-menu-item db))
        {:app.ws/send {:event "create-building"
-                      :data {:x x
+                      :data {:id (get-in db [:buildings-menu-item :id])
+                             :x x
                              :y y
-                             :id (get-in db [:buildings-menu-item :id])
-                             :dir (get-in db [:buildings-menu-item :dir])}}}))))
+                             :dir (get-in db [:buildings-menu-item :dir])
+                             :inputs (get-in db [:buildings-menu-item :inputs])
+                             :output (get-in db [:buildings-menu-item :output])
+                             :ticks (get-in db [:buildings-menu-item :ticks])}}}))))
 
 (rf/reg-event-fx
  ::remove-building
@@ -83,8 +86,21 @@
  :<- [::selected-menu-item]
  (fn [selected-menu-item _]
    {:items
-    [{:id :b :dir :u :class ["t" "belt-u" "belt" (when (= :b (:id selected-menu-item)) "selected-item")]}
-     {:id :m :dir :r :class ["t" "miner" "miner-r" (when (= :m (:id selected-menu-item)) "selected-item")]}]}))
+    [{:id :b  :dir :u :class ["t" "belt-u" "belt" (when (= :b (:id selected-menu-item)) "selected-item")]}
+     {:id :m  :dir :r :class ["t" "miner" "miner-r" (when (= :m (:id selected-menu-item)) "selected-item")]}
+     {:id :fc :dir :r :inputs {:w 2 :l 2} :output :b :ticks 2}]}))
+
+(defn fabric-rotate
+  [cursor dir inputs]
+  (map-indexed
+   (fn [index input]
+     [(case dir
+        :r [(+ (:x cursor) index) (:y cursor)]
+        :l [(- (:x cursor) index) (:y cursor)]
+        :d [(:x cursor) (+ (:y cursor) index)]
+        :u [(:x cursor) (- (:y cursor) index)])
+      (first input)])
+   inputs))
 
 (rf/reg-event-db
  ::seleted-building-rotate
@@ -114,3 +130,9 @@
         y (int (/ true-y tile-size))]
    (assoc db :cursor {:x (inc x)
                       :y (inc y)}))))
+
+(comment
+  
+  (fabric-rotate {:x 0 :y 0} :r {:a 1 :b 2})
+  (fabric-rotate {:x 0 :y 0} :b {:a 1 :b 2})
+  )

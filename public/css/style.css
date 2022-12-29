@@ -252,11 +252,9 @@ body {
 #buildings-menu {
     position: fixed;
     bottom: 40px;
-    left: 0; 
-    right: 0; 
-    margin-left: auto; 
-    margin-right: auto; 
-    width: 240px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 #buildings-menu-items {

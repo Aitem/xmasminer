@@ -33,21 +33,37 @@
 (def players 
   (atom {}))
 
+(defn fabric-rotate
+  [cursor dir inputs]
+  (prn cursor dir inputs)
+  (when dir
+    (map-indexed
+     (fn [index input]
+       [(case dir
+          :r [(+ (:x cursor) index) (:y cursor)]
+          :l [(- (:x cursor) index) (:y cursor)]
+          :d [(:x cursor) (+ (:y cursor) index)]
+          :u [(:x cursor) (- (:y cursor) index)])
+        (first input)])
+     inputs)))
+
 (defn make-fabric
   [{[x y] :position direction :direction output :output inputs :inputs :as options}]
   (into {}
         (map-indexed
          (fn [index [tp cnt]]
-           (let [ix x
-                 iy (+ index y)]
-             [[ix iy]
-              (cond-> [:f :r (merge
-                              {:input tp :amount cnt :main [x y] }
-                              (when (= [ix iy] [x y])
-                                {:inputs inputs :ticks (:ticks options) :output (:output options)}))])]))
+           [(case direction
+              :r [(+ x index) y]
+              :l [(- x index) y]
+              :d [x (+ y index)]
+              :u [x (- y index)])
+            (cond-> [:f :r (merge
+                            {:input tp :amount cnt :main [x y] }
+                            (when (= 0 index)
+                              {:dir direction  :inputs inputs :ticks (:ticks options) :output (:output options)}))])])
          inputs)))
 
-(def buildings
+(defonce buildings 
   (atom (merge
          (make-fabric {:position [5 3] :direction :r :inputs {:b 2 :w 2 :c 2 :l 2} :output :b :ticks 2}) 
          {[3 3]   [:m :r :b :h]
@@ -184,6 +200,15 @@
    {} miners)
   )
 
+(defn spawned-fabric-resource-position
+  [dir [x y]]
+  (case dir
+    :r [x (dec y)]
+    :l [x (dec y)]
+    :d [(inc x) y]
+    :u [(dec x) y]
+    (prn "-------" dir)))
+
 
 (defn process-res [[pos [t o]] gmap]
   (if-let [infra (get gmap pos)]
@@ -208,14 +233,15 @@
                           (assoc-in [2 :done t] false)
                           (assoc-in [2 :storage t] (inc current-count)))))))
 
-            (when (every? true? (vals (get-in @buildings [(:main opts) 2 :done])))
+            (when (= (count (get-in main-build [2 :inputs]))
+                     (count (filter true? (vals (get-in @buildings [(:main opts) 2 :done])))))
               (if (>= (or (get-in main-build [2 :cticks]) 0)
                       (get-in main-build [2 :ticks]))
                 (do 
                   (swap! buildings update-in [(:main opts) 2]
                          (fn [f] (assoc f :done nil :cticks 0 :storage nil)))
-                  {[(inc (first (:main opts))) (second (:main opts))]
-
+                  {(spawned-fabric-resource-position (get-in main-build [2 :dir])
+                                                     (:main opts))
                    [(get-in main-build [2 :output]) nil]})
                 (do (swap! buildings update-in [(:main opts) 2 :cticks] (fnil inc 0))
                     nil))))))
@@ -303,9 +329,18 @@
                (broadcast-buildings-state))
              (= "create-building" (:event data))
              (do 
-               (swap! buildings assoc [(get-in data [:data :x]) (get-in data [:data :y])]
-                      [(get-in data [:data :id])
-                       (get-in data [:data :dir])])
+               (cond
+                 (= :fc (get-in data [:data :id]))
+                 (swap! buildings merge (make-fabric
+                                         {:position [(get-in data [:data :x]) (get-in data [:data :y])]
+                                          :direction (get-in data [:data :dir])
+                                          :inputs (get-in data [:data :inputs])
+                                          :output (get-in data [:data :output])
+                                          :ticks (get-in data [:data :ticks])}))
+                 :else 
+                 (swap! buildings assoc [(get-in data [:data :x]) (get-in data [:data :y])]
+                        [(get-in data [:data :id])
+                         (get-in data [:data :dir])]))
                (broadcast-buildings-state))
              (= "change-name" (:event data))
              (do 

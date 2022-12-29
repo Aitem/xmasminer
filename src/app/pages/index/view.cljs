@@ -185,13 +185,29 @@
               item-x  (-> page :cursor :x)
               item-y  (-> page :cursor :y)]
           (if (model/allow-building-create? page (:buildings-menu-item page))
-            [:div {:class (conj [(:class (:buildings-menu-item page))
-                                 (str "block-scale-" zoom-level " bg-scale-" zoom-level)]
-                                (building-tile [(:id (:buildings-menu-item page))
-                                                (:dir (:buildings-menu-item page))]))
-                   :style {:opacity     0.7
-                           :grid-column item-x
-                           :grid-row  item-y}}]
+            (cond
+              (= :fc item-id)
+              (for [[[fx fy] ft] (model/fabric-rotate (:cursor page)
+                                                        (get-in page [:buildings-menu-item :dir])
+                                                        (get-in page [:buildings-menu-item :inputs]))]
+                [:div {:keys (str fx fy ft)
+                       :class (conj [(:class (:buildings-menu-item page))
+                                     (str "block-scale-" zoom-level " bg-scale-" zoom-level)]
+                                    (building-tile [(:id (:buildings-menu-item page))
+                                                    (:dir (:buildings-menu-item page))]))
+                       :style {:opacity     0.7
+                               :grid-column fx
+                               :grid-row    fy}}
+                 (str "F" ft)])
+              
+              :else
+              [:div {:class (conj [(:class (:buildings-menu-item page))
+                                   (str "block-scale-" zoom-level " bg-scale-" zoom-level)]
+                                  (building-tile [(:id (:buildings-menu-item page))
+                                                  (:dir (:buildings-menu-item page))]))
+                     :style {:opacity     0.7
+                             :grid-column item-x
+                             :grid-row  item-y}}])
             [:div {:class (conj [(:class (:buildings-menu-item page))
                                  (str "block-scale-" zoom-level " bg-scale-" zoom-level)]
                                 (building-tile [(:id (:buildings-menu-item page))
@@ -221,7 +237,6 @@
                 :class [(str "block-scale-" zoom-level " bg-scale-" zoom-level) (building-tile [type opts])]
                 :style {:grid-column (inc vp-bx)
                         :grid-row (inc vp-by)}}
-          
           (when fab
             [:<>
              [:div {:key (hash fab)
@@ -230,12 +245,9 @@
                                   :w "chip"
                                   "wire")
                                 " block-scale-" zoom-level
-                                " bg-scale-"    zoom-level
-
-                                )
-
-                    :style {:grid-column (inc vp-bx) :grid-row (inc vp-by)}}]
-             (:count fab)])
+                                " bg-scale-"    zoom-level)
+                    :style {:grid-column (inc vp-bx) :grid-row (inc vp-by)}}
+              (:input fab) ":"(:count fab)]])
           (when state
             (:count state))])]
 
@@ -261,6 +273,7 @@
                 :style {:margin-left (str (* 2 dx) "px")
                         :margin-top  (str (* 2 dy) "px")
                         :grid-column (inc vp-rx) :grid-row (inc vp-ry)}}
+          type
           ])]
 
       ;; mines
