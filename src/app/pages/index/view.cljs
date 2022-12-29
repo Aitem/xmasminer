@@ -230,7 +230,15 @@
                         (< vp-rx vp-w)
                         (< vp-ry vp-h))]
          [:div {:key (hash (str x y type dx dy "1"))
-                :class (str "wire block-scale-" zoom-level " bg-scale-" zoom-level)
+
+                :class (str (condp = type
+                              :c "circuite"
+                              :w "chip"
+                              "wire")
+                            " block-scale-" zoom-level
+                            " bg-scale-"    zoom-level
+
+                            )
 
                 :style {:margin-left (str (* 2 dx) "px")
                         :margin-top  (str (* 2 dy) "px")
