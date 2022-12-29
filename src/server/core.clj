@@ -33,50 +33,68 @@
 (def players 
   (atom {}))
 
+(defn make-fabric
+  [{[x y] :position direction :direction output :output inputs :inputs :as options}]
+  (into {}
+        (map-indexed
+         (fn [index [tp cnt]]
+           (let [ix x
+                 iy (+ index y)]
+             [[ix iy]
+              (cond-> [:f :r (merge
+                              {:input tp :amount cnt :main [x y] }
+                              (when (= [ix iy] [x y])
+                                {:inputs inputs :ticks (:ticks options) :output (:output options)}))])]))
+         inputs)))
 
 (def buildings
-  (atom {[4 4]   [:m :r :c :h]
-         [25 4]  [:h :r :c :h {:limit 10 :count 0}]
-         [15 15] [:h :r :c :h {:limit 10 :count 0}]
+  (atom (merge
+         (make-fabric {:position [5 3] :direction :r :inputs {:b 2 :w 2 :c 2 :l 2} :output :b :ticks 2}) 
+         {[3 3]   [:m :r :b :h]
+          [3 4]   [:m :r :w :h]
+          [3 5]   [:m :r :c :h]
+          [3 6]   [:m :r :l :h]
+          [25 4]  [:h :r :c :h {:limit 10 :count 0}]
+          [15 15] [:h :r :c :h {:limit 10 :count 0}]
 
-         [15 16] [:f :a {:recipe {:battery 2} :state {:battery 0} :ticks 2 :current-tick 0}] ;; accamulator = battery + battery
-         ;; UI inputs ???
-         [15 17] [:f :c {:recipe {:micro 1 :wire 1} :state {:micro 0 :wire 0} :ticks 2 :current 0}] ;; circuit = microproccessor + wire
+          ;; [15 16] [:f :a {:recept {:battery 2} :state {:battery 0} :ticks 2 :current-tick 0}] ;; accamulator = battery + battery
+          ;; UI inputs ???
+          ;; [15 17] [:f :c {:recept {:micro 1 :wire 1} :state {:micro 0 :wire 0} :ticks 2 :current 0}] ;; circuite = microproccessor + wire
 
-         [10 10] [:q :u {:limit 10 :count 0}]
+          [10 10] [:q :u {:limit 10 :count 0}]
 
-         [15 4] [:b :r]
-         [16 4] [:b :r]
-         [17 4] [:b :r]
-         [18 4] [:b :r]
-         [19 4] [:b :r]
-         [20 4] [:b :r]
-         [14 4] [:b :r]
+          [15 4] [:b :r]
+          [16 4] [:b :r]
+          [17 4] [:b :r]
+          [18 4] [:b :r]
+          [19 4] [:b :r]
+          [20 4] [:b :r]
+          [14 4] [:b :r]
 
-         [21 4] [:b :d]
-         [21 5] [:b :d]
-         [21 6] [:b :d]
-         [21 7] [:b :d]
-         [21 8] [:b :d]
-         [21 9] [:b :d]
-         [21 10] [:b :d]
+          [21 4] [:b :d]
+          [21 5] [:b :d]
+          [21 6] [:b :d]
+          [21 7] [:b :d]
+          [21 8] [:b :d]
+          [21 9] [:b :d]
+          [21 10] [:b :d]
 
-         [15 11] [:b :l]
-         [16 11] [:b :l]
-         [17 11] [:b :l]
-         [18 11] [:b :l]
-         [19 11] [:b :l]
-         [20 11] [:b :l]
-         [21 11] [:b :l]
+          [15 11] [:b :l]
+          [16 11] [:b :l]
+          [17 11] [:b :l]
+          [18 11] [:b :l]
+          [19 11] [:b :l]
+          [20 11] [:b :l]
+          [21 11] [:b :l]
 
-         [14 5] [:b :u]
-         [14 6] [:b :u]
-         [14 7] [:b :u]
-         [14 8] [:b :u]
-         [14 9] [:b :u]
-         [14 10] [:b :u]
-         [14 11] [:b :u]
-         }))
+          [14 5] [:b :u]
+          [14 6] [:b :u]
+          [14 7] [:b :u]
+          [14 8] [:b :u]
+          [14 9] [:b :u]
+          [14 10] [:b :u]
+          [14 11] [:b :u]
+          })))
 
 (defn broadcast-buildings-state
   []
@@ -86,11 +104,10 @@
 
 (def mines
   {
-   [3 3] [:c :h]
-   [3 4] [:c :h]
-   [4 3] [:c :h]
-   [4 4] [:c :h]
-   }
+   [3 3] [:b nil]
+   [3 4] [:w nil]
+   [3 5] [:c nil]
+   [3 6] [:l nil]}
   )
 
 ;; RESOURCES
@@ -128,24 +145,56 @@
    {} miners)
   )
 
+(defn spawn-on-fabric [miners]
+  (reduce
+   (fn [acc [[x y] [_ _dir type r]]]
+     (assoc acc [(inc x)  y] [type r]))
+   {} miners)
+  )
+
 
 (defn process-res [[pos [t o]] gmap]
   (if-let [infra (get gmap pos)]
-    (if (= :h (first infra))
+    (cond
+      (= :h (first infra))
       (do
-        (swap! buildings update pos (fn [hub] (update-in hub [4 :count] inc)))
+        (swap! buildings update pos (fn [hub] (update-in hub [4 :count] (fnil inc 0))))
         nil)
+      (= :f (first infra))
+      (let [opts (get-in infra [2])
+            main-build (get @buildings (:main opts))]
+        (do
+          (when (= (:input opts) t)
 
+            (swap! buildings update (:main opts)
+                   (fn [main]
+                     (let [current-count (or (get-in main [2 :storage t]) 0)]
+                       (if (= current-count (get-in main [2 :inputs t]))
+                         (assoc-in main [2 :done t] true)
+                         (->
+                          main
+                          (assoc-in [2 :done t] false)
+                          (assoc-in [2 :storage t] (inc current-count)))))))
+
+            (when (every? true? (vals (get-in @buildings [(:main opts) 2 :done])))
+              (if (>= (or (get-in main-build [2 :cticks]) 0)
+                      (get-in main-build [2 :ticks]))
+                (do 
+                  (swap! buildings update-in [(:main opts) 2]
+                         (fn [f] (assoc f :done nil :cticks 0 :storage nil)))
+                  {[(inc (first (:main opts))) (second (:main opts))]
+
+                   [(get-in main-build [2 :output]) nil]})
+                (do (swap! buildings update-in [(:main opts) 2 :cticks] (fnil inc 0))
+                    nil))))))
+      :else
       (condp = infra
         [:b :r] {[(inc (first pos)) (second pos)] [t o]}
         [:b :l] {[(dec (first pos)) (second pos)] [t o]}
         [:b :u] {[(first pos) (dec (second pos))] [t o]}
         [:b :d] {[(first pos) (inc (second pos))] [t o]}
         {pos [t o]}))
-
-    {pos [t o]}
-    )
-  )
+    {pos [t o]}))
 
 (defn global-tick []
   (try

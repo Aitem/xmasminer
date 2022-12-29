@@ -51,7 +51,8 @@
          y (+ vp-y (dec vp-by))]
      (when (allow-building-create? db (:buildings-menu-item db))
        {:app.ws/send {:event "create-building"
-                      :data {:x x :y y
+                      :data {:x x
+                             :y y
                              :id (get-in db [:buildings-menu-item :id])
                              :dir (get-in db [:buildings-menu-item :dir])}}}))))
 

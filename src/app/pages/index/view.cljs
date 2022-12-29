@@ -58,7 +58,7 @@
      :m "miner"
      :h "hub"
      :q "quest"
-
+     :f "miner"
      t))
 
 (defn building-tile [[type opts]]
@@ -209,7 +209,7 @@
       ;; buildings
       [:<>
        (for [building buildings
-             :let [[[x y] [type opts _ _ state]] building
+             :let [[[x y] [type opts fab _ state]] building
                    vp-bx (- x vp-x)
                    vp-by (- y vp-y)]
              :when (and (>= vp-bx 0)
@@ -218,7 +218,23 @@
                         (< vp-by vp-h))]
          [:div {:key (str x y type opts)
                 :class [(str "block-scale-" zoom-level " bg-scale-" zoom-level) (building-tile [type opts])]
-                :style {:grid-column (inc vp-bx) :grid-row (inc vp-by)}}
+                :style {:grid-column (inc vp-bx)
+                        :grid-row (inc vp-by)}}
+          
+          (when fab
+            [:<>
+             [:div {:key (hash fab)
+                    :class (str (condp = (:input fab)
+                                  :c "circuite"
+                                  :w "chip"
+                                  "wire")
+                                " block-scale-" zoom-level
+                                " bg-scale-"    zoom-level
+
+                                )
+
+                    :style {:grid-column (inc vp-bx) :grid-row (inc vp-by)}}]
+             (:count fab)])
           (when state
             (:count state))])]
 
@@ -257,5 +273,6 @@
                         (< vp-mx vp-w)
                         (< vp-my vp-h))]
          [:div {:key (str x y type)
-                :class (str "char mine-h block-scale-" zoom-level " bg-scale-" zoom-level)
-                :style {:grid-column (inc vp-mx) :grid-row (inc vp-my)}}])]]]))
+                :class (str "block-scale-" zoom-level " bg-scale-" zoom-level)
+                :style {:grid-column (inc vp-mx) :grid-row (inc vp-my)}}
+          (str type)])]]]))
