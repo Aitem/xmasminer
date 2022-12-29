@@ -31,6 +31,7 @@
     5 160
     nil 40))
 
+
 (defn move-res [[pos [t o dx dy]] gmap tile-size]
   (let [d (/ tile-size fps)]
     (if-let [infra (get gmap pos)]
@@ -73,14 +74,6 @@
     (inc n)
     n))
 
-(defn zoom-level->tile-size [level]
-  (case level
-    1 10
-    2 20
-    3 40
-    4 80
-    5 160
-    nil 40))
 
 (rf/reg-event-db
  ::resize-viewport
