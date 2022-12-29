@@ -279,6 +279,7 @@ body {
 }
 
 #buildings-menu {
+    z-index: 99999;
     position: fixed;
     bottom: 0px;
     display: flex;
@@ -288,10 +289,9 @@ body {
 
 
 #buildings-menu-items {
-    border-radius: 10px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     padding: 0px 20px 0px 20px;
-    background-color: rgba(0,0,0,0.20);
+    background-color: rgba(255, 255, 255, 0.51);
     display: flex;
 }
 
