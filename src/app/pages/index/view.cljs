@@ -218,7 +218,7 @@
                            :grid-row  item-y
                            :width (str tile-size "px")
                            :height (str tile-size "px")
-                           :backgound-size (str tile-size "px")}}])))
+                           :background-size (str tile-size "px")}}])))
 
 
 
@@ -241,7 +241,7 @@
                             :grid-row (inc vp-by)
                             :width (str tile-size "px")
                             :height (str tile-size "px")
-                            :backgound-size (str tile-size "px")}}
+                            :background-size (str tile-size "px")}}
               [:div {:style {:position "absolute"
                              :background-color "yellow"
                              :opacity 0.5
@@ -262,7 +262,7 @@
                           :grid-row (inc vp-by)
                           :width (str tile-size "px")
                           :height (str tile-size "px")
-                          :backgound-size (str tile-size "px")}}]))]
+                          :background-size (str tile-size "px")}}]))]
 
       ;; resources
       [:<>
