@@ -240,9 +240,7 @@
                               :w "chip"
                               "wire")
                             " block-scale-" zoom-level
-                            " bg-scale-"    zoom-level
-
-                            )
+                            " bg-scale-"    zoom-level)
 
                 :style {:margin-left (str (* 2 dx) "px")
                         :margin-top  (str (* 2 dy) "px")
