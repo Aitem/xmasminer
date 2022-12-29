@@ -1,6 +1,7 @@
 (ns server.core
   (:require
-   org.httpkit.server)
+   [org.httpkit.server]
+   [server.buildings :as buildings])
   (:import [java.util.concurrent Executors TimeUnit])
   (:gen-class))
 
@@ -79,38 +80,50 @@
 
           [10 10] [:q :u {:limit 10 :count 0}]
 
-          [15 4] [:b :r]
-          [16 4] [:b :r]
-          [17 4] [:b :r]
-          [18 4] [:b :r]
-          [19 4] [:b :r]
-          [20 4] [:b :r]
-          [14 4] [:b :r]
-
-          [21 4] [:b :d]
-          [21 5] [:b :d]
-          [21 6] [:b :d]
-          [21 7] [:b :d]
-          [21 8] [:b :d]
-          [21 9] [:b :d]
-          [21 10] [:b :d]
-
-          [15 11] [:b :l]
-          [16 11] [:b :l]
-          [17 11] [:b :l]
-          [18 11] [:b :l]
-          [19 11] [:b :l]
-          [20 11] [:b :l]
-          [21 11] [:b :l]
-
-          [14 5] [:b :u]
-          [14 6] [:b :u]
-          [14 7] [:b :u]
-          [14 8] [:b :u]
-          [14 9] [:b :u]
-          [14 10] [:b :u]
-          [14 11] [:b :u]
           })))
+
+(defn add-building [x y building]
+  (let [[building-type {direction :direction}] building]
+    (swap! buildings
+           assoc [x y] [(case building-type
+                          :belt :b)
+                        (case direction
+                          :left :l
+                          :right :r
+                          :up :u
+                          :down :d)])))
+
+(add-building 15 4 (buildings/belt :right))
+(add-building 16 4 (buildings/belt :right))
+(add-building 17 4 (buildings/belt :right))
+(add-building 18 4 (buildings/belt :right))
+(add-building 19 4 (buildings/belt :right))
+(add-building 20 4 (buildings/belt :right))
+(add-building 14 4 (buildings/belt :right))
+
+(add-building 21 4 (buildings/belt :down))
+(add-building 21 5 (buildings/belt :down))
+(add-building 21 6 (buildings/belt :down))
+(add-building 21 7 (buildings/belt :down))
+(add-building 21 8 (buildings/belt :down))
+(add-building 21 9 (buildings/belt :down))
+(add-building 21 10 (buildings/belt :down))
+
+(add-building 15 11 (buildings/belt :left))
+(add-building 16 11 (buildings/belt :left))
+(add-building 17 11 (buildings/belt :left))
+(add-building 18 11 (buildings/belt :left))
+(add-building 19 11 (buildings/belt :left))
+(add-building 20 11 (buildings/belt :left))
+(add-building 21 11 (buildings/belt :left))
+
+(add-building 14 5 (buildings/belt :up))
+(add-building 14 6 (buildings/belt :up))
+(add-building 14 7 (buildings/belt :up))
+(add-building 14 8 (buildings/belt :up))
+(add-building 14 9 (buildings/belt :up))
+(add-building 14 10 (buildings/belt :up))
+(add-building 14 11 (buildings/belt :up))
 
 (defn broadcast-buildings-state
   []
@@ -193,8 +206,8 @@
                                :id id
                                :type resource-type})))
                 [] @resources)]
-      (doseq [[channel data] @players]
-        (org.httpkit.server/send! channel (str {:event "resources" :data flat-resources})))))
+    (doseq [[channel data] @players]
+      (org.httpkit.server/send! channel (str {:event "resources" :data flat-resources})))))
 
 (defn get-miners [buildings]
   (reduce

@@ -31,7 +31,6 @@
 
 
 (defn move-res [[pos [t o dx dy]] gmap tile-size]
-  (println gmap)
   (let [d (/ tile-size fps)]
     (if-let [infra (get gmap pos)]
       (let [[building-type building-opts &_] infra]
@@ -80,10 +79,6 @@
  (fn [db [_ new-zoom-level]]
    (let [zoom-level (or new-zoom-level (:zoom-level db))
          tile-size (zoom-level->tile-size zoom-level)]
-     (println "AAAAA" zoom-level tile-size
-(make-odd (inc (int (/ js/document.documentElement.clientWidth tile-size))))
-(make-odd (inc (int (/ js/document.documentElement.clientHeight tile-size))))
-              )
      (-> db
          (assoc-in [:viewport :w] (make-odd (inc (int (/ js/document.documentElement.clientWidth tile-size)))))
          (assoc-in [:viewport :h] (make-odd (inc (int (/ js/document.documentElement.clientHeight tile-size)))))))))

@@ -74,7 +74,6 @@
 (rf/reg-event-fx
  ::zoom
  (fn [{db :db} [_ dy]]
-   (println "DY" dy)
    (let [current-zoom-level (:zoom-level db)
          down? (> dy 0)
          new-zoom-level (cond (and down? (> current-zoom-level 1)) (dec current-zoom-level)
