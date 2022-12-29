@@ -70,6 +70,8 @@ body {
 
 .t {
     display: block;
+    width: 100%;
+    height: 100%;
 }
 
 .miner {z-index: 1000}
@@ -111,8 +113,8 @@ body {
     background-size: 30px;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: gray;
-    border: 1px solid #d3d4d9;
+    background-color: #e5e5e5;
+    border: 1px solid #d3d3d3;
     border-radius: 5px;
     animation: active-mine 2s linear infinite;
 }
