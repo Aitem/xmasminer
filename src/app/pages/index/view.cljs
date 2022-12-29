@@ -191,7 +191,7 @@
                                  (str "block-scale-" zoom-level " bg-scale-" zoom-level)]
                                 (building-tile [(:id (:buildings-menu-item page))
                                                 (:dir (:buildings-menu-item page))]))
-                   :style {:opacity     0.4
+                   :style {:opacity     0.7
                            :grid-column item-x
                            :grid-row  item-y}}]
             [:div {:class (conj [(:class (:buildings-menu-item page))
