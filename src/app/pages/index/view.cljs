@@ -199,7 +199,7 @@
                                                       (get-in page [:buildings-menu-item :inputs]))]
                 [:div {:keys (str fx fy ft)
                        :class (str "fabric mine-" (name ft))
-                       :style {:opacity     0.7
+                       :style {:opacity     1
                                :grid-column fx
                                :grid-row    fy
                                :width (str tile-size "px")
@@ -210,7 +210,7 @@
               [:div {:class (conj [(:class (:buildings-menu-item page))]
                                   (building-tile [(:id (:buildings-menu-item page))
                                                   (:dir (:buildings-menu-item page))]))
-                     :style {:opacity     0.7
+                     :style {:opacity     1
                              :grid-column item-x
                              :grid-row  item-y
                              :width (str tile-size "px")
