@@ -169,9 +169,8 @@
                        (< vp-px vp-w)
                        (< vp-py vp-h))]
         [:div#player {:key (hash p)
-                      :class (str "block-scale-" zoom-level " bg-scale-" zoom-level)
-                      :style {:background-image (str "url(" (:skin p)")")
-                              :grid-column (inc vp-px)
+                      :class (str "skin-" (:skin p) " block-scale-" zoom-level " bg-scale-" zoom-level)
+                      :style {:grid-column (inc vp-px)
                               :grid-row (inc vp-py)}}
          [:div {:style {:color "black"
                         :position "absolute"

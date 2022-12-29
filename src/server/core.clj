@@ -11,12 +11,7 @@
   (str (swap! uid inc)))
 
 (def player-skins
-  #{"./img/p_1.png"
-    "./img/p01.PNG"
-    "./img/p_02.PNG"
-    "./img/p_03.PNG"
-    "./img/p_04.PNG"
-    })
+  #{"p_1" "p01" "p_02" "p_03" "p_04"})
 
 
 (defn stop-job [state job-id]
