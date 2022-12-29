@@ -156,7 +156,6 @@
      [buildings-menu]
      [:span#info (str pos)]
      [:div#map {:ref init-map
-                :class (str "bg-scale-" zoom-level)
                 :style {:grid (str "repeat(" (get-in page [:viewport :h])
                                    ", " tile-size "px) / repeat("(get-in page [:viewport :w]) ", " tile-size "px)")
                         :margin-left (str "-" (int (/ (overflow-w viewport tile-size) 2)) "px")
@@ -170,9 +169,12 @@
                        (< vp-px vp-w)
                        (< vp-py vp-h))]
         [:div#player {:key (str "p-" (hash p))
-                      :class (str "skin-" (:skin p) " block-scale-" zoom-level " bg-scale-" zoom-level)
+                      :class (str "skin-" (:skin p))
                       :style {:grid-column (inc vp-px)
-                              :grid-row (inc vp-py)}}
+                              :grid-row (inc vp-py)
+                              :width (str tile-size "px")
+                              :height (str tile-size "px")
+                              :background-size (str tile-size "px")}}
          [:div {:style {:color "black"
                         :position "absolute"
                         :text-align "center"
@@ -191,27 +193,34 @@
                                                       (get-in page [:buildings-menu-item :dir])
                                                       (get-in page [:buildings-menu-item :inputs]))]
                 [:div {:keys (str fx fy ft)
-                       :class (str "fabric mine-" (name ft) " block-scale-" zoom-level " bg-scale-" zoom-level)
+                       :class (str "fabric mine-" (name ft))
                        :style {:opacity     0.7
                                :grid-column fx
-                               :grid-row    fy}}])
-              
+                               :grid-row    fy
+                               :width (str tile-size "px")
+                               :height (str tile-size "px")
+                               :background-size (str tile-size "px")}}])
+
               :else
-              [:div {:class (conj [(:class (:buildings-menu-item page))
-                                   (str "block-scale-" zoom-level " bg-scale-" zoom-level)]
+              [:div {:class (conj [(:class (:buildings-menu-item page))]
                                   (building-tile [(:id (:buildings-menu-item page))
                                                   (:dir (:buildings-menu-item page))]))
                      :style {:opacity     0.7
                              :grid-column item-x
-                             :grid-row  item-y}}])
-            [:div {:class (conj [(:class (:buildings-menu-item page))
-                                 (str "block-scale-" zoom-level " bg-scale-" zoom-level)]
+                             :grid-row  item-y
+                             :width (str tile-size "px")
+                             :height (str tile-size "px")
+                             :background-size (str tile-size "px")}}])
+            [:div {:class (conj [(:class (:buildings-menu-item page))]
                                 (building-tile [(:id (:buildings-menu-item page))
                                                 (:dir (:buildings-menu-item page))]))
                    :style {:opacity     0.4
                            :background-color "red"
                            :grid-column item-x
-                           :grid-row  item-y}}])))
+                           :grid-row  item-y
+                           :width (str tile-size "px")
+                           :height (str tile-size "px")
+                           :backgound-size (str tile-size "px")}}])))
 
 
 
@@ -228,8 +237,13 @@
          (if (map? fab)
            (let [main (get-in buildings [(:main fab) 2])]
              [:div {:key (str x "-" y "-" type "-" opts)
-                    :class (str "fabric mine-" (second (str (:input fab))) " block-scale-" zoom-level " bg-scale-" zoom-level)
-                    :style {:position "relative" :grid-column (inc vp-bx) :grid-row (inc vp-by)}}
+                    :class (str "fabric mine-" (second (str (:input fab))))
+                    :style {:position "relative"
+                            :grid-column (inc vp-bx)
+                            :grid-row (inc vp-by)
+                            :width (str tile-size "px")
+                            :height (str tile-size "px")
+                            :backgound-size (str tile-size "px")}}
               [:div {:style {:position "absolute"
                              :background-color "yellow"
                              :opacity 0.5
@@ -243,12 +257,14 @@
                              :width "100%"
                              :height (str (* 100 
                                              (/ (get-in main [:cticks])
-                                                (get-in main [:ticks]))) "%")}}]
-              ])
+                                                (get-in main [:ticks]))) "%")}}]])
            [:div {:key (str x "-" y "-" type "-" opts)
-                  :class [(str "block-scale-" zoom-level " bg-scale-" zoom-level) (building-tile [type opts])]
+                  :class [(building-tile [type opts])]
                   :style {:grid-column (inc vp-bx)
-                          :grid-row (inc vp-by)}}]))]
+                          :grid-row (inc vp-by)
+                          :width (str tile-size "px")
+                          :height (str tile-size "px")
+                          :backgound-size (str tile-size "px")}}]))]
 
       ;; resources
       [:<>
@@ -262,13 +278,14 @@
                         (< vp-ry vp-h))]
          [:div {:key (str "r-" x "-" y "-" type "-" dx "-" dy "1")
 
-                :class (str "res res-" (second (str type))
-                            " block-scale-" zoom-level
-                            " bg-scale-"    zoom-level)
+                :class (str "res res-" (second (str type)))
 
                 :style {:margin-left (str (* 2 dx) "px")
                         :margin-top  (str (* 2 dy) "px")
-                        :grid-column (inc vp-rx) :grid-row (inc vp-ry)}}
+                        :grid-column (inc vp-rx) :grid-row (inc vp-ry)
+                        :width (str tile-size "px")
+                        :height (str tile-size "px")
+                        :backgound-size (str tile-size "px")}}
           ])]
 
       ;; mines
@@ -282,5 +299,9 @@
                         (< vp-mx vp-w)
                         (< vp-my vp-h))]
          [:div {:key (str "m-" x "-" y "-" type)
-                :class (str "mine mine-" (second (str type)) " block-scale-" zoom-level " bg-scale-" zoom-level)
-                :style {:grid-column (inc vp-mx) :grid-row (inc vp-my)}}])]]]))
+                :class (str "mine mine-" (second (str type)))
+                :style {:grid-column (inc vp-mx)
+                        :grid-row (inc vp-my)
+                        :width (str tile-size "px")
+                        :height (str tile-size "px")
+                        :background-size (str tile-size "px")}}])]]]))
