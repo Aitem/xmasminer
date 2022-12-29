@@ -9,8 +9,16 @@
 
 (re-frame.core/reg-event-db
  ::save-mines
- (fn [db [_ data]]
-   (assoc db :mines data)))
+ (fn [db [_ payload]]
+   (let [data
+         (reduce (fn [acc mine]
+                   (let [x (:x mine)
+                         y (:y mine)
+                         _id (:id mine)
+                         resource (:resource mine)]
+                     (assoc acc [x y] [resource nil])))
+                 {} payload)]
+     (assoc db :mines data))))
 
 (re-frame.core/reg-event-db
  ::save-buildings

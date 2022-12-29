@@ -248,8 +248,20 @@
 
 (defn broadcast-mines-state
   []
-  (doseq [[channel data] @players]
-    (org.httpkit.server/send! channel (str {:event "mines" :data mines}))))
+  (let [flat-mines
+        (reduce
+         (fn [acc [position mine]]
+           (let [[x y] position
+                 id (next-uid)
+                 [resource-type & _] mine]
+             (conj acc {:id id
+                        :x x
+                        :y y
+                        :resource resource-type})))
+         [] mines)]
+
+    (doseq [[channel data] @players]
+      (org.httpkit.server/send! channel (str {:event "mines" :data flat-mines})))))
 
 (defn broadcast-players-state
   []
