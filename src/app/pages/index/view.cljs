@@ -236,7 +236,7 @@
          [:div {:key (hash (str x y type dx dy "1"))
 
                 :class (str (condp = type
-                              :c "circuite"
+                              :c "circuit"
                               :w "chip"
                               "wire")
                             " block-scale-" zoom-level

@@ -44,9 +44,9 @@
          [25 4]  [:h :r :c :h {:limit 10 :count 0}]
          [15 15] [:h :r :c :h {:limit 10 :count 0}]
 
-         [15 16] [:f :a {:recept {:battery 2} :state {:battery 0} :ticks 2 :current-tick 0}] ;; accamulator = battery + battery
+         [15 16] [:f :a {:recipe {:battery 2} :state {:battery 0} :ticks 2 :current-tick 0}] ;; accamulator = battery + battery
          ;; UI inputs ???
-         [15 17] [:f :c {:recept {:micro 1 :wire 1} :state {:micro 0 :wire 0} :ticks 2 :current 0}] ;; circuite = microproccessor + wire
+         [15 17] [:f :c {:recipe {:micro 1 :wire 1} :state {:micro 0 :wire 0} :ticks 2 :current 0}] ;; circuit = microproccessor + wire
 
          [10 10] [:q :u {:limit 10 :count 0}]
 
