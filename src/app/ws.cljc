@@ -24,8 +24,16 @@
 
 (re-frame.core/reg-event-db
  ::save-resources
- (fn [db [_ res]]
-   (assoc db :res res)))
+ (fn [db [_ payload]]
+   (let [data
+         (reduce (fn [acc resource]
+                   (let [x (:x resource)
+                         y (:y resource)
+                         _id (:id resource)
+                         resource-type (:type resource)]
+                    (assoc acc [x y] [resource-type _])))
+                 {} payload)]
+     (assoc db :res data))))
 
 (re-frame.core/reg-event-db
  ::init-player
