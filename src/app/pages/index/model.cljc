@@ -51,17 +51,18 @@
          y (+ vp-y (dec vp-by))]
      (when (:buildings-menu-item db)
        (when (allow-building-create? db (:buildings-menu-item db))
-         {:dispatch (when (= :fc (get-in db [:buildings-menu-item :id]))
-                      [:app.player/clear])
-          :app.ws/send {:event "create-building"
-                        :data {:id (get-in db [:buildings-menu-item :id])
-                               :x x
-                               :y y
-                               :mine  (get-in db [:mines [x y]])
-                               :dir (get-in db [:buildings-menu-item :dir])
-                               :inputs (get-in db [:buildings-menu-item :inputs])
-                               :output (get-in db [:buildings-menu-item :output])
-                               :ticks (get-in db [:buildings-menu-item :ticks])}}})))))
+         (merge 
+          (when (= :fc (get-in db [:buildings-menu-item :id]))
+            {:dispatch [:app.player/clear]})
+          {:app.ws/send {:event "create-building"
+                         :data {:id (get-in db [:buildings-menu-item :id])
+                                :x x
+                                :y y
+                                :mine  (get-in db [:mines [x y]])
+                                :dir (get-in db [:buildings-menu-item :dir])
+                                :inputs (get-in db [:buildings-menu-item :inputs])
+                                :output (get-in db [:buildings-menu-item :output])
+                                :ticks (get-in db [:buildings-menu-item :ticks])}}}))))))
 
 (rf/reg-event-fx
  ::remove-building
