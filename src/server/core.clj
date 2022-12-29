@@ -134,17 +134,36 @@
 (def mines
   {
 
-   [0 1] [:b nil]
-   [0 2] [:w nil]
-   [0 3] [:c nil]
-   [0 4] [:l nil]
-   [0 5] [:m nil]
+   [-10 -10] [:b nil]
+   [-10 -9] [:b nil]
+   [-9 -10] [:b nil]
+   [-9 -9] [:b nil]
 
 
-   [3 3] [:b nil]
-   [3 4] [:w nil]
-   [3 5] [:c nil]
-   [3 6] [:l nil]}
+   [-10 0] [:w nil]
+   [-10 1] [:w nil]
+   [-9 0]  [:w nil]
+   [-9 1]  [:w nil]
+
+   [0 -10] [:c nil]
+   [0 -9]  [:c nil]
+   [1 -10] [:c nil]
+   [1 -9]  [:c nil]
+
+
+   [10 -10] [:l nil]
+   [10 -9]  [:l nil]
+   [11 -10] [:l nil]
+   [11 -9]  [:l nil]
+
+
+   [10 0] [:m nil]
+   [10 1] [:m nil]
+   [11 0] [:m nil]
+   [11 1] [:m nil]
+
+
+   }
   )
 
 ;; RESOURCES
