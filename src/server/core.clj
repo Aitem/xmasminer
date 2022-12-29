@@ -10,11 +10,11 @@
   (str (swap! uid inc)))
 
 (def player-skins
-  #{"/img/p_1.png"
-    "/img/p01.PNG"
-    "/img/p_02.PNG"
-    "/img/p_03.PNG"
-    "/img/p_04.PNG"
+  #{"img/p_1.png"
+    "img/p01.PNG"
+    "img/p_02.PNG"
+    "img/p_03.PNG"
+    "img/p_04.PNG"
     })
 
 
