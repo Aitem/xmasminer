@@ -227,7 +227,38 @@
                            :height (str tile-size "px")
                            :background-size (str tile-size "px")}}])))
 
-
+      ;;fabrics
+      (for [fabric (:fabrics page)
+            :let [[[x y] [type opts fab _ state]] fabric
+                  vp-bx (- x vp-x)
+                  vp-by (- y vp-y)]
+            :when (and (>= vp-bx 0)
+                       (>= vp-by 0)
+                       (< vp-bx vp-w)
+                       (< vp-by vp-h))]
+        (let [main (get-in (:fabrics page) [(:main fab) 2])]
+          [:div {:key (str x "-" y "-" type "-" opts)
+                 :class (str "fabric mine-" (name (or (:input fab) "")))
+                 :style {:position "relative"
+                         :grid-column (inc vp-bx)
+                         :grid-row (inc vp-by)
+                         :width (str tile-size "px")
+                         :height (str tile-size "px")
+                         :background-size (str tile-size "px")}}
+           [:div {:style {:position "absolute"
+                          :background-color "yellow"
+                          :opacity 0.5
+                          :width "100%"
+                          :height (str (* 100 
+                                          (/ (get-in main [:storage (:input fab)])
+                                             (get-in main [:inputs (:input fab)]))) "%")}}]
+           [:div {:style {:position "absolute"
+                          :background-color "green"
+                          :opacity 0.5
+                          :width "100%"
+                          :height (str (* 100 
+                                          (/ (get-in main [:cticks])
+                                             (get-in main [:ticks]))) "%")}}]]))
 
       ;; buildings
       [:<>

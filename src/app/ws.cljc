@@ -48,6 +48,25 @@
      (assoc db :buildings data))))
 
 (re-frame.core/reg-event-db
+ ::save-fabrics
+ (fn [db [_ payload]]
+   (let [data
+         (reduce (fn [acc building]
+                   (let [x (:x building)
+                         y (:y building)
+                         _id (:id building)
+                         building-type (:type building)
+                         opts (get-in building [:data :opts])
+                         fab (get-in building [:data :fab])
+                         state (get-in building [:data :state])]
+                     (assoc acc [x y] [building-type opts fab nil state])))
+                 {} payload)]
+     (doseq [a (js/document.getAnimations)]
+       (set! (.-startTime a) 0))
+
+     (assoc db :fabrics data))))
+
+(re-frame.core/reg-event-db
  ::save-resources
  (fn [db [_ payload]]
    (let [data
@@ -84,10 +103,11 @@
         (let [response (clojure.edn/read-string (.-data a))]
           (prn "In: " (:event response))
           (case (:event response)
-            "resources" (re-frame.core/dispatch [::save-resources (:data response)])
-            "mines"     (re-frame.core/dispatch [::save-mines     (:data response)])
-            "players"   (re-frame.core/dispatch [::save-players   (:data response)])
+            "resources" (re-frame.core/dispatch-sync [::save-resources (:data response)])
+            "mines"     (re-frame.core/dispatch-sync [::save-mines     (:data response)])
+            "players"   (re-frame.core/dispatch-sync [::save-players   (:data response)])
+            "buildings" (re-frame.core/dispatch-sync [::save-buildings (:data response)])
             "world"     (re-frame.core/dispatch [::save-world     (:data response)])
-            "buildings" (re-frame.core/dispatch [::save-buildings (:data response)])
+            "fabrics"   (re-frame.core/dispatch-sync [::save-fabrics (:data response)])
             "init" (re-frame.core/dispatch [::init-player (:data response)])
             nil))))

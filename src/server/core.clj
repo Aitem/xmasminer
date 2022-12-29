@@ -109,6 +109,8 @@
 
 ;; (add-building 10 10 (buildings/tree))
 
+(defonce build? (atom false))
+
 (defn broadcast-buildings-state
   []
   (let [flat-buildings
@@ -125,7 +127,10 @@
                                   :fab fab
                                   :state state}}))) [] @buildings)]
     (doseq [[channel data] @players]
-      (org.httpkit.server/send! channel (str {:event "buildings" :data flat-buildings})))))
+      (when @build?
+        (org.httpkit.server/send! channel (str {:event "buildings" :data (filterv #(not= :f (:type %)) flat-buildings)})))
+      (org.httpkit.server/send! channel (str {:event "fabrics"   :data (filterv #(= :f (:type %)) flat-buildings)})))
+    (reset! build? false)))
 
 (into {}
       (map (fn [x y]
@@ -331,6 +336,7 @@
                          :skin (rand-nth (vec player-skins))
                          :color (rand-nth ["red" "yellow" "green" "purple"])
                          :id (next-uid)}]
+        (reset! build? true)
         (swap! players assoc channel player-data)
         (send-player-data channel player-data)
         (broadcast-resources-state)
@@ -354,14 +360,15 @@
                  (if (= :f (first building))
                    (swap! buildings
                           (fn [bs]
-                            (def bs bs)
                             (into {}
                                   (remove (fn [[_ [_ _ opts]]]
                                             (= (:main opts) (get-in building [2 :main])))
                                           bs))))
                    (swap! buildings dissoc [(get-in data [:data :x])
                                             (get-in data [:data :y])]))
-                 (broadcast-buildings-state)))
+                 #_(broadcast-buildings-state))
+               (reset! build? true)
+               )
              (= "create-building" (:event data))
              (do 
                (cond
@@ -379,7 +386,8 @@
                                  (get-in data [:data :dir])]
                                 (when (= :m (get-in data [:data :id]))
                                   (get-in data [:data :mine])))))
-               (broadcast-buildings-state))
+               (reset! build? true)
+               #_(broadcast-buildings-state))
              (= "change-name" (:event data))
              (do 
                (swap! players assoc-in [channel :name] (:data data))

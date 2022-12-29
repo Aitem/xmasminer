@@ -11,6 +11,7 @@
  (fn [db _]
    (select-keys db [:player :players :buildings :res :mines
                     :world
+                    :fabrics
                     :cursor :buildings-menu-item :viewport :zoom-level])))
 
 (rf/reg-event-fx
@@ -35,6 +36,22 @@
     (allow-miner-create? (:cursor page) (:viewport page) (:mines page))
     :else true))
 
+(defn make-fabric
+  [{[x y] :position direction :direction output :output inputs :inputs :as options}]
+  (into {}
+        (map-indexed
+         (fn [index [tp cnt]]
+           [(case direction
+              :r [(+ x index) y]
+              :l [(- x index) y]
+              :d [x (+ y index)]
+              :u [x (- y index)])
+            (cond-> [:f :r (merge
+                            {:input tp :amount cnt :main [x y] }
+                            (when (= 0 index)
+                              {:dir direction  :inputs inputs :ticks (:ticks options) :output (:output options)}))])])
+         inputs)))
+
 (rf/reg-event-fx
  ::create-seleted-building
  (fn [{db :db} _]
@@ -55,7 +72,19 @@
          (merge 
           (when (= :fc (get-in db [:buildings-menu-item :id]))
             {:dispatch [:app.player/clear]})
-          {:app.ws/send {:event "create-building"
+          {:db (if (= :fc (get-in db [:buildings-menu-item :id]))
+                 (update db :fabrics merge
+                         (make-fabric
+                          {:position [x y]
+                           :direction (get-in db [:buildings-menu-item :dir])
+                           :inputs (get-in db [:buildings-menu-item :inputs])
+                           :output (get-in db [:buildings-menu-item :output])
+                           :ticks (get-in db [:buildings-menu-item :ticks])}))
+                 (assoc-in db [:buildings [x y]] [(get-in db [:buildings-menu-item :id])
+                                                  (get-in db [:buildings-menu-item :dir])
+                                                  (when (= :m (get-in db [:buildings-menu-item :id]))
+                                                    (get-in db [:mines [x y]]))]))
+           :app.ws/send {:event "create-building"
                          :data {:id (get-in db [:buildings-menu-item :id])
                                 :x x
                                 :y y
@@ -68,6 +97,7 @@
 (rf/reg-event-fx
  ::remove-building
  (fn [{db :db} _]
+   (prn (:fabrics db))
    (let [pid (get-in db [:player :id])
          player (first (filter #(= pid (:id %)) (:players db)))
          vp-h (get-in db [:viewport :h])
@@ -79,8 +109,18 @@
          vp-bx (get-in db [:cursor :x])
          vp-by (get-in db [:cursor :y])
          x (+ vp-x (dec vp-bx))
-         y (+ vp-y (dec vp-by))]
-     {:app.ws/send {:event "remove-building" :data {:x x :y y}}})))
+         y (+ vp-y (dec vp-by))
+         building (or (get (:buildings db) [x y])
+                      (get (:fabrics db) [x y]))]
+     {:db (if (= :f (first building))
+            (update db :fabrics
+                    (fn [bs]
+                      (into {}
+                            (remove (fn [[_ [_ _ opts]]]
+                                      (= (:main opts) (get-in building [2 :main])))
+                                    bs))))
+            (update db :buildings dissoc [x y]))
+      :app.ws/send {:event "remove-building" :data {:x x :y y}}})))
 
 (rf/reg-sub
  ::selected-menu-item
