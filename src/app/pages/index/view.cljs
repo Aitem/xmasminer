@@ -119,15 +119,25 @@
     (inc n)
     n))
 
-(defn overflow-w [viewport]
+(defn zoom-level->tile-size [level]
+  (case level
+    1 10
+    2 20
+    3 40
+    4 80
+    5 160
+    nil 40))
+
+(defn overflow-w [viewport tile-size]
   (let [browser-width js/document.documentElement.clientWidth
-        viewport-width (* (:w viewport) 40)]
+        viewport-width (* (:w viewport) tile-size)]
     (- viewport-width browser-width)))
 
-(defn overflow-h [viewport]
+(defn overflow-h [viewport tile-size]
   (let [browser-height js/document.documentElement.clientHeight
-        viewport-height (* (:h viewport) 40)]
+        viewport-height (* (:h viewport) tile-size)]
     (- viewport-height browser-height)))
+
 
 (defn view [{{pos :position pid :id} :player
              mines :mines
@@ -139,15 +149,20 @@
         p-y (get-in player [:position :y])
         vp-x (- p-x (int (/ vp-w 2)))
         vp-y (- p-y (int (/ vp-h 2)))
-        viewport (:viewport page)]
+        viewport (:viewport page)
+        zoom-level (:zoom-level page)
+        tile-size (zoom-level->tile-size zoom-level)]
     [:div#screen {:style {:overflow "hidden"}}
      [menu]
      [buildings-menu]
      [:span#info (str pos)]
-     [:div#map {:ref init-map :style {:grid (str "repeat(" (get-in page [:viewport :h])
-                                                 ", 40px) / repeat("(get-in page [:viewport :w]) ", 40px)")
-                                      :margin-left (str "-" (int (/ (overflow-w viewport) 2)) "px")
-                                      :margin-top (str "-" (int (/ (overflow-h viewport) 2)) "px")}}
+     [:div#map {:ref init-map
+                :class (str "bg-scale-" zoom-level)
+                :style {:grid (str "repeat(" (get-in page [:viewport :h])
+                                   ", " tile-size "px) / repeat("(get-in page [:viewport :w]) ", " tile-size "px)")
+                        :margin-left (str "-" (int (/ (overflow-w viewport tile-size) 2)) "px")
+                        :margin-top (str "-" (int (/ (overflow-h viewport tile-size) 2)) "px")
+                        :background-size (str tile-size "px")}}
       (for [p (:players page)
             :let [vp-px (- (get-in p [:position :x]) vp-x)
                   vp-py (- (get-in p [:position :y]) vp-y)]
@@ -156,6 +171,7 @@
                        (< vp-px vp-w)
                        (< vp-py vp-h))]
         [:div#player {:key (hash p)
+                      :class (str "block-scale-" zoom-level " bg-scale-" zoom-level)
                       :style {:background-image (str "url(" (:skin p)")")
                               :grid-column (inc vp-px)
                               :grid-row (inc vp-py)}}
@@ -171,13 +187,15 @@
               item-x  (-> page :cursor :x)
               item-y  (-> page :cursor :y)]
           (if (model/allow-building-create? page (:buildings-menu-item page))
-            [:div {:class (conj [(:class (:buildings-menu-item page))]
+            [:div {:class (conj [(:class (:buildings-menu-item page))
+                                 (str "block-scale-" zoom-level " bg-scale-" zoom-level)]
                                 (building-tile [(:id (:buildings-menu-item page))
                                                 (:dir (:buildings-menu-item page))]))
                    :style {:opacity     0.4
                            :grid-column item-x
                            :grid-row  item-y}}]
-            [:div {:class (conj [(:class (:buildings-menu-item page))]
+            [:div {:class (conj [(:class (:buildings-menu-item page))
+                                 (str "block-scale-" zoom-level " bg-scale-" zoom-level)]
                                 (building-tile [(:id (:buildings-menu-item page))
                                                 (:dir (:buildings-menu-item page))]))
                    :style {:opacity     0.4
@@ -196,7 +214,7 @@
                         (< vp-bx vp-w)
                         (< vp-by vp-h))]
          [:div {:key (str x y type opts)
-                :class (building-tile [type opts])
+                :class [(str "block-scale-" zoom-level " bg-scale-" zoom-level) (building-tile [type opts])]
                 :style {:grid-column (inc vp-bx) :grid-row (inc vp-by)}}
           (when state
             (:count state))])]
@@ -212,7 +230,7 @@
                         (< vp-rx vp-w)
                         (< vp-ry vp-h))]
          [:div {:key (hash (str x y type dx dy "1"))
-                :class (str "wire")
+                :class (str "wire block-scale-" zoom-level " bg-scale-" zoom-level)
 
                 :style {:margin-left (str (* 2 dx) "px")
                         :margin-top  (str (* 2 dy) "px")
@@ -230,5 +248,5 @@
                         (< vp-mx vp-w)
                         (< vp-my vp-h))]
          [:div {:key (str x y type)
-                :class (str "char mine-h")
+                :class (str "char mine-h block-scale-" zoom-level " bg-scale-" zoom-level)
                 :style {:grid-column (inc vp-mx) :grid-row (inc vp-my)}}])]]]))

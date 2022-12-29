@@ -10,7 +10,7 @@
  index-page
  (fn [db _]
    (select-keys db [:player :players :buildings :res :mines
-                    :cursor :buildings-menu-item :viewport])))
+                    :cursor :buildings-menu-item :viewport :zoom-level])))
 
 (rf/reg-event-fx
  ::change-name

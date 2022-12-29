@@ -57,18 +57,34 @@
        (do (js/clearInterval (get @live-intervals id))
            (swap! live-intervals dissoc id))))))
 
-(rf/reg-event-db
- ::resize-viewport
- (fn [db [_ w h]]
-   (-> db
-       (assoc-in [:viewport :h] h)
-       (assoc-in [:viewport :w] w))))
-
 (defn make-odd [n]
   (println "mo" n)
   (if (even? n)
     (inc n)
     n))
+
+(defn zoom-level->tile-size [level]
+  (case level
+    1 10
+    2 20
+    3 40
+    4 80
+    5 160
+    nil 40))
+
+(rf/reg-event-db
+ ::resize-viewport
+ (fn [db [_ new-zoom-level]]
+   (let [zoom-level (or new-zoom-level (:zoom-level db))
+         tile-size (zoom-level->tile-size zoom-level)]
+     (println "AAAAA" zoom-level tile-size
+(make-odd (inc (int (/ js/document.documentElement.clientWidth tile-size))))
+(make-odd (inc (int (/ js/document.documentElement.clientHeight tile-size))))
+              )
+     (-> db
+         (assoc-in [:viewport :w] (make-odd (inc (int (/ js/document.documentElement.clientWidth tile-size)))))
+         (assoc-in [:viewport :h] (make-odd (inc (int (/ js/document.documentElement.clientHeight tile-size)))))))))
+
 
 (rf/reg-event-fx
  ::init
@@ -83,7 +99,8 @@
                                 :y (- 0 (int (/ h 2)))
                                 :h h
                                 :w w}
-                     :player {:position {:x 0 :y 0}}})})))
+                     :player {:position {:x 0 :y 0}}
+                     :zoom-level 3})})))
 
 (defn ^:dev/after-load init []
   (rf/dispatch [::init])

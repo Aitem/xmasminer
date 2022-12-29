@@ -71,13 +71,14 @@
  (fn [db _]
    (dissoc db :buildings-menu-item)))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::zoom
- (fn [db [_ dy]]
+ (fn [{db :db} [_ dy]]
    (let [current-zoom-level (:zoom-level db)
-         down? (> dy 0)]
-     (if down?
-       (cond-> db
-         (> current-zoom-level 1) (assoc :zoom-level (dec current-zoom-level)))
-       (cond-> db
-         (< current-zoom-level 5) (assoc :zoom-level (inc current-zoom-level)))))))
+         down? (> dy 0)
+         new-zoom-level (cond (and down? (> current-zoom-level 1)) (dec current-zoom-level)
+                              (and (not down?) (< current-zoom-level 5)) (inc current-zoom-level)
+                              :else current-zoom-level)]
+     {:db (assoc db :zoom-level new-zoom-level)
+      :dispatch [:app.core/resize-viewport new-zoom-level]}
+     )))
