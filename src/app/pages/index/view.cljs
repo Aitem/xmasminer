@@ -213,13 +213,9 @@
                                 (building-tile [(:id (:buildings-menu-item page))
                                                 (:dir (:buildings-menu-item page))]))
                    :style {:opacity     0.4
-                           :background "red"
+                           :background-color "red"
                            :grid-column item-x
                            :grid-row  item-y}}])))
-
-
-
-
 
 
 
