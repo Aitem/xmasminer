@@ -203,6 +203,12 @@
                            :grid-column item-x
                            :grid-row  item-y}}])))
 
+
+
+
+
+
+
       ;; buildings
       [:<>
        (for [building buildings

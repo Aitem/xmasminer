@@ -91,16 +91,20 @@
  (fn [{db :db} _]
    (let [h (make-odd (inc (int (/ js/document.documentElement.clientHeight 40))))
          w (make-odd (inc (int (/ js/document.documentElement.clientWidth 40))))]
-     {:fx [[:interval {:action    :start
-                       :id        :tick
-                       :frequency (/ 1000 fps)
-                       :event     [::animation]}]]
-      :db (merge db {:viewport {:x (- 0 (int (/ w 2)))
-                                :y (- 0 (int (/ h 2)))
-                                :h h
-                                :w w}
-                     :player {:position {:x 0 :y 0}}
-                     :zoom-level 3})})))
+
+     {:fx [(when-not (:initialized db)
+             [:interval {:action    :start
+                         :id        :tick
+                         :frequency (/ 1000 fps)
+                         :event     [::animation]}])]
+      :db (merge db {:initialized true
+                     :zoom-level 3}
+                 (when-not (:initialized db)
+                   {:viewport {:x (- 0 (int (/ w 2)))
+                               :y (- 0 (int (/ h 2)))
+                               :h h
+                               :w w}
+                    :player {:position {:x 0 :y 0}}}))})))
 
 (defn ^:dev/after-load init []
   (rf/dispatch [::init])
