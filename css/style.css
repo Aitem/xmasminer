@@ -108,6 +108,7 @@ body {
 .res {
     background-position: center;
     background-repeat: no-repeat;
+    z-index: 900;
 }
 .res-w  {background-image: url("../img/wire.png");}
 .res-wr {background-image: url("../img/wire-red.png");}
@@ -123,15 +124,28 @@ body {
 .res-m  {background-image: url("../img/chip.png");}
 .res-a  {background-image: url("../img/accamulator.png");}
 
+.world {
+    background-size: 30px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.world-s {
+    background-image: url("../img/s-floor.png");
+}
+
 .mine {
     background-size: 30px;
     background-position: center;
     background-repeat: no-repeat;
     background-color: #e5e5e5;
-    border: 1px solid #d3d3d3;
+    border: 1px solid #6d6c6c;
     border-radius: 5px;
+    margin: 3px;
     animation: active-mine 2s linear infinite;
+    z-index: 900;
 }
+
 @keyframes active-mine {
   0% {
     background-size: 100% 100%;
@@ -193,21 +207,25 @@ body {
 
 
 .belt-u {
+    z-index: 900;
     animation: belt-up 1s linear infinite ;
     background-image: url("../img/belt-u.png");
 }
 
 .belt-r {
+    z-index: 900;
     animation: belt-right 1s linear infinite ;
     background-image: url("../img/belt-r.png");
 }
 
 .belt-d {
+    z-index: 900;
     animation: belt-down 1s linear infinite ;
     background-image: url("../img/belt-d.png");
 }
 
 .belt-l {
+    z-index: 900;
     animation: belt-left 1s linear infinite ;
     background-image: url("../img/belt-l.png");
 }
