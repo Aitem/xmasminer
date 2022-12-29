@@ -24,16 +24,8 @@
 
 (re-frame.core/reg-event-db
  ::save-resources
- (fn [db [_ payload]]
-   (let [data
-         (reduce (fn [acc resource]
-                   (let [x (:x resource)
-                         y (:y resource)
-                         _id (:id resource)
-                         resource-type (:type resource)]
-                    (assoc acc [x y] [resource-type _])))
-                 {} payload)]
-     (assoc db :res data))))
+ (fn [db [_ res]]
+   (assoc db :res res)))
 
 (re-frame.core/reg-event-db
  ::init-player
@@ -43,8 +35,8 @@
 (defonce ws
   #?(:cljs
      (if (= "aitem.github.io" js/window.location.host)
-       (new js/WebSocket "ws://xmas.aidbox.dev/ws")
-       (new js/WebSocket "ws://135.181.141.93:8787/ws")
+       (new js/WebSocket "wss://xmas.aidbox.dev/ws")
+       (new js/WebSocket "ws://localhost:8080/ws")
        )
      :clj  nil))
 
