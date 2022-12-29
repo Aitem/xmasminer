@@ -58,11 +58,16 @@
 (rf/reg-event-fx
  ::remove-building
  (fn [{db :db} _]
-   (let [vp (:viewport db)
+   (let [pid (get-in db [:player :id])
+         player (first (filter #(= pid (:id %)) (:players db)))
+         vp-h (get-in db [:viewport :h])
+         vp-w (get-in db [:viewport :w])
+         p-x (get-in player [:position :x])
+         p-y (get-in player [:position :y])
+         vp-x (- p-x (int (/ vp-w 2)))
+         vp-y (- p-y (int (/ vp-h 2)))
          vp-bx (get-in db [:cursor :x])
          vp-by (get-in db [:cursor :y])
-         vp-x (:x vp)
-         vp-y (:y vp)
          x (+ vp-x (dec vp-bx))
          y (+ vp-y (dec vp-by))]
      {:app.ws/send {:event "remove-building" :data {:x x :y y}}})))
