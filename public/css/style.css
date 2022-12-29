@@ -304,7 +304,6 @@ body {
 
 #buildings-menu-items > .item:hover {
     background-color: rgba(0,0,0,0.06);
-    cursor: pointer;
 }
 
 .box {
