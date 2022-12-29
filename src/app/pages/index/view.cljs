@@ -301,7 +301,9 @@
                           :grid-row (inc vp-by)
                           :width (str tile-size "px")
                           :height (str tile-size "px")
-                          :background-size (str tile-size "px")}}]))]
+                          :background-size (str tile-size "px")}}
+            (when (= :h type)
+              (str state))]))]
 
       ;; resources
       [:<>

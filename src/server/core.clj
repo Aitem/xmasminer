@@ -165,6 +165,8 @@
    [6 -9]    [:or nil]
    [7 -9]    [:og nil]
 
+   [7 29]    [:ob nil]
+
    }
   )
 
@@ -238,7 +240,7 @@
     (cond
       (= :h (first infra))
       (do
-        (swap! buildings update pos (fn [hub] (update-in hub [3 :count] (fnil inc 0))))
+        (swap! buildings update pos (fn [hub] (update-in hub [4 :count] (fnil inc 0))))
         nil)
       (= :f (first infra))
       (let [opts (get-in infra [2])
