@@ -21,30 +21,41 @@
 
 
 (def fps 50)
-(def d (/ 40 fps))
 
-(defn move-res [[pos [t o dx dy]] gmap]
-  (if-let [infra (get gmap pos)]
-    (condp = infra
-      [:b :r] {pos [t o (+ dx d) dy]}
-      [:b :l] {pos [t o (- dx d) dy]}
-      [:b :u] {pos [t o dx (- dy d)]}
-      [:b :d] {pos [t o dx (+ dy d)]}
+(defn zoom-level->tile-size [level]
+  (case level
+    1 10
+    2 20
+    3 40
+    4 80
+    5 160
+    nil 40))
 
-      {pos [t o]}
-      )
-    {pos [t o]}
-    )
+(defn move-res [[pos [t o dx dy]] gmap tile-size]
+  (let [d (/ tile-size fps)]
+    (if-let [infra (get gmap pos)]
+     (condp = infra
+       [:b :r] {pos [t o (+ dx d) dy]}
+       [:b :l] {pos [t o (- dx d) dy]}
+       [:b :u] {pos [t o dx (- dy d)]}
+       [:b :d] {pos [t o dx (+ dy d)]}
+
+       {pos [t o]}
+       )
+     {pos [t o]}
+     ))
   )
 
 
 (rf/reg-event-db
  ::animation
  (fn [db _]
-   (let [gmap (:buildings db)]
+   (let [gmap (:buildings db)
+         zoom-level (:zoom-level db)
+         tile-size (zoom-level->tile-size zoom-level)]
      (update db :res
              (fn [ress]
-               (reduce (fn [acc r] (merge acc (move-res r gmap))) {} ress)
+               (reduce (fn [acc r] (merge acc (move-res r gmap tile-size))) {} ress)
                )))
    ))
 
