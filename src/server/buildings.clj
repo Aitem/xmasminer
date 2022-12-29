@@ -1,7 +1,7 @@
 (ns server.buildings)
 
 (defn belt [direction]
-  [:belt {:direction direction}])
+  [:belt {:w 1 :h 1} {:direction direction}])
 
 (defn belt-left []
   (belt :left))

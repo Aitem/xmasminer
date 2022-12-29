@@ -64,7 +64,7 @@
                               {:dir direction  :inputs inputs :ticks (:ticks options) :output (:output options)}))])])
          inputs)))
 
-(def buildings 
+(def buildings
   (atom {
          [25 4]  [:h :r :c :h {:limit 10 :count 0}]
          [15 15] [:h :r :c :h {:limit 10 :count 0}]
@@ -73,12 +73,12 @@
          ;; UI inputs ???
          ;; [15 17] [:f :c {:recept {:micro 1 :wire 1} :state {:micro 0 :wire 0} :ticks 2 :current 0}] ;; circuite = microproccessor + wire
 
-         [10 10] [:q :u {:limit 10 :count 0}]
-
-         }))
+          [10 10] [:q :u {:limit 10 :count 0}]}))
 
 (defn add-building [x y building]
-  (let [[building-type {direction :direction}] building]
+  (let [[building-type
+         {w :w h :h}
+         {direction :direction}] building]
     (swap! buildings
            assoc [x y] [(case building-type
                           :belt :b)
