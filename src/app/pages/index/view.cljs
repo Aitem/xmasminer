@@ -64,7 +64,7 @@
 
 (defn building-tile [[type opts]]
   (let [t (tile-type type)]
-    (str "t " t " " t "-" (name opts))))
+    (str "t " t " " t "-" (name (or opts "")))))
 
 (defn add-content [block content]
   (cond-> block

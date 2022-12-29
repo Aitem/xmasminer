@@ -115,6 +115,9 @@ body {
 .res-c  {background-image: url("../img/circuit.png");}
 .res-cr {background-image: url("../img/circuit-red.png");}
 .res-cb {background-image: url("../img/circuit-blue.png");}
+.res-og {background-image: url("../img/orb-green.png");}
+.res-or {background-image: url("../img/orb-red.png");}
+.res-ob {background-image: url("../img/orb-blue.png");}
 .res-b  {background-image: url("../img/battery.png");}
 .res-l  {background-image: url("../img/light.png");}
 .res-m  {background-image: url("../img/chip.png");}
@@ -147,6 +150,9 @@ body {
 .mine-c {background-image: url("../img/circuit.png");}
 .mine-cr {background-image: url("../img/circuit-red.png");}
 .mine-cb {background-image: url("../img/circuit-blue.png");}
+.mine-ob {background-image: url("../img/orb-blue.png");}
+.mine-og {background-image: url("../img/orb-green.png");}
+.mine-or {background-image: url("../img/orb-red.png");}
 .mine-b {background-image: url("../img/battery.png");}
 .mine-l {background-image: url("../img/light.png");}
 .mine-m {background-image: url("../img/chip.png");}

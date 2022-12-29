@@ -93,9 +93,14 @@
     [{:id :b  :dir :u :class ["t" "belt-u" "belt" (when (= :b (:id selected-menu-item)) "selected-item")]}
      {:id :m  :dir :r :class ["t" "miner" "miner-r" (when (= :m (:id selected-menu-item)) "selected-item")]}
      {:id :fc :dir :r :class ["t" "mine-a" (when (= :m (:id selected-menu-item)) "selected-item")] :inputs {:b 2} :output :a :ticks 2}
+     ;; Circuites
      {:id :fc :dir :r :class ["t" "mine-c" (when (= :m (:id selected-menu-item)) "selected-item")] :inputs {:m 1 :wg 1} :output :c :ticks 2}
      {:id :fc :dir :r :class ["t" "mine-cr" (when (= :m (:id selected-menu-item)) "selected-item")] :inputs {:m 1 :wr 1} :output :cr :ticks 2}
-     {:id :fc :dir :r :class ["t" "mine-cb" (when (= :m (:id selected-menu-item)) "selected-item")] :inputs {:m 1 :wg 1} :output :cb :ticks 2}
+     {:id :fc :dir :r :class ["t" "mine-cb" (when (= :m (:id selected-menu-item)) "selected-item")] :inputs {:m 1 :w 1} :output :cb :ticks 2}
+     ;; ORBS
+     {:id :fc :dir :r :class ["t" "mine-ob" (when (= :m (:id selected-menu-item)) "selected-item")] :inputs {:a 1 :l 1 :cb 1} :output :ob :ticks 2}
+     {:id :fc :dir :r :class ["t" "mine-og" (when (= :m (:id selected-menu-item)) "selected-item")] :inputs {:a 1 :l 1 :c 1} :output :og :ticks 2}
+     {:id :fc :dir :r :class ["t" "mine-or" (when (= :m (:id selected-menu-item)) "selected-item")] :inputs {:a 1 :l 1 :cr 1} :output :or :ticks 2}
      ]}))
 
 (defn fabric-rotate
