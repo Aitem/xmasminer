@@ -76,9 +76,11 @@ body {
 
 .miner {z-index: 1000}
 
-.miner-r {
-    background-image: url("../img/miner-r.png");
-}
+.miner-r {background-image: url("../img/miner-r.png");}
+.miner-l {background-image: url("../img/miner-l.png");}
+.miner-u {background-image: url("../img/miner-u.png");}
+.miner-d {background-image: url("../img/miner-d.png");}
+
 .hub-r {
     background-image: url("../img/miner-r.png");
     text-align: center;
