@@ -114,20 +114,25 @@ body {
     background-color: gray;
     border: 1px solid #d3d4d9;
     border-radius: 5px;
+    animation: active-mine 2s linear infinite;
 }
-.mine-w {
-    background-image: url("../img/wire.png");
+@keyframes active-mine {
+  0% {
+    background-size: 100% 100%;
+  }
+  50% {
+    background-size: 80% 80%;
+  }
+  100% {
+    background-size: 100% 100%;
+  }
 }
 
-.mine-c {
-    background-image: url("../img/circuit.png");
-}
-.mine-b {
-    background-image: url("../img/battery.png");
-}
-.mine-l {
-    background-image: url("../img/light.png");
-}
+.mine-w {background-image: url("../img/wire.png");}
+.mine-c {background-image: url("../img/circuit.png");}
+.mine-b {background-image: url("../img/battery.png");}
+.mine-l {background-image: url("../img/light.png");}
+.mine-m {background-image: url("../img/chip.png");}
 
 
 .skin-p_1 {
@@ -251,11 +256,12 @@ body {
 
 #buildings-menu {
     position: fixed;
-    bottom: 40px;
+    bottom: 0px;
     display: flex;
     justify-content: center;
     width: 100%;
 }
+
 
 #buildings-menu-items {
     border-radius: 10px;
