@@ -213,7 +213,6 @@ body {
 
 #player {
     display: block;
-    background-image: url(/img/p_1.png);
     z-index: 1000;
     /* grid-column: 5; */
     /* grid-row: 5; */
