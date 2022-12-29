@@ -6,7 +6,7 @@ body {
 #map {
     display: grid;
     background-color: #cdd0d4;
-    background-image: url("/img/tale.png");
+    background-image: url("../img/tale.png");
     justify-items: center;
     align-items: center;
     width: max-content;
@@ -75,10 +75,10 @@ body {
 .miner {z-index: 1000}
 
 .miner-r {
-    background-image: url("/img/miner-r.png");
+    background-image: url("../img/miner-r.png");
 }
 .hub-r {
-    background-image: url("/img/miner-r.png");
+    background-image: url("../img/miner-r.png");
     text-align: center;
     color: green;
     vertical-align: center;
@@ -92,29 +92,29 @@ body {
     width: 200px;
     height: 350px;
 
-    background-image: url("/img/main-tree.png");
+    background-image: url("../img/main-tree.png");
     background-size: 200px 350px;
 }
 
 .char-h {
     background-size:  40px 40px;
-    background-image: url("/img/char-h.png");
+    background-image: url("../img/char-h.png");
 }
 
 .wire {
-    background-image: url("/img/wire.png");
+    background-image: url("../img/wire.png");
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .circuite {
-    background-image: url("/img/circuite.png");
+    background-image: url("../img/circuite.png");
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .mine-h {
-    background-image: url("/img/mine-h.png");
+    background-image: url("../img/mine-h.png");
 }
 
 
@@ -126,26 +126,26 @@ body {
 
 .belt-u {
     animation: belt-up 1s linear infinite ;
-    background-image: url("/img/belt-u.png");
+    background-image: url("../img/belt-u.png");
 }
 
 .belt-r {
     animation: belt-right 1s linear infinite ;
-    background-image: url("/img/belt-r.png");
+    background-image: url("../img/belt-r.png");
 }
 
 .belt-d {
     animation: belt-down 1s linear infinite ;
-    background-image: url("/img/belt-d.png");
+    background-image: url("../img/belt-d.png");
 }
 
 .belt-l {
     animation: belt-left 1s linear infinite ;
-    background-image: url("/img/belt-l.png");
+    background-image: url("../img/belt-l.png");
 }
 
 .belt-ur {
-    background-image: url("/img/belt-ur.png");
+    background-image: url("../img/belt-ur.png");
 }
 
 
