@@ -3,14 +3,13 @@
 (defn belt [direction]
   [:belt {:w 1 :h 1} {:direction direction}])
 
-(defn belt-left []
-  (belt :left))
+(defn hub [direction resource limit cnt]
+  [:hub {:w 1 :h 1} {:direction direction
+                     :resource resource
+                     :limit limit
+                     :count cnt}])
 
-(defn belt-right []
-  (belt :right))
-
-(defn belt-up []
-  (belt :up))
-
-(defn belt-down []
-  (belt :down))
+(defn tree []
+  [:tree {:w 1 :h 1} {:direction :up
+                      :limit 10
+                      :count 0}])

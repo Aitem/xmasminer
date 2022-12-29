@@ -1,7 +1,8 @@
 (ns server.core
   (:require
    [org.httpkit.server]
-   [server.buildings :as buildings])
+   [server.buildings :as buildings]
+   [server.resources :as resources])
   (:import [java.util.concurrent Executors TimeUnit])
   (:gen-class))
 
@@ -65,28 +66,47 @@
          inputs)))
 
 (def buildings
-  (atom {
-         [25 4]  [:h :r :c :h {:limit 10 :count 0}]
-         [15 15] [:h :r :c :h {:limit 10 :count 0}]
-
-         ;; [15 16] [:f :a {:recept {:battery 2} :state {:battery 0} :ticks 2 :current-tick 0}] ;; accamulator = battery + battery
+  (atom {;; [15 16] [:f :a {:recept {:battery 2} :state {:battery 0} :ticks 2 :current-tick 0}] ;; accamulator = battery + battery
          ;; UI inputs ???
          ;; [15 17] [:f :c {:recept {:micro 1 :wire 1} :state {:micro 0 :wire 0} :ticks 2 :current 0}] ;; circuite = microproccessor + wire
-
-          [10 10] [:q :u {:limit 10 :count 0}]}))
+         }))
 
 (defn add-building [x y building]
-  (let [[building-type
-         {w :w h :h}
-         {direction :direction}] building]
+  (let [[building-type _ building-data] building]
     (swap! buildings
-           assoc [x y] [(case building-type
-                          :belt :b)
-                        (case direction
-                          :left :l
-                          :right :r
-                          :up :u
-                          :down :d)])))
+           (fn [building-map]
+             (case building-type
+              :belt (assoc building-map [x y]
+                           [:b
+                            (case (:direction building-data)
+                              :left :l
+                              :right :r
+                              :up :u
+                              :down :d)])
+              :hub (assoc building-map [x y]
+                          [:h
+                           (case (:direction building-data)
+                             :left :l
+                             :right :r
+                             :up :u
+                             :down :d)
+                           (:resource building-data)
+                           {:limit (:limit building-data)
+                            :count (:count building-data)}
+                           :h])
+
+              :tree (assoc building-map [x y]
+                           [:q
+                            (case (:direction building-data)
+                              :left :l
+                              :right :r
+                              :up :u
+                              :down :d)
+                            {:limit (:limit building-data)
+                             :count (:count building-data)}]))))))
+
+(add-building 25 4 (buildings/hub :right resources/circuit 10 0))
+(add-building 15 15 (buildings/hub :right resources/circuit 10 0))
 
 (add-building 15 4 (buildings/belt :right))
 (add-building 16 4 (buildings/belt :right))
@@ -119,6 +139,8 @@
 (add-building 14 9 (buildings/belt :up))
 (add-building 14 10 (buildings/belt :up))
 (add-building 14 11 (buildings/belt :up))
+
+(add-building 10 10 (buildings/tree))
 
 (defn broadcast-buildings-state
   []
