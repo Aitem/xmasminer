@@ -37,11 +37,16 @@
 (rf/reg-event-fx
  ::create-seleted-building
  (fn [{db :db} _]
-   (let [vp (:viewport db)
+   (let [pid (get-in db [:player :id])
+         player (first (filter #(= pid (:id %)) (:players db)))
+         vp-h (get-in db [:viewport :h])
+         vp-w (get-in db [:viewport :w])
+         p-x (get-in player [:position :x])
+         p-y (get-in player [:position :y])
+         vp-x (- p-x (int (/ vp-w 2)))
+         vp-y (- p-y (int (/ vp-h 2)))
          vp-bx (get-in db [:cursor :x])
          vp-by (get-in db [:cursor :y])
-         vp-x (:x vp)
-         vp-y (:y vp)
          x (+ vp-x (dec vp-bx))
          y (+ vp-y (dec vp-by))]
      (when (allow-building-create? db (:buildings-menu-item db))
@@ -85,8 +90,21 @@
                    :d :l
                    :l :u} dir)))))
 
+(defn zoom-level->tile-size [level]
+  (case level
+    1 10
+    2 20
+    3 40
+    4 80
+    5 160
+    nil 40))
+
 (rf/reg-event-db
  ::map-cursor
- (fn [db [_ x y]]
+ (fn [db [_ true-x true-y]]
+  (let [zoom-level (:zoom-level db)
+        tile-size (zoom-level->tile-size zoom-level)
+        x (int (/ true-x tile-size))
+        y (int (/ true-y tile-size))]
    (assoc db :cursor {:x (inc x)
-                      :y (inc y)})))
+                      :y (inc y)}))))

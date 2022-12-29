@@ -58,7 +58,6 @@
            (swap! live-intervals dissoc id))))))
 
 (defn make-odd [n]
-  (println "mo" n)
   (if (even? n)
     (inc n)
     n))

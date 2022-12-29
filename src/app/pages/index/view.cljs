@@ -39,9 +39,7 @@
      "mousemove"
      (fn [event]
        (let [map-object (.getBoundingClientRect (js/document.getElementById "map"))]
-         (rf/dispatch [::model/map-cursor
-                       (int (/ (- (.-x event) (.-x map-object)) 40))
-                       (int (/ (- (.-y event) (.-y map-object)) 40))])
+         (rf/dispatch [::model/map-cursor (- (.-x event) (.-x map-object)) (- (.-y event) (.-y map-object))])
          (when (= 1 (.-buttons event))
            (rf/dispatch [::model/create-seleted-building]))
          (when (= 2 (.-buttons event))
