@@ -193,6 +193,11 @@
    [11 1] [:m nil]
 
 
+   [-10 9]  [:a nil]
+   [-11 9]  [:a nil]
+   [-10 10] [:a nil]
+   [-11 10] [:a nil]
+
    }
   )
 
@@ -202,6 +207,7 @@
 ;; :c circuite +
 ;; :l light
 ;; :m microchip
+;; :a accamulator
 
 (def resources
   (atom {
