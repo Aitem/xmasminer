@@ -114,6 +114,7 @@ body {
 .res-b  {background-image: url("../img/battery.png");}
 .res-l  {background-image: url("../img/light.png");}
 .res-m  {background-image: url("../img/chip.png");}
+.res-a  {background-image: url("../img/accamulator.png");}
 
 .mine {
     background-size: 30px;
@@ -141,6 +142,7 @@ body {
 .mine-b {background-image: url("../img/battery.png");}
 .mine-l {background-image: url("../img/light.png");}
 .mine-m {background-image: url("../img/chip.png");}
+.mine-a {background-image: url("../img/accamulator.png");}
 
 
 .skin-p_1 {
