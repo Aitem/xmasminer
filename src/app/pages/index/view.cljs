@@ -150,7 +150,6 @@
         zoom-level (:zoom-level page)
         tile-size (zoom-level->tile-size zoom-level)]
     [:div#screen {:style {:overflow "hidden"}}
-     [menu]
      [buildings-menu]
      [:span#info (str pos)]
      [:div#map {:ref init-map

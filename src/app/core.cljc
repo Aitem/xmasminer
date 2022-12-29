@@ -12,10 +12,43 @@
             [app.ws]
             [app.player]))
 
+(rf/reg-fx
+ ::play-soundtrack
+ (fn []
+   (.play app.init/soundtrack)))
+
+(rf/reg-sub
+ ::play?
+ (fn [db _]
+   (:play? db)))
+
+(rf/reg-event-fx
+ ::play
+ (fn [{db :db} [_ value]]
+   {::play-soundtrack {}
+    :db (assoc db :play? true)}))
+
+(defn mainmenu
+  []
+  (let [play? @(rf/subscribe [::play?])]
+    (when-not play?
+      [:dialog.nes-dialog.is-rounded {:open true :style {:margin-top "100px"}}
+       [:h1 {:style {:text-align "center"}} "XmasMiner"]
+       [:p.nes-text.is-success {:style {:text-align "center" :margin-bottom "45px"}} "Mine the mood!"]
+       [:label "Your name"]
+       [:input.nes-input {:on-change #(rf/dispatch [:app.pages.index.model/change-name (.. % -target -value)])}]
+       [:div {:style {:display "flex" :justify-content "center"}} 
+        [:button.nes-btn.is-primary
+         {:style {:margin "50px 0px 20px 0px" :padding "10px 40px"}
+          :on-click #(rf/dispatch [::play])}
+         "Play"]]])))
+
 (defn root []
   (let [m (rf/subscribe [app.pages.index.model/index-page])]
     (fn []
-      (app.pages.index.view/view @m))))
+      [:<> 
+       [mainmenu]
+       (app.pages.index.view/view @m)])))
 
 
 (def fps 30)

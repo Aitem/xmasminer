@@ -1,6 +1,9 @@
 (ns app.init
   (:require [re-frame.core :as rf]))
 
+(defonce soundtrack
+  (js/Audio. "audio/soundtrack.mp3"))
+
 (defonce initialize
   (do 
     (js/window.addEventListener
