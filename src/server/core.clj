@@ -98,8 +98,21 @@
 
 (defn broadcast-buildings-state
   []
-  (doseq [[channel data] @players]
-    (org.httpkit.server/send! channel (str {:event "buildings" :data @buildings}))))
+  (let [flat-buildings
+        (reduce (fn [acc [position building]]
+                  (let [[x y] position
+                        id (next-uid)
+                        [type opts fab _ state] building]
+                    (conj acc
+                          {:id id
+                           :x x
+                           :y y
+                           :type type
+                           :data {:opts opts
+                                  :fab fab
+                                  :state state}}))) [] @buildings)]
+    (doseq [[channel data] @players]
+      (org.httpkit.server/send! channel (str {:event "buildings" :data flat-buildings})))))
 
 
 (def mines

@@ -14,13 +14,22 @@
 
 (re-frame.core/reg-event-db
  ::save-buildings
- (fn [db [_ buildings]]
+ (fn [db [_ payload]]
+   (let [data
+         (reduce (fn [acc building]
+                   (let [x (:x building)
+                         y (:y building)
+                         _id (:id building)
+                         building-type (:type building)
+                         opts (get-in building [:data :opts])
+                         fab (get-in building [:data :fab])
+                         state (get-in building [:data :state])]
+                     (assoc acc [x y] [building-type opts fab nil state])))
+                 {} payload)]
+     (doseq [a (js/document.getAnimations)]
+       (set! (.-startTime a) 0))
 
-   (doseq [a (js/document.getAnimations)]
-     (set! (.-startTime a) 0))
-
-
-   (assoc db :buildings buildings)))
+     (assoc db :buildings data))))
 
 (re-frame.core/reg-event-db
  ::save-resources

@@ -16,7 +16,8 @@
     [:div#buildings-menu
      [:div#buildings-menu-items
       (for [item (:items state)]
-        [:div.item {:on-click #(rf/dispatch [::model/select-buildings-menu-item item])}
+        [:div.item {:on-click #(rf/dispatch [::model/select-buildings-menu-item item])
+                    :key (hash item)}
          [:div {:id (:id item) :class (:class item)}]])]]))
 
 (defn init-map

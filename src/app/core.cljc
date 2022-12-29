@@ -31,16 +31,18 @@
 
 
 (defn move-res [[pos [t o dx dy]] gmap tile-size]
+  (println gmap)
   (let [d (/ tile-size fps)]
     (if-let [infra (get gmap pos)]
-     (condp = infra
-       [:b :r] {pos [t o (+ dx d) dy]}
-       [:b :l] {pos [t o (- dx d) dy]}
-       [:b :u] {pos [t o dx (- dy d)]}
-       [:b :d] {pos [t o dx (+ dy d)]}
+      (let [[building-type building-opts &_] infra]
+        (condp = [building-type building-opts]
+          [:b :r] {pos [t o (+ dx d) dy]}
+          [:b :l] {pos [t o (- dx d) dy]}
+          [:b :u] {pos [t o dx (- dy d)]}
+          [:b :d] {pos [t o dx (+ dy d)]}
 
-       {pos [t o]}
-       )
+          {pos [t o]}
+          ))
      {pos [t o]}
      ))
   )
