@@ -15,6 +15,11 @@
 (re-frame.core/reg-event-db
  ::save-buildings
  (fn [db [_ buildings]]
+
+   (doseq [a (js/document.getAnimations)]
+     (set! (.-startTime a) 0))
+
+
    (assoc db :buildings buildings)))
 
 (re-frame.core/reg-event-db
