@@ -32,7 +32,7 @@
   []
   (let [play? @(rf/subscribe [::play?])]
     (when-not play?
-      [:dialog.nes-dialog.is-rounded {:open true :style {:margin-top "100px"}}
+      [:dialog.nes-dialog.is-rounded {:open true :style {:margin-top "100px" :z-index 9999}}
        [:h1 {:style {:text-align "center"}} "XmasMiner"]
        [:p.nes-text.is-success {:style {:text-align "center" :margin-bottom "45px"}} "Mine the mood!"]
        [:label "Your name"]
