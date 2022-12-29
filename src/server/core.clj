@@ -126,8 +126,18 @@
 
 (defn broadcast-resources-state
   []
-  (doseq [[channel data] @players]
-    (org.httpkit.server/send! channel (str {:event "resources" :data @resources}))))
+  (let [flat-resources
+        (reduce (fn [acc [position resource]]
+                  (let [[x y] position
+                        id (next-uid)
+                        [resource-type _] resource]
+                    (conj acc {:x x
+                               :y y
+                               :id id
+                               :type resource-type})))
+                [] @resources)]
+      (doseq [[channel data] @players]
+        (org.httpkit.server/send! channel (str {:event "resources" :data flat-resources})))))
 
 (defn get-miners [buildings]
   (reduce
