@@ -117,6 +117,14 @@
 
 (def mines
   {
+
+   [0 1] [:b nil]
+   [0 2] [:w nil]
+   [0 3] [:c nil]
+   [0 4] [:l nil]
+   [0 5] [:m nil]
+
+
    [3 3] [:b nil]
    [3 4] [:w nil]
    [3 5] [:c nil]
@@ -124,10 +132,11 @@
   )
 
 ;; RESOURCES
-;; :b battery
-;; :w wire
-;; :c chip
+;; :b battery  +
+;; :w wire     +
+;; :c circuite +
 ;; :l light
+;; :m microchip
 
 (def resources
   (atom {

@@ -10,12 +10,16 @@
     (js/document.addEventListener
      "keydown"
      (fn [event]
-       (case (.-key event)
-         "Escape" (rf/dispatch-sync [:app.player/clear])
-         "w" (rf/dispatch-sync [:app.player/move-w])
-         "a" (rf/dispatch-sync [:app.player/move-a])
-         "s" (rf/dispatch-sync [:app.player/move-s])
-         "d" (rf/dispatch-sync [:app.player/move-d])
+       (case (.-keyCode event)
+         27 (rf/dispatch-sync [:app.player/clear])
+         87 (rf/dispatch-sync [:app.player/move-w])
+         38 (rf/dispatch-sync [:app.player/move-w])
+         65 (rf/dispatch-sync [:app.player/move-a])
+         37 (rf/dispatch-sync [:app.player/move-a])
+         83 (rf/dispatch-sync [:app.player/move-s])
+         40 (rf/dispatch-sync [:app.player/move-s])
+         68 (rf/dispatch-sync [:app.player/move-d])
+         39 (rf/dispatch-sync [:app.player/move-d])
          nil)))
     (js/document.addEventListener
      "wheel"

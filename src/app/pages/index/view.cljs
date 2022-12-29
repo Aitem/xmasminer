@@ -274,6 +274,5 @@
                         (< vp-mx vp-w)
                         (< vp-my vp-h))]
          [:div {:key (str "m-" x "-" y "-" type)
-                :class (str "block-scale-" zoom-level " bg-scale-" zoom-level)
-                :style {:grid-column (inc vp-mx) :grid-row (inc vp-my)}}
-          (str type)])]]]))
+                :class (str "mine mine-" (second (str type)) " block-scale-" zoom-level " bg-scale-" zoom-level)
+                :style {:grid-column (inc vp-mx) :grid-row (inc vp-my)}}])]]]))
