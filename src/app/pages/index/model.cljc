@@ -54,6 +54,7 @@
                       :data {:id (get-in db [:buildings-menu-item :id])
                              :x x
                              :y y
+                             :mine  (get-in db [:mines [x y]])
                              :dir (get-in db [:buildings-menu-item :dir])
                              :inputs (get-in db [:buildings-menu-item :inputs])
                              :output (get-in db [:buildings-menu-item :output])

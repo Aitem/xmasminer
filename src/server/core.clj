@@ -220,7 +220,7 @@
 
 (defn spawn-on-miner [miners]
   (reduce
-   (fn [acc [[x y] [_ dir type r]]]
+   (fn [acc [[x y] [_ dir type r] :as m]]
      (merge acc
             (case dir
               :r  {[(inc x)  y] [type r]}
@@ -377,9 +377,12 @@
                                           :output (get-in data [:data :output])
                                           :ticks (get-in data [:data :ticks])}))
                  :else 
-                 (swap! buildings assoc [(get-in data [:data :x]) (get-in data [:data :y])]
-                        [(get-in data [:data :id])
-                         (get-in data [:data :dir])]))
+                 (swap! buildings assoc
+                        [(get-in data [:data :x]) (get-in data [:data :y])]
+                        (concat [(get-in data [:data :id])
+                                 (get-in data [:data :dir])]
+                                (when (= :m (get-in data [:data :id]))
+                                  (get-in data [:data :mine])))))
                (broadcast-buildings-state))
              (= "change-name" (:event data))
              (do 

@@ -105,11 +105,15 @@ body {
     background-image: url("../img/char-h.png");
 }
 
-.wire {
-    background-image: url("../img/wire.png");
+.res {
     background-position: center;
     background-repeat: no-repeat;
 }
+.res-w  {background-image: url("../img/wire.png");}
+.res-c  {background-image: url("../img/circuit.png");}
+.res-b  {background-image: url("../img/battery.png");}
+.res-l  {background-image: url("../img/light.png");}
+.res-m  {background-image: url("../img/chip.png");}
 
 .mine {
     background-size: 30px;
