@@ -107,8 +107,24 @@ body {
     background-repeat: no-repeat;
 }
 
-.circuit {
-    background-image: url("../img/circuit.png");
+.skin-p_1 {
+    background-image: url("../img/p_1.png");
+}
+.skin-p01 {
+    background-image: url("../img/p01.PNG");
+}
+.skin-p_02 {
+    background-image: url("../img/p_02.PNG");
+}
+.skin-p_03 {
+    background-image: url("../img/p_03.PNG");
+}
+.skin-p_04 {
+    background-image: url("../img/p_04.PNG");
+}
+
+.circuite {
+    background-image: url("../img/circuite.png");
     background-position: center;
     background-repeat: no-repeat;
 }
