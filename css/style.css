@@ -110,6 +110,7 @@ body {
     background-repeat: no-repeat;
 }
 .res-w  {background-image: url("../img/wire.png");}
+.res-wr {background-image: url("../img/wire-red.png");}
 .res-c  {background-image: url("../img/circuit.png");}
 .res-b  {background-image: url("../img/battery.png");}
 .res-l  {background-image: url("../img/light.png");}
@@ -137,7 +138,8 @@ body {
   }
 }
 
-.mine-w {background-image: url("../img/wire.png");}
+.mine-w  {background-image: url("../img/wire.png");}
+.mine-wr {background-image: url("../img/wire-red.png");}
 .mine-c {background-image: url("../img/circuit.png");}
 .mine-b {background-image: url("../img/battery.png");}
 .mine-l {background-image: url("../img/light.png");}
