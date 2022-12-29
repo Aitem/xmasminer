@@ -107,6 +107,29 @@ body {
     background-repeat: no-repeat;
 }
 
+.mine {
+    background-size: 30px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: gray;
+    border: 1px solid #d3d4d9;
+    border-radius: 5px;
+}
+.mine-w {
+    background-image: url("../img/wire.png");
+}
+
+.mine-c {
+    background-image: url("../img/circuit.png");
+}
+.mine-b {
+    background-image: url("../img/battery.png");
+}
+.mine-l {
+    background-image: url("../img/light.png");
+}
+
+
 .skin-p_1 {
     background-image: url("../img/p_1.png");
 }
