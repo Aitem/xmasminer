@@ -26,4 +26,4 @@
      (fn [event]
        (.preventDefault event)
        (let [dy (.-deltaY event)]
-         (rf/dispatch-sync [:app.player/zoom dy]))))))
+         (rf/dispatch-sync [:app.player/zoom-smooth dy]))))))

@@ -72,13 +72,17 @@
    (dissoc db :buildings-menu-item)))
 
 (rf/reg-event-fx
- ::zoom
+ ::zoom-smooth
  (fn [{db :db} [_ dy]]
+   (println "smoothzoom")
+   (println "smoothzoom dy" dy)
    (let [current-zoom-level (:zoom-level db)
-         down? (> dy 0)
-         new-zoom-level (cond (and down? (> current-zoom-level 1)) (dec current-zoom-level)
-                              (and (not down?) (< current-zoom-level 5)) (inc current-zoom-level)
-                              :else current-zoom-level)]
+         ;; in Firefox one level in 138 on my machine
+         one-level-pixels 138
+         new-zoom-level (/ (- (* one-level-pixels current-zoom-level) dy) one-level-pixels)
+         new-zoom-level (cond (< new-zoom-level 1) 1
+                              (> new-zoom-level 5) 5
+                              :else new-zoom-level)]
+     (println "smoothzoom newlevel" new-zoom-level)
      {:db (assoc db :zoom-level new-zoom-level)
-      :dispatch [:app.core/resize-viewport new-zoom-level]}
-     )))
+      :dispatch [:app.core/resize-viewport new-zoom-level]})))

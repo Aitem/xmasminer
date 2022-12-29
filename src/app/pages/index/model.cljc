@@ -118,13 +118,11 @@
                    :l :u} dir)))))
 
 (defn zoom-level->tile-size [level]
-  (case level
-    1 10
-    2 20
-    3 40
-    4 80
-    5 160
-    nil 40))
+  (if level
+    (let [scale-factor (js/Math.pow 2 (- level 3))
+          tile-size (int (* scale-factor 40))]
+      tile-size)
+    40))
 
 (rf/reg-event-db
  ::map-cursor
