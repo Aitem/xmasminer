@@ -734,3 +734,8 @@ body {
 .box {
     position: relative;
 }
+
+html, body, .app, #root, #screen {
+    width: 100%;
+    height: 100%;
+}

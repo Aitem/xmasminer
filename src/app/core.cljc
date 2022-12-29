@@ -65,6 +65,7 @@
        (assoc-in [:viewport :w] w))))
 
 (defn make-odd [n]
+  (println "mo" n)
   (if (even? n)
     (inc n)
     n))

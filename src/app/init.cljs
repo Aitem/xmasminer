@@ -1,14 +1,19 @@
 (ns app.init
   (:require [re-frame.core :as rf]))
 
+(defn make-odd [n]
+  (if (even? n)
+    (inc n)
+    n))
+
 (defonce initialize
   (do 
     (js/window.addEventListener
      "resize"
      (fn []
        (rf/dispatch [:app.core/resize-viewport
-                     (int (/ js/document.documentElement.clientWidth 40))
-                     (int (/ js/document.documentElement.clientHeight 40))])))
+                     (make-odd (inc (int (/ js/document.documentElement.clientWidth 40))))
+                     (make-odd (inc (int (/ js/document.documentElement.clientHeight 40))))])))
     (js/document.addEventListener
      "keydown"
      (fn [event]

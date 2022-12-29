@@ -114,6 +114,20 @@
                                          :text-align "center"
                                          :margin-top "-20px"}}]))
 
+(defn make-odd [n]
+  (if (even? n)
+    (inc n)
+    n))
+
+(defn overflow-w [viewport]
+  (let [browser-width js/document.documentElement.clientWidth
+        viewport-width (* (:w viewport) 40)]
+    (- viewport-width browser-width)))
+
+(defn overflow-h [viewport]
+  (let [browser-height js/document.documentElement.clientHeight
+        viewport-height (* (:h viewport) 40)]
+    (- viewport-height browser-height)))
 
 (defn view [{{pos :position pid :id} :player
              mines :mines
@@ -124,13 +138,16 @@
         p-x (get-in player [:position :x])
         p-y (get-in player [:position :y])
         vp-x (- p-x (int (/ vp-w 2)))
-        vp-y (- p-y (int (/ vp-h 2)))]
-    [:div#screen
+        vp-y (- p-y (int (/ vp-h 2)))
+        viewport (:viewport page)]
+    [:div#screen {:style {:overflow "hidden"}}
      [menu]
      [buildings-menu]
      [:span#info (str pos)]
      [:div#map {:ref init-map :style {:grid (str "repeat(" (get-in page [:viewport :h])
-                                                 ", 40px) / repeat("(get-in page [:viewport :w]) ", 40px)")}}
+                                                 ", 40px) / repeat("(get-in page [:viewport :w]) ", 40px)")
+                                      :margin-left (str "-" (int (/ (overflow-w viewport) 2)) "px")
+                                      :margin-top (str "-" (int (/ (overflow-h viewport) 2)) "px")}}
       (for [p (:players page)
             :let [vp-px (- (get-in p [:position :x]) vp-x)
                   vp-py (- (get-in p [:position :y]) vp-y)]
