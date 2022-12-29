@@ -8,6 +8,14 @@
    (assoc db :players players)))
 
 (re-frame.core/reg-event-db
+ ::save-world (fn [db [_ w]] (assoc db :world w)))
+
+(re-frame.core/reg-event-db
+ ::save-world
+ (fn [db [_ w]]
+   (assoc db :world w )))
+
+(re-frame.core/reg-event-db
  ::save-mines
  (fn [db [_ payload]]
    (let [data
@@ -76,9 +84,10 @@
         (let [response (clojure.edn/read-string (.-data a))]
           (prn "In: " (:event response))
           (case (:event response)
-            "resources" (re-frame.core/dispatch-sync [::save-resources (:data response)])
-            "mines"     (re-frame.core/dispatch-sync [::save-mines     (:data response)])
-            "players"   (re-frame.core/dispatch-sync [::save-players   (:data response)])
-            "buildings" (re-frame.core/dispatch-sync [::save-buildings (:data response)])
+            "resources" (re-frame.core/dispatch [::save-resources (:data response)])
+            "mines"     (re-frame.core/dispatch [::save-mines     (:data response)])
+            "players"   (re-frame.core/dispatch [::save-players   (:data response)])
+            "world"     (re-frame.core/dispatch [::save-world     (:data response)])
+            "buildings" (re-frame.core/dispatch [::save-buildings (:data response)])
             "init" (re-frame.core/dispatch [::init-player (:data response)])
             nil))))

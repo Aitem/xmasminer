@@ -105,42 +105,9 @@
                             {:limit (:limit building-data)
                              :count (:count building-data)}]))))))
 
-(add-building 25 4 (buildings/hub :right resources/circuit 10 0))
-(add-building 15 15 (buildings/hub :right resources/circuit 10 0))
 
-(add-building 15 4 (buildings/belt :right))
-(add-building 16 4 (buildings/belt :right))
-(add-building 17 4 (buildings/belt :right))
-(add-building 18 4 (buildings/belt :right))
-(add-building 19 4 (buildings/belt :right))
-(add-building 20 4 (buildings/belt :right))
-(add-building 14 4 (buildings/belt :right))
 
-(add-building 21 4 (buildings/belt :down))
-(add-building 21 5 (buildings/belt :down))
-(add-building 21 6 (buildings/belt :down))
-(add-building 21 7 (buildings/belt :down))
-(add-building 21 8 (buildings/belt :down))
-(add-building 21 9 (buildings/belt :down))
-(add-building 21 10 (buildings/belt :down))
-
-(add-building 15 11 (buildings/belt :left))
-(add-building 16 11 (buildings/belt :left))
-(add-building 17 11 (buildings/belt :left))
-(add-building 18 11 (buildings/belt :left))
-(add-building 19 11 (buildings/belt :left))
-(add-building 20 11 (buildings/belt :left))
-(add-building 21 11 (buildings/belt :left))
-
-(add-building 14 5 (buildings/belt :up))
-(add-building 14 6 (buildings/belt :up))
-(add-building 14 7 (buildings/belt :up))
-(add-building 14 8 (buildings/belt :up))
-(add-building 14 9 (buildings/belt :up))
-(add-building 14 10 (buildings/belt :up))
-(add-building 14 11 (buildings/belt :up))
-
-(add-building 10 10 (buildings/tree))
+;; (add-building 10 10 (buildings/tree))
 
 (defn broadcast-buildings-state
   []
@@ -160,46 +127,44 @@
     (doseq [[channel data] @players]
       (org.httpkit.server/send! channel (str {:event "buildings" :data flat-buildings})))))
 
+(into {}
+      (map (fn [x y]
+        [[x y] [:s nil]])
+      (range -11 11) (range -11 0)))
+
+(def world
+  (merge
+   (into {}
+         (for [x (range -11 10)
+               y (range -11 -1)]
+           [[x y] [:s nil]]))
+   {[-3 -12] [:w "Sandbox"]}))
+
+(defn broadcast-world-state
+  []
+  (doseq [[channel data] @players]
+    (org.httpkit.server/send! channel (str {:event "world" :data world}))))
 
 (def mines
   {
 
-   [-10 -10] [:b nil]
-   [-10 -9] [:b nil]
-   [-9 -10] [:b nil]
-   [-9 -9] [:b nil]
+   [-9 -9]   [:w  nil]
+   [-8 -9]   [:wr nil]
+   [-7 -9]   [:wg nil]
 
+   [-5 -9]   [:b nil]
+   [-4 -9]   [:a nil]
 
-   [-10 0] [:w  nil]
-   [-10 1] [:wr nil]
-   [-9 0]  [:wg nil]
-   [-9 1]  [:w nil]
+   [-2 -9]   [:l nil]
+   [-1 -9]   [:m nil]
 
-   [0 -10] [:c nil]
-   [1 -10] [:cb nil]
-   [2 -10] [:cr nil]
+   [1 -9]   [:c nil]
+   [2 -9]   [:cb nil]
+   [3 -9]   [:cr nil]
 
-
-   [10 -10] [:l nil]
-   [10 -9]  [:l nil]
-   [11 -10] [:l nil]
-   [11 -9]  [:l nil]
-
-
-   [10 0] [:m nil]
-   [10 1] [:m nil]
-   [11 0] [:m nil]
-   [11 1] [:m nil]
-
-   [10 9] [:ob nil]
-   [11 9] [:or nil]
-   [12 9] [:og nil]
-
-
-   [-10 9]  [:a nil]
-   [-11 9]  [:a nil]
-   [-10 10] [:a nil]
-   [-11 10] [:a nil]
+   [5 -9]    [:ob nil]
+   [6 -9]    [:or nil]
+   [7 -9]    [:og nil]
 
    }
   )
@@ -212,13 +177,7 @@
 ;; :m microchip
 ;; :a accamulator
 
-(def resources
-  (atom {
-         [15 4]  [:b nil]
-         [21 5]  [:w nil]
-         [14 10] [:c nil]
-         [20 11] [:l nil]
-         }))
+(def resources (atom {}))
 
 (defn broadcast-resources-state
   []
@@ -376,6 +335,7 @@
         (send-player-data channel player-data)
         (broadcast-resources-state)
         (broadcast-mines-state)
+        (broadcast-world-state)
         (broadcast-buildings-state)
         (broadcast-players-state))
       (org.httpkit.server/on-close

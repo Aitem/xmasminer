@@ -145,7 +145,7 @@
 
 
 (defn view [{{pos :position pid :id} :player
-             mines :mines
+             mines :mines world :world
              buildings :buildings res :res belt :belt :as page}]
   (let [player (first (filter #(= pid (:id %)) (:players page)))
         vp-h (get-in page [:viewport :h])
@@ -306,4 +306,25 @@
                         :grid-row (inc vp-my)
                         :width (str tile-size "px")
                         :height (str tile-size "px")
-                        :background-size (str tile-size "px")}}])]]]))
+                        :background-size (str tile-size "px")}}])]
+
+      ;; world
+      [:<>
+       (for [w world
+             :let [[[x y] [type text]] w
+                   vp-mx (- x vp-x)
+                   vp-my (- y vp-y)]
+             :when (and (>= vp-mx 0)
+                        (>= vp-my 0)
+                        (< vp-mx vp-w)
+                        (< vp-my vp-h))]
+         [:div {:key (str "w-" x "-" y "-" type)
+                :class (str "world world-" (name type))
+                :style {:grid-column (inc vp-mx)
+                        :grid-row (inc vp-my)
+                        :width (str tile-size "px")
+                        :height (str tile-size "px")
+                        :background-size (str tile-size "px")}}
+          (when text text)])]
+
+      ]]))
