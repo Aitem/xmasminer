@@ -168,7 +168,7 @@
                        (>= vp-py 0)
                        (< vp-px vp-w)
                        (< vp-py vp-h))]
-        [:div#player {:key (hash p)
+        [:div#player {:key (str "p-" (hash p))
                       :class (str "skin-" (:skin p) " block-scale-" zoom-level " bg-scale-" zoom-level)
                       :style {:grid-column (inc vp-px)
                               :grid-row (inc vp-py)}}
@@ -216,7 +216,7 @@
                         (>= vp-by 0)
                         (< vp-bx vp-w)
                         (< vp-by vp-h))]
-         [:div {:key (str x y type opts)
+         [:div {:key (str x "-" y "-" type "-" opts)
                 :class [(str "block-scale-" zoom-level " bg-scale-" zoom-level) (building-tile [type opts])]
                 :style {:grid-column (inc vp-bx)
                         :grid-row (inc vp-by)}}
@@ -248,7 +248,7 @@
                         (>= vp-ry 0)
                         (< vp-rx vp-w)
                         (< vp-ry vp-h))]
-         [:div {:key (hash (str x y type dx dy "1"))
+         [:div {:key (str "r-" x "-" y "-" type "-" dx "-" dy "1")
 
                 :class (str (condp = type
                               :c "circuit"
@@ -272,7 +272,7 @@
                         (>= vp-my 0)
                         (< vp-mx vp-w)
                         (< vp-my vp-h))]
-         [:div {:key (str x y type)
+         [:div {:key (str "m-" x "-" y "-" type)
                 :class (str "block-scale-" zoom-level " bg-scale-" zoom-level)
                 :style {:grid-column (inc vp-mx) :grid-row (inc vp-my)}}
           (str type)])]]]))
