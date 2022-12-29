@@ -235,7 +235,7 @@
          (if (map? fab)
            (let [main (get-in buildings [(:main fab) 2])]
              [:div {:key (str x "-" y "-" type "-" opts)
-                    :class (str "fabric mine-" (name (:input fab)))
+                    :class (str "fabric mine-" (name (or (:input fab) "")))
                     :style {:position "relative"
                             :grid-column (inc vp-bx)
                             :grid-row (inc vp-by)

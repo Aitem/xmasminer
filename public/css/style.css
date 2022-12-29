@@ -111,7 +111,10 @@ body {
 }
 .res-w  {background-image: url("../img/wire.png");}
 .res-wr {background-image: url("../img/wire-red.png");}
+.res-wg {background-image: url("../img/wire-green.png");}
 .res-c  {background-image: url("../img/circuit.png");}
+.res-cr {background-image: url("../img/circuit-red.png");}
+.res-cb {background-image: url("../img/circuit-blue.png");}
 .res-b  {background-image: url("../img/battery.png");}
 .res-l  {background-image: url("../img/light.png");}
 .res-m  {background-image: url("../img/chip.png");}
@@ -140,7 +143,10 @@ body {
 
 .mine-w  {background-image: url("../img/wire.png");}
 .mine-wr {background-image: url("../img/wire-red.png");}
+.mine-wg {background-image: url("../img/wire-green.png");}
 .mine-c {background-image: url("../img/circuit.png");}
+.mine-cr {background-image: url("../img/circuit-red.png");}
+.mine-cb {background-image: url("../img/circuit-blue.png");}
 .mine-b {background-image: url("../img/battery.png");}
 .mine-l {background-image: url("../img/light.png");}
 .mine-m {background-image: url("../img/chip.png");}
