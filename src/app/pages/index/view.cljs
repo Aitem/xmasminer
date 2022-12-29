@@ -283,7 +283,7 @@
                         :grid-column (inc vp-rx) :grid-row (inc vp-ry)
                         :width (str tile-size "px")
                         :height (str tile-size "px")
-                        :backgound-size (str tile-size "px")}}
+                        :background-size (str tile-size "px")}}
           ])]
 
       ;; mines
