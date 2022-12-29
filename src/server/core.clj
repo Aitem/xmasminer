@@ -220,8 +220,15 @@
 
 (defn spawn-on-miner [miners]
   (reduce
-   (fn [acc [[x y] [_ _dir type r]]]
-     (assoc acc [(inc x)  y] [type r]))
+   (fn [acc [[x y] [_ dir type r]]]
+     (merge acc
+            (case dir
+              :r  {[(inc x)  y] [type r]}
+              :l  {[(dec x)  y] [type r]}
+              :u  {[x  (dec y)] [type r]}
+              :d  {[x  (inc y)] [type r]}
+              {})
+            ))
    {} miners)
   )
 
