@@ -64,23 +64,18 @@
                               {:dir direction  :inputs inputs :ticks (:ticks options) :output (:output options)}))])])
          inputs)))
 
-(defonce buildings 
-  (atom (merge
-         (make-fabric {:position [5 3] :direction :r :inputs {:b 2 :w 2 :c 2 :l 2} :output :b :ticks 2}) 
-         {[3 3]   [:m :r :b :h]
-          [3 4]   [:m :r :w :h]
-          [3 5]   [:m :r :c :h]
-          [3 6]   [:m :r :l :h]
-          [25 4]  [:h :r :c :h {:limit 10 :count 0}]
-          [15 15] [:h :r :c :h {:limit 10 :count 0}]
+(def buildings 
+  (atom {
+         [25 4]  [:h :r :c :h {:limit 10 :count 0}]
+         [15 15] [:h :r :c :h {:limit 10 :count 0}]
 
-          ;; [15 16] [:f :a {:recept {:battery 2} :state {:battery 0} :ticks 2 :current-tick 0}] ;; accamulator = battery + battery
-          ;; UI inputs ???
-          ;; [15 17] [:f :c {:recept {:micro 1 :wire 1} :state {:micro 0 :wire 0} :ticks 2 :current 0}] ;; circuite = microproccessor + wire
+         ;; [15 16] [:f :a {:recept {:battery 2} :state {:battery 0} :ticks 2 :current-tick 0}] ;; accamulator = battery + battery
+         ;; UI inputs ???
+         ;; [15 17] [:f :c {:recept {:micro 1 :wire 1} :state {:micro 0 :wire 0} :ticks 2 :current 0}] ;; circuite = microproccessor + wire
 
-          [10 10] [:q :u {:limit 10 :count 0}]
+         [10 10] [:q :u {:limit 10 :count 0}]
 
-          })))
+         }))
 
 (defn add-building [x y building]
   (let [[building-type {direction :direction}] building]
@@ -363,9 +358,19 @@
            (cond
              (= "remove-building" (:event data))
              (do 
-               (swap! buildings dissoc [(get-in data [:data :x])
-                                        (get-in data [:data :y])])
-               (broadcast-buildings-state))
+               (let [building (get @buildings [(get-in data [:data :x])
+                                               (get-in data [:data :y])])]
+                 (if (= :f (first building))
+                   (swap! buildings
+                          (fn [bs]
+                            (def bs bs)
+                            (into {}
+                                  (remove (fn [[_ [_ _ opts]]]
+                                            (= (:main opts) (get-in building [2 :main])))
+                                          bs))))
+                   (swap! buildings dissoc [(get-in data [:data :x])
+                                            (get-in data [:data :y])]))
+                 (broadcast-buildings-state)))
              (= "create-building" (:event data))
              (do 
                (cond

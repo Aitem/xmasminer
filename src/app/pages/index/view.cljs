@@ -188,17 +188,13 @@
             (cond
               (= :fc item-id)
               (for [[[fx fy] ft] (model/fabric-rotate (:cursor page)
-                                                        (get-in page [:buildings-menu-item :dir])
-                                                        (get-in page [:buildings-menu-item :inputs]))]
+                                                      (get-in page [:buildings-menu-item :dir])
+                                                      (get-in page [:buildings-menu-item :inputs]))]
                 [:div {:keys (str fx fy ft)
-                       :class (conj [(:class (:buildings-menu-item page))
-                                     (str "block-scale-" zoom-level " bg-scale-" zoom-level)]
-                                    (building-tile [(:id (:buildings-menu-item page))
-                                                    (:dir (:buildings-menu-item page))]))
+                       :class (str "fabric mine-" (name ft) " block-scale-" zoom-level " bg-scale-" zoom-level)
                        :style {:opacity     0.7
                                :grid-column fx
-                               :grid-row    fy}}
-                 (str "F" ft)])
+                               :grid-row    fy}}])
               
               :else
               [:div {:class (conj [(:class (:buildings-menu-item page))
@@ -229,23 +225,30 @@
                         (>= vp-by 0)
                         (< vp-bx vp-w)
                         (< vp-by vp-h))]
-         [:div {:key (str x "-" y "-" type "-" opts)
-                :class [(str "block-scale-" zoom-level " bg-scale-" zoom-level) (building-tile [type opts])]
-                :style {:grid-column (inc vp-bx)
-                        :grid-row (inc vp-by)}}
-          (when fab
-            [:<>
-             [:div {:key (hash fab)
-                    :class (str (condp = (:input fab)
-                                  :c "circuite"
-                                  :w "chip"
-                                  "wire")
-                                " block-scale-" zoom-level
-                                " bg-scale-"    zoom-level)
-                    :style {:grid-column (inc vp-bx) :grid-row (inc vp-by)}}
-              (:input fab) ":"(:count fab)]])
-          (when state
-            (:count state))])]
+         (if (map? fab)
+           (let [main (get-in buildings [(:main fab) 2])]
+             [:div {:key (str x "-" y "-" type "-" opts)
+                    :class (str "fabric mine-" (second (str (:input fab))) " block-scale-" zoom-level " bg-scale-" zoom-level)
+                    :style {:position "relative" :grid-column (inc vp-bx) :grid-row (inc vp-by)}}
+              [:div {:style {:position "absolute"
+                             :background-color "yellow"
+                             :opacity 0.5
+                             :width "100%"
+                             :height (str (* 100 
+                                             (/ (get-in main [:storage (:input fab)])
+                                                (get-in main [:inputs (:input fab)]))) "%")}}]
+              [:div {:style {:position "absolute"
+                             :background-color "green"
+                             :opacity 0.5
+                             :width "100%"
+                             :height (str (* 100 
+                                             (/ (get-in main [:cticks])
+                                                (get-in main [:ticks]))) "%")}}]
+              ])
+           [:div {:key (str x "-" y "-" type "-" opts)
+                  :class [(str "block-scale-" zoom-level " bg-scale-" zoom-level) (building-tile [type opts])]
+                  :style {:grid-column (inc vp-bx)
+                          :grid-row (inc vp-by)}}]))]
 
       ;; resources
       [:<>

@@ -49,16 +49,19 @@
          vp-by (get-in db [:cursor :y])
          x (+ vp-x (dec vp-bx))
          y (+ vp-y (dec vp-by))]
-     (when (allow-building-create? db (:buildings-menu-item db))
-       {:app.ws/send {:event "create-building"
-                      :data {:id (get-in db [:buildings-menu-item :id])
-                             :x x
-                             :y y
-                             :mine  (get-in db [:mines [x y]])
-                             :dir (get-in db [:buildings-menu-item :dir])
-                             :inputs (get-in db [:buildings-menu-item :inputs])
-                             :output (get-in db [:buildings-menu-item :output])
-                             :ticks (get-in db [:buildings-menu-item :ticks])}}}))))
+     (when (:buildings-menu-item db)
+       (when (allow-building-create? db (:buildings-menu-item db))
+         {:dispatch (when (= :fc (get-in db [:buildings-menu-item :id]))
+                      [:app.player/clear])
+          :app.ws/send {:event "create-building"
+                        :data {:id (get-in db [:buildings-menu-item :id])
+                               :x x
+                               :y y
+                               :mine  (get-in db [:mines [x y]])
+                               :dir (get-in db [:buildings-menu-item :dir])
+                               :inputs (get-in db [:buildings-menu-item :inputs])
+                               :output (get-in db [:buildings-menu-item :output])
+                               :ticks (get-in db [:buildings-menu-item :ticks])}}})))))
 
 (rf/reg-event-fx
  ::remove-building
@@ -89,7 +92,8 @@
    {:items
     [{:id :b  :dir :u :class ["t" "belt-u" "belt" (when (= :b (:id selected-menu-item)) "selected-item")]}
      {:id :m  :dir :r :class ["t" "miner" "miner-r" (when (= :m (:id selected-menu-item)) "selected-item")]}
-     {:id :fc :dir :r :inputs {:w 2 :l 2} :output :b :ticks 2}]}))
+     {:id :fc :dir :r :class ["t" "mine-c" (when (= :m (:id selected-menu-item)) "selected-item")] :inputs {:m 1 :w 1} :output :c :ticks 2}
+     ]}))
 
 (defn fabric-rotate
   [cursor dir inputs]
