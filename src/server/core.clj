@@ -1,7 +1,8 @@
 (ns server.core
   (:require
    org.httpkit.server)
-  (:import [java.util.concurrent Executors TimeUnit]))
+  (:import [java.util.concurrent Executors TimeUnit])
+  (:gen-class))
 
 
 (def uid (atom 0))
@@ -231,6 +232,13 @@
                (swap! players assoc-in [channel :position :x] (:data data))
                (broadcast-players-state)))))))
     :else {:status 200}))
+
+
+(defn -main [& args]
+  (prn "RUN SERVER")
+  (def server (org.httpkit.server/run-server #'handler {:port 8787}))
+  (run-job ctx :global global-tick 1)
+  )
 
 (comment
   (def server (org.httpkit.server/run-server #'handler {:port 8080}))

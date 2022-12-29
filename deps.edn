@@ -22,7 +22,11 @@
  :aliases
  {:shadow
   {:extra-deps {thheller/shadow-cljs       {:mvn/version "2.20.16"}}
-   :main-opts ["-m" "shadow.cljs.devtools.cli"]}
+   :main-opts ["-m" "shadow.cljs.devtools.cli"]
+   }
+
+  :server
+  {:main-opts ["-m" "server.core"]}
 
   :report
   {:extra-deps {thheller/shadow-cljs       {:mvn/version "2.20.16"}}

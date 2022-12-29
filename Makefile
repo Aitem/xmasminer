@@ -20,6 +20,9 @@ backend: up
 repl:
 	clj -A:shadow:dev:test watch app
 
+server:
+	clj -A:server
+
 build:
 	clj -A:shadow release app
 
