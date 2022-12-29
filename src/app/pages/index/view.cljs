@@ -13,11 +13,19 @@
 (defn buildings-menu
   []
   (let [state @(rf/subscribe [::model/buildings-menu])]
-    [:div#buildings-menu
-     [:div#buildings-menu-items
+    [:dialog.nes-dialog
+     {:open true :style {:bottom 0 :z-index 9999}}
+     (for [item (:items state)]
+       [:div.nes-btn {:on-click #(rf/dispatch [::model/select-buildings-menu-item item])
+                      :key (hash item)
+                      :style {:margin "0 10px"}}
+        [:div {:id (:id item) :class (:class item) :style {:padding "20px"}}]
+        ])]
+    #_[:div#buildings-menu
+     [:div#buildings-menu-items.nes-container.with-title.is-centered
       (for [item (:items state)]
-        [:div.item {:on-click #(rf/dispatch [::model/select-buildings-menu-item item])
-                    :key (hash item)}
+        [:div.item.nes-btn {:on-click #(rf/dispatch [::model/select-buildings-menu-item item])
+                            :key (hash item)}
          [:div {:id (:id item) :class (:class item)}]])]]))
 
 (defn init-map
