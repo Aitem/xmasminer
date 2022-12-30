@@ -133,7 +133,7 @@
 (def world
   (merge
    (into {}
-         (for [x (range -11 10)
+         (for [x (range -11 6)
                y (range -11 -1)]
            [[x y] [:s nil]]))
    {[-3 -12] [:w "Sandbox"]
@@ -147,29 +147,50 @@
   (doseq [[channel data] @players]
     (org.httpkit.server/send! channel (str {:event "world" :data world}))))
 
+;; w wr wg b l m
+(defn gen-mines [[x1 y1 x2 y2 cnt]]
+  (reduce
+   (fn [acc _]
+     (merge acc
+            (reduce
+             (fn [a t]
+               (assoc a [(+ x1 (rand-int (- x2 x1)))
+                         (+ y1 (rand-int (- y2 y1)))]
+                      [t nil]))
+             {}
+             [:w :wr :wg :b :l :m])))
+   {}
+   (range cnt))
+  )
+
+;; x
+
+
 (def mines
-  {
-   [-9 -9]   [:w  nil]
-   [-8 -9]   [:wr nil]
-   [-7 -9]   [:wg nil]
+  (merge
+   (gen-mines [-20 -20 -60 60 20])
+   (gen-mines [-58  61  51 85 20])
+   (gen-mines [20  -21  60 60 20])
+   {
+    [-9 -9]   [:w  nil]
+    [-8 -9]   [:wr nil]
+    [-7 -9]   [:wg nil]
 
-   [-5 -9]   [:b nil]
-   [-4 -9]   [:a nil]
+    [-5 -9]   [:b nil]
+    [-4 -9]   [:a nil]
 
-   [-2 -9]   [:l nil]
-   [-1 -9]   [:m nil]
+    [-2 -9]   [:l nil]
+    [-1 -9]   [:m nil]
 
-   [1 -9]   [:c nil]
-   [2 -9]   [:cb nil]
-   [3 -9]   [:cr nil]
+    [1 -9]   [:c nil]
+    [2 -9]   [:cb nil]
+    [3 -9]   [:cr nil]
 
-   [5 -9]    [:ob nil]
-   [6 -9]    [:or nil]
-   [7 -9]    [:og nil]
+    ;;   [5 -9]    [:ob nil]
+    ;;   [6 -9]    [:or nil]
+    ;;   [7 -9]    [:og nil]
 
-   [7 29]    [:ob nil]
-
-   }
+    })
   )
 
 ;; RESOURCES
@@ -352,8 +373,8 @@
          (let [data (read-string string)]
            (cond
              (= "remove-building" (:event data))
-             (when (not= :h (get-in b [[(get-in data [:data :x])
-                                        (get-in data [:data :y])] 0]))
+             (when (not= :h (get-in @buildings [[(get-in data [:data :x])
+                                                 (get-in data [:data :y])] 0]))
                (do 
                  (let [building (get @buildings [(get-in data [:data :x])
                                                  (get-in data [:data :y])])]
