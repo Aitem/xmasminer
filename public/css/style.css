@@ -106,6 +106,15 @@ body {
     z-index: 1000;
 }
 
+.hub {
+    color: white;
+    font-size: 20px;
+    white-space: nowrap;
+    padding-top: 40px;
+    text-shadow: 0px 0px 4px #090909;
+    background-repeat: no-repeat;
+}
+
 
 .quest {
     width: 200px;

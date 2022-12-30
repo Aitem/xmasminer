@@ -40,8 +40,8 @@
     (js/document.addEventListener
      "keydown"
      (fn [event]
-       (case (.-key event)
-         "r" (rf/dispatch-sync [::model/seleted-building-rotate])
+       (case (.-keyCode event)
+         82 (rf/dispatch-sync [::model/seleted-building-rotate])
          nil)))
     (.addEventListener
      (js/document.getElementById "map")
@@ -320,8 +320,8 @@
                             :width (str tile-size "px")
                             :height (str tile-size "px")
                             :background-size (str tile-size "px")})}
-             #_(when (= :h type)
-                 (str state))])))]
+             (when (= :h type)
+               (str (:count state) "/" (:limit state) ))])))]
 
       ;; resources
       [:<>
