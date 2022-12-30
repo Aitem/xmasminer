@@ -171,7 +171,7 @@ body {
     border: 1px solid #6d6c6c;
     border-radius: 5px;
     margin: 3px;
-    animation: active-mine 2s linear infinite;
+    /* animation: active-mine 2s linear infinite; */
     z-index: 900;
 }
 
