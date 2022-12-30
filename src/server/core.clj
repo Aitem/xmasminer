@@ -350,21 +350,23 @@
          (let [data (read-string string)]
            (cond
              (= "remove-building" (:event data))
-             (do 
-               (let [building (get @buildings [(get-in data [:data :x])
-                                               (get-in data [:data :y])])]
-                 (if (= :f (first building))
-                   (swap! buildings
-                          (fn [bs]
-                            (into {}
-                                  (remove (fn [[_ [_ _ opts]]]
-                                            (= (:main opts) (get-in building [2 :main])))
-                                          bs))))
-                   (swap! buildings dissoc [(get-in data [:data :x])
-                                            (get-in data [:data :y])]))
-                 #_(broadcast-buildings-state))
-               (reset! build? true)
-               )
+             (when (not= :h (get-in b [[(get-in data [:data :x])
+                                        (get-in data [:data :y])] 0]))
+               (do 
+                 (let [building (get @buildings [(get-in data [:data :x])
+                                                 (get-in data [:data :y])])]
+                   (if (= :f (first building))
+                     (swap! buildings
+                            (fn [bs]
+                              (into {}
+                                    (remove (fn [[_ [_ _ opts]]]
+                                              (= (:main opts) (get-in building [2 :main])))
+                                            bs))))
+                     (swap! buildings dissoc [(get-in data [:data :x])
+                                              (get-in data [:data :y])]))
+                   #_(broadcast-buildings-state))
+                 (reset! build? true)
+                 ))
              (= "create-building" (:event data))
              (do 
                (cond

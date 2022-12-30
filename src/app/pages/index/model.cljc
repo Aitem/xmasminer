@@ -66,20 +66,23 @@
          vp-bx (get-in db [:cursor :x])
          vp-by (get-in db [:cursor :y])
          x (+ vp-x (dec vp-bx))
-         y (+ vp-y (dec vp-by))]
+         y (+ vp-y (dec vp-by))
+         fabrics (make-fabric
+                  {:position  [x y]
+                   :direction (get-in db [:buildings-menu-item :dir])
+                   :inputs    (get-in db [:buildings-menu-item :inputs])
+                   :output    (get-in db [:buildings-menu-item :output])
+                   :ticks     (get-in db [:buildings-menu-item :ticks])})]
      (when (:buildings-menu-item db)
-       (when (allow-building-create? db (:buildings-menu-item db))
+       (when (and (allow-building-create? db (:buildings-menu-item db))
+                  (and (not= :h (first (get (:buildings db) [x y])))
+                       (not (some #(= :h (first (get (:buildings db) %)))
+                                  (keys fabrics)))))
          (merge 
           (when (= :fc (get-in db [:buildings-menu-item :id]))
             {:dispatch [:app.player/clear]})
           {:db (if (= :fc (get-in db [:buildings-menu-item :id]))
-                 (update db :fabrics merge
-                         (make-fabric
-                          {:position [x y]
-                           :direction (get-in db [:buildings-menu-item :dir])
-                           :inputs (get-in db [:buildings-menu-item :inputs])
-                           :output (get-in db [:buildings-menu-item :output])
-                           :ticks (get-in db [:buildings-menu-item :ticks])}))
+                 (update db :fabrics merge fabrics)
                  (assoc-in db [:buildings [x y]] [(get-in db [:buildings-menu-item :id])
                                                   (get-in db [:buildings-menu-item :dir])
                                                   (when (= :m (get-in db [:buildings-menu-item :id]))
@@ -97,7 +100,6 @@
 (rf/reg-event-fx
  ::remove-building
  (fn [{db :db} _]
-   (prn (:fabrics db))
    (let [pid (get-in db [:player :id])
          player (first (filter #(= pid (:id %)) (:players db)))
          vp-h (get-in db [:viewport :h])
@@ -112,15 +114,16 @@
          y (+ vp-y (dec vp-by))
          building (or (get (:buildings db) [x y])
                       (get (:fabrics db) [x y]))]
-     {:db (if (= :f (first building))
-            (update db :fabrics
-                    (fn [bs]
-                      (into {}
-                            (remove (fn [[_ [_ _ opts]]]
-                                      (= (:main opts) (get-in building [2 :main])))
-                                    bs))))
-            (update db :buildings dissoc [x y]))
-      :app.ws/send {:event "remove-building" :data {:x x :y y}}})))
+     (when (not= :h (first building))
+       {:db (if (= :f (first building))
+              (update db :fabrics
+                      (fn [bs]
+                        (into {}
+                              (remove (fn [[_ [_ _ opts]]]
+                                        (= (:main opts) (get-in building [2 :main])))
+                                      bs))))
+              (update db :buildings dissoc [x y]))
+        :app.ws/send {:event "remove-building" :data {:x x :y y}}}))))
 
 (rf/reg-sub
  ::selected-menu-item
