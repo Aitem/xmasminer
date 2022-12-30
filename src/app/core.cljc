@@ -16,6 +16,7 @@
  ::play-soundtrack
  (fn []
    (set! (.-volume app.init/soundtrack) 0.02)
+   (set! (.-loop app.init/soundtrack) true)
    (.play app.init/soundtrack)))
 
 (rf/reg-sub
