@@ -440,7 +440,7 @@
   )
 
 (comment
-  (def server (org.httpkit.server/run-server #'handler {:port 8080}))
+  (def server (org.httpkit.server/run-server #'handler {:port 8080 :thread 200}))
   (run-job ctx :global global-tick 1)
   (server)
   @players 
