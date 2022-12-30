@@ -200,6 +200,7 @@
                 [:div {:keys (str fx fy ft)
                        :class (str "fabric mine-" (name ft))
                        :style {:opacity     1
+                               :z-index     99999
                                :grid-column fx
                                :grid-row    fy
                                :width (str tile-size "px")
@@ -211,6 +212,7 @@
                                   (building-tile [(:id (:buildings-menu-item page))
                                                   (:dir (:buildings-menu-item page))]))
                      :style {:opacity     1
+                               :z-index     99999
                              :grid-column item-x
                              :grid-row  item-y
                              :width (str tile-size "px")
