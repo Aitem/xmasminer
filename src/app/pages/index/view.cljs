@@ -295,15 +295,33 @@
                                              (/ (get-in main [:cticks])
                                                 (get-in main [:ticks]))) "%")}}]])
 
-           [:div {:key (str x "-" y "-" type "-" opts)
-                  :class (building-tile [type opts])
-                  :style {:grid-column (inc vp-bx)
-                          :grid-row (inc vp-by)
-                          :width (str tile-size "px")
-                          :height (str tile-size "px")
-                          :background-size (str tile-size "px")}}
-            (when (= :h type)
-              (str state))]))]
+           (let [alpha (when (= :h type)
+                         (if (> (:count state) 10)
+                           1
+                           (/ (:count state) 10)))]
+               [:div {:key (str x "-" y "-" type "-" opts)
+                   :class (building-tile [type opts])
+                   :style (merge
+                           (when (= :h type)
+                             (prn "alpha" alpha)
+                             (case opts
+                               :ob {:box-shadow (str "0px 0px 10px 10px rgba(38,120,255," alpha ")")
+                                    :background-color (str "rgba(38,120,255," alpha ")")}
+
+                               :og {:box-shadow (str "0px 0px 10px 10px rgba(61,222,63," alpha ")")
+                                    :background-color (str "rgba(61,222,63," alpha ")")}
+
+                               :or {:box-shadow (str "0px 0px 10px 10px rgba(255,63,63," alpha ")")
+                                    :background-color (str "rgba(255,63,63," alpha ")")}
+
+                               ))
+                           {:grid-column (inc vp-bx)
+                            :grid-row (inc vp-by)
+                            :width (str tile-size "px")
+                            :height (str tile-size "px")
+                            :background-size (str tile-size "px")})}
+             #_(when (= :h type)
+                 (str state))])))]
 
       ;; resources
       [:<>

@@ -48,6 +48,25 @@
      (assoc db :buildings data))))
 
 (re-frame.core/reg-event-db
+ ::save-hubs
+ (fn [db [_ payload]]
+   (let [data
+         (reduce (fn [acc building]
+                   (let [x (:x building)
+                         y (:y building)
+                         _id (:id building)
+                         building-type (:type building)
+                         opts (get-in building [:data :opts])
+                         fab (get-in building [:data :fab])
+                         state (get-in building [:data :state])]
+                     (assoc acc [x y] [building-type opts fab nil state])))
+                 {} payload)]
+     (doseq [a (js/document.getAnimations)]
+       (set! (.-startTime a) 0))
+
+     (update db :buildings merge data))))
+
+(re-frame.core/reg-event-db
  ::save-fabrics
  (fn [db [_ payload]]
    (let [data
@@ -109,5 +128,6 @@
             "buildings" (re-frame.core/dispatch-sync [::save-buildings (:data response)])
             "world"     (re-frame.core/dispatch [::save-world     (:data response)])
             "fabrics"   (re-frame.core/dispatch-sync [::save-fabrics (:data response)])
+            "hubs"      (re-frame.core/dispatch-sync [::save-hubs (:data response)])
             "init" (re-frame.core/dispatch [::init-player (:data response)])
             nil))))

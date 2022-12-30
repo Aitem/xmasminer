@@ -98,6 +98,8 @@ body {
 
 .hub-ob {
     background-image: url("../img/orb-blue.png");
+    /* box-shadow: 0px 0px 10px 10px rgba(38,120,255,0.8); */
+    /* background-color: rgba(38,120,255,0.8); */
     text-align: center;
     vertical-align: center;
     justify-content: center;

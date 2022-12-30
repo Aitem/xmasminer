@@ -120,7 +120,9 @@
     (doseq [[channel data] @players]
       (when @build?
         (org.httpkit.server/send! channel (str {:event "buildings" :data (filterv #(not= :f (:type %)) flat-buildings)})))
-      (org.httpkit.server/send! channel (str {:event "fabrics"   :data (filterv #(= :f (:type %)) flat-buildings)})))
+      (org.httpkit.server/send! channel (str {:event "fabrics"   :data (filterv #(= :f (:type %)) flat-buildings)}))
+      (org.httpkit.server/send! channel (str {:event "hubs"   :data (filterv #(= :h (:type %)) flat-buildings)}))
+      )
     (reset! build? false)))
 
 (into {}
