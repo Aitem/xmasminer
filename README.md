@@ -1,5 +1,5 @@
 # XmasMiner
 
-Play now https://aitem.github.io/XmasMiner/
+Play now [XmasMiner](https://aitem.github.io/xmasminer/)
 
 Mine your Xmas
