@@ -354,6 +354,15 @@
 (defn send-player-data [channel player-data]
   (org.httpkit.server/send! channel (str {:event "init" :data player-data})))
 
+(defn can-place? [buildings new-building]
+  (reduce (fn [can-place? [pos [building-type]]]
+            (let [old-building (get buildings pos)]
+              (cond
+                (not old-building) (and can-place? true)
+                (and (= building-type :b) (= (first old-building) :b)) (and can-place? true)
+                :else (reduced false))))
+          true new-building))
+
 (defn handler
   [request]
   (cond
@@ -403,19 +412,29 @@
              (do 
                (cond
                  (= :fc (get-in data [:data :id]))
-                 (swap! buildings merge (make-fabric
-                                         {:position [(get-in data [:data :x]) (get-in data [:data :y])]
-                                          :direction (get-in data [:data :dir])
-                                          :inputs (get-in data [:data :inputs])
-                                          :output (get-in data [:data :output])
-                                          :ticks (get-in data [:data :ticks])}))
-                 :else 
-                 (swap! buildings assoc
-                        [(get-in data [:data :x]) (get-in data [:data :y])]
-                        (concat [(get-in data [:data :id])
-                                 (get-in data [:data :dir])]
-                                (when (= :m (get-in data [:data :id]))
-                                  (get-in data [:data :mine])))))
+                 (let [new-fabric
+                       (make-fabric
+                        {:position [(get-in data [:data :x]) (get-in data [:data :y])]
+                         :direction (get-in data [:data :dir])
+                         :inputs (get-in data [:data :inputs])
+                         :output (get-in data [:data :output])
+                         :ticks (get-in data [:data :ticks])})]
+                   (swap! buildings
+                          (fn [buildings-map]
+                            (if (can-place? buildings-map new-fabric)
+                              (merge buildings-map new-fabric)
+                              buildings-map))))
+                 :else
+                 (let [new-building {[(get-in data [:data :x]) (get-in data [:data :y])]
+                                     (concat [(get-in data [:data :id])
+                                              (get-in data [:data :dir])]
+                                             (when (= :m (get-in data [:data :id]))
+                                               (get-in data [:data :mine])))}]
+                   (swap! buildings
+                          (fn [buildings-map]
+                            (if (can-place? buildings-map new-building)
+                              (merge buildings-map new-building)
+                              buildings-map)))))
                (reset! build? true)
                #_(broadcast-buildings-state))
              (= "change-name" (:event data))
