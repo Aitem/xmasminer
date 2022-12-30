@@ -89,14 +89,14 @@
 
               )))))
 
-(add-building -3 33 [:hub :or {:resource :or :limit 10 :count 0}])
-(add-building 0  25 [:hub :og {:resource :or :limit 10 :count 0}])
-(add-building 4  33 [:hub :ob {:resource :or :limit 10 :count 0}])
-(add-building 1  32 [:hub :or {:resource :or :limit 10 :count 0}])
-(add-building -2 28 [:hub :or {:resource :or :limit 10 :count 0}])
-(add-building 2  29 [:hub :ob {:resource :or :limit 10 :count 0}])
-(add-building -2 31 [:hub :og {:resource :or :limit 10 :count 0}])
-(add-building 1  27 [:hub :og {:resource :or :limit 10 :count 0}])
+(add-building -3 33 [:hub :or {:resource :or :limit 10 :count 10}])
+(add-building 0  25 [:hub :og {:resource :or :limit 10 :count 10}])
+(add-building 4  33 [:hub :ob {:resource :or :limit 10 :count 10}])
+(add-building 1  32 [:hub :or {:resource :or :limit 10 :count 10}])
+(add-building -2 28 [:hub :or {:resource :or :limit 10 :count 10}])
+(add-building 2  29 [:hub :ob {:resource :or :limit 10 :count 10}])
+(add-building -2 31 [:hub :og {:resource :or :limit 10 :count 10}])
+(add-building 1  27 [:hub :og {:resource :or :limit 10 :count 10}])
 
 ;; (add-building 10 10 (buildings/tree))
 
@@ -302,6 +302,14 @@
         {pos [t o]}))
     {pos [t o]}))
 
+(defn fire!
+  []
+  (when (->> (filter #(= :h (first %)) (vals @buildings))
+             (map last)
+             (every? #(>= (or (:count %) 0) (or (:limit %) 0))))
+    (doseq [[channel _] @players]
+      (org.httpkit.server/send! channel (str {:event "fire"})))))
+
 (defn global-tick []
   (try
     (let [gmap @buildings
@@ -316,6 +324,7 @@
 
     (broadcast-resources-state)
     (broadcast-buildings-state)
+    (fire!)
     (catch Exception e
       (prn e)))
   )

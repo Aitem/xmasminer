@@ -1,5 +1,6 @@
 {
   "dependencies": {
+      "fireworks-js": "2.10.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "p5": "1.5.0"

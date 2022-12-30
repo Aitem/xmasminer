@@ -1,8 +1,16 @@
 (ns app.init
-  (:require [re-frame.core :as rf]))
+  (:require
+   [re-frame.core :as rf]
+   ["fireworks-js" :as fire]))
 
 (defonce soundtrack
   (js/Audio. "audio/soundtrack.mp3"))
+
+(defn fire!
+  []
+  (let [container (js/document.getElementById "fire")
+        fireworks (fire/Fireworks. container (clj->js {:sound {:enabled true}}))]
+    (.start fireworks)))
 
 (defonce initialize
   (do 

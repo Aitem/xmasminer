@@ -117,6 +117,18 @@
    (prn "Out: " data)
    (.send ws (str data))))
 
+(re-frame.core/reg-fx
+ ::fire
+ (fn [_ _]
+   (app.init/fire!)))
+
+(re-frame.core/reg-event-fx
+ ::fire
+ (fn [{db :db} _]
+   (when-not (:fire db)
+     {:db (assoc db :fire true)
+      ::fire {}})))
+
 (set! (.. ws -onmessage)
       (fn [a]
         (let [response (clojure.edn/read-string (.-data a))]
@@ -129,5 +141,6 @@
             "world"     (re-frame.core/dispatch [::save-world     (:data response)])
             "fabrics"   (re-frame.core/dispatch-sync [::save-fabrics (:data response)])
             "hubs"      (re-frame.core/dispatch-sync [::save-hubs (:data response)])
+            "fire"      (re-frame.core/dispatch-sync [::fire])
             "init" (re-frame.core/dispatch [::init-player (:data response)])
             nil))))
