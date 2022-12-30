@@ -53,7 +53,7 @@
        (app.pages.index.view/view @m)])))
 
 
-(def fps 30)
+(def fps 20)
 
 (defn zoom-level->tile-size [level]
   (if level

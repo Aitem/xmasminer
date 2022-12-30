@@ -303,7 +303,6 @@
                    :class (building-tile [type opts])
                    :style (merge
                            (when (= :h type)
-                             (prn "alpha" alpha)
                              (case opts
                                :ob {:box-shadow (str "0px 0px 10px 10px rgba(38,120,255," alpha ")")
                                     :background-color (str "rgba(38,120,255," alpha ")")}
